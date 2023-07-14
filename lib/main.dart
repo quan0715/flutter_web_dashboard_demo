@@ -4,8 +4,15 @@ import 'package:prologium_project_demo/views/dashboard/dashboard_test_view.dart'
 import 'package:prologium_project_demo/views/dashboard/dashboard_one_view.dart';
 import 'package:prologium_project_demo/views/dashboard/dashboard_two_view.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+
+
+Future<void> main() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 

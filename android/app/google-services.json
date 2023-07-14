@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "157653924729",
+    "project_id": "ibmdashboarddemo",
+    "storage_bucket": "ibmdashboarddemo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:157653924729:android:a0798d06d6f33b1822cda8",
+        "android_client_info": {
+          "package_name": "com.example.prologium_project_demo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "157653924729-9l4fdtrlt0ojjmaaq3vgrp8t4bkj6sdq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYuw2g3MT-nXsB5niGmCQj0ejnjfv06N8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "157653924729-9l4fdtrlt0ojjmaaq3vgrp8t4bkj6sdq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

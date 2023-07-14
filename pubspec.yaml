@@ -41,6 +41,7 @@ dependencies:
   intl: ^0.18.1
   syncfusion_flutter_datagrid: ^22.1.38
   flutter_brand_palettes: ^0.5.1
+  firebase_core: ^2.14.0
 
 dev_dependencies:
   flutter_test:
