@@ -14,9 +14,14 @@ class FakeData{
         ammeter: model,
         startTime: DateTime.now(),
         duration: const Duration(hours: 1),
-        electricityConsumed: (model.weaklyAccumulatedElectricityFlow.last.power * (Random().nextBool() ? 2.25 : 0.45)).toInt(),
+        electricityConsumed: (
+          model.weaklyAccumulatedElectricityFlow.isNotEmpty 
+          ? model.weaklyAccumulatedElectricityFlow.last.power * (Random().nextBool() ? 2.25 : 0.45)
+          : 0
+        ).toInt(),
         averageElectricityConsumed: (
-          model.weaklyAccumulatedElectricityFlow.last.power 
+          model.weaklyAccumulatedElectricityFlow.isNotEmpty
+          ? model.weaklyAccumulatedElectricityFlow.last.power : 0
         ).toInt()
       ),
     );

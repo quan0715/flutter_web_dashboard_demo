@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:prologium_project_demo/models/electricity_amount_proportion.dart';
 import 'package:prologium_project_demo/models/electricity_flow_data.dart';
 import 'package:prologium_project_demo/models/electricity_time_data.dart';
@@ -29,6 +30,7 @@ class AmmeterModel{
 
   
   bool get haveSubAmmeters => subAmmeters.isNotEmpty;
+  
   List<ElectricityAmountProportion> get getProportion{
     if(haveSubAmmeters){
       List<ElectricityAmountProportion> result = [];
@@ -40,6 +42,7 @@ class AmmeterModel{
           amount: child.ammeterData.currentElectricityFlow
         ));
       }
+      debugPrint("result: $result");
       return result;
     }
     return [];

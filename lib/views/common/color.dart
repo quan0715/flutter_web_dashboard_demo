@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_brand_palettes/palettes.dart';
 
 class DashboardColor{
   static Color correct = const Color(0xFF4CAF50);
   static Color incorrect = Colors.red.shade400;
+  static Color colorSeed = const Ibm.blue().color;
   static Color primary(BuildContext context) => Theme.of(context).colorScheme.primary; 
   static Color secondary(BuildContext context) => Theme.of(context).colorScheme.secondary;
   static Color background(BuildContext context) => Theme.of(context).colorScheme.background;

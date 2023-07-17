@@ -21,7 +21,7 @@ class InfoCard extends StatelessWidget {
     var error = errorReport != null && errorReport!(value);
     final TextStyle titleStyle = TextStyle(
       color: DashboardColor.secondary(context),
-      fontSize: 16,
+      fontSize: 14,
       fontWeight: FontWeight.bold,
     );
     final TextStyle valueStyle = TextStyle(
@@ -33,8 +33,9 @@ class InfoCard extends StatelessWidget {
     );
     final TextStyle unitStyle = TextStyle(
       color: DashboardColor.secondary(context).withOpacity(0.7),
-      fontSize: 16,
-      fontWeight: FontWeight.bold,
+      fontSize: 14,
+      fontStyle: FontStyle.italic,
+      // fontWeight: FontWeight.bold,
     );
     return Card(
       elevation: 4,
@@ -47,11 +48,11 @@ class InfoCard extends StatelessWidget {
       ), 
       child: DashboardPadding.medium(
         child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min ,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(title, style: titleStyle),
-            Spacer(), 
+            Text(title, style: titleStyle,),
+            const Spacer(), 
             DashboardSizedBox.medium(),
             Text(DashBoardFormat.number(value), style: valueStyle),
             DashboardSizedBox.small(),

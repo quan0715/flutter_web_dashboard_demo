@@ -51,7 +51,7 @@ class _HomePageBaseViewState extends State<HomePageBaseView> {
         ),
       ),
       leadingWidth: 100,
-      title: Text('IBM能源管理平台', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+      title: Text('IBM能源管理平台', style: Theme.of(context).textTheme.titleLarge),
       titleTextStyle: const TextStyle(
         color: Colors.black,
         fontSize: 20,

@@ -56,7 +56,7 @@ class ElectricityTimeData{
     int difference = 1 - weekday;
     DateTime thisMonday = now.add(Duration(days: difference));
     DateTime currentTime = DateTime(thisMonday.year, thisMonday.month, thisMonday.day);
-    return generateFakeData(currentTime, monitoringDate: difference.abs());
+    return generateFakeData(currentTime, monitoringDate: max(difference.abs(), 1));
     // 模擬上週7天的數據
   }
 }

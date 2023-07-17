@@ -20,8 +20,8 @@ class ElectricityTimeLineChart extends StatelessWidget{
         borderWidth: 2,
         // title: ChartTitle(text: '即時用電量趨勢圖(最近8小時)'),
         legend: const Legend(
-          // position: LegendPosition, 
-          isVisible: false,
+          position: LegendPosition.bottom, 
+          isVisible: true,
         ),
         tooltipBehavior: TooltipBehavior(enable: true),
         primaryXAxis: CategoryAxis(

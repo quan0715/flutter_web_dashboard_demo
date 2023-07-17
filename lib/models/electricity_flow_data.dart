@@ -60,7 +60,10 @@ class ElectricityFlowData {
       lastMonthlyAccumulatedElectricityFlow ~/ DateTime.now().day ~/ 24;
 
   int get currentElectricityFlow =>
-      weaklyAccumulatedElectricityFlow.last.power.toInt();
+      weaklyAccumulatedElectricityFlow.isNotEmpty
+          ? weaklyAccumulatedElectricityFlow.last.power.toInt()
+          : 0;
+      // weaklyAccumulatedElectricityFlow.last.power.toInt();
 
   bool currentElectricityFlowError() =>
       currentElectricityFlow >

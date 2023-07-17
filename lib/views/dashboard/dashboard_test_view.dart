@@ -57,13 +57,13 @@ class HeadLineDropdownView extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (data.location.isNotEmpty)
-            RawChip(
-              avatar: const Icon(Icons.location_city_outlined),
-              visualDensity: VisualDensity.compact,
-              label: Text(data.location),
-              labelStyle: getRawChipStyle(context),
-              // side: BorderSide.none,
-            ),
+              RawChip(
+                avatar: const Icon(Icons.location_city_outlined),
+                visualDensity: VisualDensity.compact,
+                label: Text(data.location),
+                labelStyle: getRawChipStyle(context),
+                // side: BorderSide.none,
+              ),
             DashboardSizedBox.medium(),
             // RawChip(
             //   avatar: Text(data.electricityType.split(' ').first),
@@ -99,9 +99,9 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
               items: [
                 ...vm.l1WorkspaceHeaderList
                     .map((data) => DropdownMenuItem(
-                        value: vm.l1WorkspaceHeaderList.indexOf(data),
-                        child: HeadLineDropdownView(data: data),
-                      ))
+                          value: vm.l1WorkspaceHeaderList.indexOf(data),
+                          child: HeadLineDropdownView(data: data),
+                        ))
                     .toList(),
               ],
               onChanged: (index) => {
@@ -110,31 +110,31 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
               value: vm.currentSelectedL1Index,
             ),
             vm.currentSelectedL1Index != 0
-            ? DropdownButton<int>(
-              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
-              borderRadius: BorderRadius.circular(5.0),
-              focusColor: Theme.of(context).colorScheme.surface,
-              elevation: 0,
-              underline: Container(),
-              items: [
-                ...vm.l2WorkspaceHeaderList
-                    .map((AmmeterModel data)
-                       => DropdownMenuItem(
-                        value: vm.l2WorkspaceHeaderList.indexOf(data),
-                        child: Text(
-                          // vm.l2WorkspaceHeaderList.indexOf(data) == 0
-                          // ?
-                          // : 
-                          data.name
-                        ),
-                      ))
-                    .toList()
-              ],
-              onChanged: (value) => {
-                vm.currentL2SelectedIndex = value!,
-              },
-              value: vm.currentSelectedL2Index,
-            ) : Spacer(),
+                ? DropdownButton<int>(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 4.0, horizontal: 10.0),
+                    borderRadius: BorderRadius.circular(5.0),
+                    focusColor: Theme.of(context).colorScheme.surface,
+                    elevation: 0,
+                    underline: Container(),
+                    items: [
+                      ...vm.l2WorkspaceHeaderList
+                          .map((AmmeterModel data) => DropdownMenuItem(
+                                value: vm.l2WorkspaceHeaderList.indexOf(data),
+                                child: Text(
+                                    // vm.l2WorkspaceHeaderList.indexOf(data) == 0
+                                    // ?
+                                    // :
+                                    data.name),
+                              ))
+                          .toList()
+                    ],
+                    onChanged: (value) => {
+                      vm.currentL2SelectedIndex = value!,
+                    },
+                    value: vm.currentSelectedL2Index,
+                  )
+                : Spacer(),
             //getInfoCardListFrame(),
           ],
         ),
@@ -157,10 +157,15 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
                 children: [
                   getQuoteSection("${vm.queryName} 分區數據"),
                   const Spacer(),
-                  Text("單位: kWH", style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                    // fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)
-                  ),),
+                  Text(
+                    "單位: kWH",
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        // fontWeight: FontWeight.bold,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.7)),
+                  ),
                   const Spacer(),
                 ],
               ),
@@ -208,23 +213,19 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
 
   Widget getPieChartFrame() {
     return Consumer<ElectricityDataDashboardViewModel>(
-      builder: (context, vm, _) => DashboardPadding.object(
+        builder: (context, vm, _) {
+      return DashboardPadding.object(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                getQuoteSection("${vm.queryName} 總電量使用分佈"),
-                ElectricityDistributionPieChartPieChart(
-                  chartData:
-                      vm.weaklyAccumulatedElectricityFlow,
-                ),
-              ],
+            getQuoteSection("${vm.queryName} 總電量使用分佈"),
+            ElectricityDistributionPieChartPieChart(
+              chartData: vm.weaklyAccumulatedElectricityFlow,
             ),
           ],
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget getInfoCardListFrame() {
@@ -240,20 +241,22 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
                 title: "時段用電總量",
                 value: vm.currentSelectedAmmeterEData.currentElectricityFlow,
                 unit: "kWH",
-                errorReport: (value){
-                  return vm.currentSelectedAmmeterEData.currentElectricityFlowError();
-                }
-            ),
+                errorReport: (value) {
+                  return vm.currentSelectedAmmeterEData
+                      .currentElectricityFlowError();
+                }),
             InfoCard(
-                title: "本月用電",
-                value: vm.currentSelectedAmmeterEData.monthlyAccumulatedElectricityFlow,
-                unit: "kWH",
-                errorReport: (value) => vm.currentSelectedAmmeterEData.monthElectricityFlowError(),
+              title: "本月用電",
+              value: vm.currentSelectedAmmeterEData
+                  .monthlyAccumulatedElectricityFlow,
+              unit: "kWH",
+              errorReport: (value) =>
+                  vm.currentSelectedAmmeterEData.monthElectricityFlowError(),
             ),
             InfoCard(
               title: "本月平均每小時用電",
-              value:
-                  vm.currentSelectedAmmeterEData.monthlyAccumulatedElectricityFlowPerHour,
+              value: vm.currentSelectedAmmeterEData
+                  .monthlyAccumulatedElectricityFlowPerHour,
               unit: "kWH",
               errorReport: (value) =>
                   value >
@@ -271,16 +274,21 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
         builder: (context, electricityDataDashboardViewModel, child) =>
             DashboardPadding.object(
                 child: SingleChildScrollView(
-                  child: Column( 
-                    children: [
-                      getQuoteSection("${electricityDataDashboardViewModel.queryName} 用電趨勢圖(最近7天)"),
-                      ElectricityTimeLineChart(
-                        data: electricityDataDashboardViewModel.currentSelectedAmmeterEData.weaklyAccumulatedElectricityFlow,
-                        cmpLine: electricityDataDashboardViewModel.currentSelectedAmmeterEData.lastWeaklyAccumulatedElectricityFlow,
-                      ),
-                    ],
+              child: Column(
+                children: [
+                  getQuoteSection(
+                      "${electricityDataDashboardViewModel.queryName} 用電趨勢圖(最近7天)"),
+                  ElectricityTimeLineChart(
+                    data: electricityDataDashboardViewModel
+                        .currentSelectedAmmeterEData
+                        .weaklyAccumulatedElectricityFlow,
+                    cmpLine: electricityDataDashboardViewModel
+                        .currentSelectedAmmeterEData
+                        .lastWeaklyAccumulatedElectricityFlow,
                   ),
-                )));
+                ],
+              ),
+            )));
   }
 
   Widget getErrorDataGridFrame() {
@@ -288,14 +296,15 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
         builder: (context, electricityDataDashboardViewModel, child) =>
             DashboardPadding.object(
                 child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      getQuoteSection("${electricityDataDashboardViewModel.queryName} 用電量錯誤回報"),
-                      DashboardSizedBox.small(),
-                      const ErrorReportDataGrid(),
-                    ],
-                  ),
-        )));
+              child: Column(
+                children: [
+                  getQuoteSection(
+                      "${electricityDataDashboardViewModel.queryName} 用電量錯誤回報"),
+                  DashboardSizedBox.small(),
+                  const ErrorReportDataGrid(),
+                ],
+              ),
+            )));
   }
 
   Widget getNotifyLabel() {
@@ -314,10 +323,7 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
           labelStyle: Theme.of(context)
               .textTheme
               .labelLarge!
-              .copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 13
-              ),
+              .copyWith(fontWeight: FontWeight.bold, fontSize: 13),
           side: BorderSide.none,
         ),
         DashboardSizedBox.small(),
@@ -332,10 +338,7 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
           labelStyle: Theme.of(context)
               .textTheme
               .labelLarge!
-              .copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 13
-              ),
+              .copyWith(fontWeight: FontWeight.bold, fontSize: 13),
         ),
       ],
     );
@@ -379,72 +382,81 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
   Widget build(BuildContext context) {
     return HomePageBaseView(
         body: ChangeNotifierProvider<ElectricityDataDashboardViewModel>(
-      create: (context) => ElectricityDataDashboardViewModel(ammeterModel: FakeData.generateFakeData()),
-      child: Consumer<ElectricityDataDashboardViewModel>(
-        builder: (context, electricityDataDashboardViewModel, child) =>
-            DashboardPadding.object(
-              child: Card(
-                // color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                child: DashboardPadding.medium(
-                  child: Container(
-                    width: MediaQuery.of(context).size.width ,
-                    height: MediaQuery.of(context).size.height ,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+      create: (context) => ElectricityDataDashboardViewModel(
+          ammeterModel: FakeData.generateFakeData()),
+      child:
+          // Consumer<ElectricityDataDashboardViewModel>(
+          //   builder: (context, electricityDataDashboardViewModel, child) =>
+          DashboardPadding.object(
+        child: Card(
+          child: DashboardPadding.medium(
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(flex: 1, child: getFactoryInfoFrame()),
+                  DashboardDivider.small(),
+                  DashboardSizedBox.large(),
+                  Expanded(
+                    flex: 12,
+                    child: Row(
                       mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(flex:1, child: getFactoryInfoFrame()),
-                        DashboardDivider.small(),
-                        DashboardSizedBox.large(),
                         Expanded(
-                          flex: 12,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          flex: 2,
+                          child: Card(
+                            elevation: 0,
+                            child: Column(
+                              children: [
+                                getPieChartFrame(),
+                                DashboardDivider.small(),
+                                DashboardSizedBox.small(),
+                                // getNotifyLabel(),
+                                getInfoCardListFrame(),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Card(
+                              elevation: 0,
+                              child: Column(
+                                children: [
+                                  allAreaDataCardFrame(),
+                                  const Spacer()
+                                ],
+                              )),
+                        ),
+                        Expanded(
+                          flex: 4,
+                          child: Column(
                             children: [
                               Expanded(
-                                flex: 2,
-                                child: Card(
-                                  elevation: 0,
-                                  child: Column(
-                                    children: [
-                                      getPieChartFrame(),
-                                      DashboardDivider.small(),
-                                      DashboardSizedBox.small(),
-                                      // getNotifyLabel(),
-                                      getInfoCardListFrame(),
-                                    ],
-                                  ),
-                                ),
-                              ),Expanded(
-                                flex: 2,
-                                child: Card(
-                                  elevation: 0,
-                                  child: Column(
-                                    children: [
-                                      allAreaDataCardFrame(),
-                                      Spacer()
-                                    ],
-                                  )
-                                ),
-                              ),Expanded(
-                                flex: 4,
-                                child: Column(
-                                  children: [
-                                    Expanded(flex: 1,child: Card(elevation : 0, child: getLineChartFrame())),
-                                    Expanded(flex: 1, child: Card(elevation : 0, child: getErrorDataGridFrame())),
-                                  ],
-                                ),
-                              )
+                                  flex: 1,
+                                  child: Card(
+                                      elevation: 0,
+                                      child: getLineChartFrame())),
+                              Expanded(
+                                  flex: 1,
+                                  child: Card(
+                                      elevation: 0,
+                                      child: getErrorDataGridFrame())),
                             ],
                           ),
                         )
                       ],
                     ),
-                  ),
-                ),
+                  )
+                ],
               ),
             ),
+          ),
+        ),
       ),
     ));
   }
