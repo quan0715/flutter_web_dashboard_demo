@@ -8,7 +8,7 @@ class DashboardThemeManager extends ChangeNotifier{
   ThemeData _theme = ThemeData(
     colorScheme: ColorScheme.fromSeed(
       seedColor: const Ibm.blue().color, 
-      brightness: Brightness.light
+      brightness: Brightness.dark
     ),
     useMaterial3: true,
   );
