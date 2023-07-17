@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prologium_project_demo/view_model/home_page_view_model.dart';
+import 'package:prologium_project_demo/views/common/padding.dart';
+import 'package:prologium_project_demo/views/common/text.dart';
 import 'package:provider/provider.dart';
 
 class HomePageBaseView extends StatefulWidget {
@@ -43,20 +45,19 @@ class _HomePageBaseViewState extends State<HomePageBaseView> {
   }
   PreferredSizeWidget topNavigationBar(BuildContext context, HomePageBaseViewModel vm) {
     return AppBar(
-      leading: MaterialButton(
-        onPressed: (){},
-        child: Image.network(
-         // "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8SmO_2F2_Pi8LSur7KYo09DSlUozTD78MTqi-QWRNIieV4ppcmfL4iakkVrrKGf15_sI&usqp=CAU"
-        'https://campustalent.careercenter.ncu.edu.tw/storage/company_logo/28224797_logo.png',
-        ),
+      // leading: MaterialButton(
+      //   onPressed: (){},
+      //   child: Image.network(
+      //    // "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8SmO_2F2_Pi8LSur7KYo09DSlUozTD78MTqi-QWRNIieV4ppcmfL4iakkVrrKGf15_sI&usqp=CAU"
+      //   'https://campustalent.careercenter.ncu.edu.tw/storage/company_logo/28224797_logo.png',
+      //   ),
+      // ),
+      automaticallyImplyLeading: false,
+      title: DashboardPadding.small(
+        padding: const EdgeInsets.all(8.0),
+        child: const Text('IBM安衛環數據監控平台'),
       ),
-      leadingWidth: 100,
-      title: Text('IBM能源管理平台', style: Theme.of(context).textTheme.titleLarge),
-      titleTextStyle: const TextStyle(
-        color: Colors.black,
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-      ),
+      titleTextStyle: DashboardText.titleLarge(context),
       centerTitle: false,
       actions: getActionButtonList(vm),
     );

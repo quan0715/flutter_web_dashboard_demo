@@ -3,8 +3,6 @@ import 'package:flutter_brand_palettes/palettes.dart';
 import 'package:prologium_project_demo/view_model/home_page_view_model.dart';
 import 'package:prologium_project_demo/views/common/theme.dart';
 import 'package:prologium_project_demo/views/dashboard/dashboard_test_view.dart';
-import 'package:prologium_project_demo/views/dashboard/dashboard_one_view.dart';
-import 'package:prologium_project_demo/views/dashboard/dashboard_two_view.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -30,8 +28,6 @@ class MyApp extends StatelessWidget {
         title: 'web dashboard project',
         theme: DashboardThemeManager().theme,
         routes: {
-          "/dashboard/1": (context) => const DashBoardOneView(),
-          "/dashboard/2": (context) => const DashBoardTwoView(),
           "/dashboard/test": (context) => const DashBoardTestView(),
         },
         initialRoute: "/dashboard/test",
@@ -40,14 +36,14 @@ class MyApp extends StatelessWidget {
             pageBuilder: (context, animation, secondaryAnimation) {
               // 页面构建器
               switch (settings.name) {
-                case '/dashboard/1':
-                  return const DashBoardOneView();
-                case '/dashboard/2':
-                  return const DashBoardTwoView();
+                // case '/dashboard/1':
+                //   return const DashBoardOneView();
+                // case '/dashboard/2':
+                //   return const DashBoardTwoView();
                 case '/dashboard/test':
                   return const DashBoardTestView();
                 default:
-                  return const DashBoardOneView();
+                  return const DashBoardTestView();
               }
             },
             transitionsBuilder:

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prologium_project_demo/models/error_report_model.dart';
 import 'package:prologium_project_demo/view_model/dashboard/dashboard_view_model.dart';
 import 'package:prologium_project_demo/views/chart/ammeter_error_report_col.dart';
 import 'package:prologium_project_demo/views/common/color.dart';
@@ -7,12 +8,11 @@ import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ErrorReportDataGrid extends StatelessWidget {
-  const ErrorReportDataGrid({super.key});
+  const ErrorReportDataGrid({super.key, required this.dataSource});
+  final List<AmmeterErrorReportModel> dataSource;
   @override
   Widget build(BuildContext context) {
-    return Consumer<ElectricityDataDashboardViewModel>(
-      builder: (context, electricityDataDashboardViewModel, child) =>
-          SfDataGrid(
+    return SfDataGrid(
         //footer: Spacer(),
         isScrollbarAlwaysShown: true,
         verticalScrollPhysics: const AlwaysScrollableScrollPhysics(),
@@ -20,10 +20,7 @@ class ErrorReportDataGrid extends StatelessWidget {
         gridLinesVisibility: GridLinesVisibility.vertical,
         headerGridLinesVisibility: GridLinesVisibility.vertical,
         columnWidthMode: ColumnWidthMode.fill,
-
-        source: AmmeterGridDataSource(
-            dataSource:
-                electricityDataDashboardViewModel.ammeterErrorReportList),
+        source: AmmeterGridDataSource( dataSource:dataSource),
         columns: [
           GridColumn(
               columnName: '設備編號',
@@ -104,7 +101,6 @@ class ErrorReportDataGrid extends StatelessWidget {
                 ),
               )),
         ],
-      ),
-    );
+      );
   }
 }

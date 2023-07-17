@@ -1,62 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:prologium_project_demo/models/ammeter_model.dart';
-import 'package:prologium_project_demo/models/electricity_amount_proportion.dart';
-import 'package:prologium_project_demo/models/electricity_flow_data.dart';
-import 'package:prologium_project_demo/models/electricity_time_data.dart';
-import 'package:prologium_project_demo/models/error_report_model.dart';
-import 'package:prologium_project_demo/models/fake_data.dart';
-import 'package:prologium_project_demo/models/workspace_model.dart';
 
-class ElectricityDataDashboardViewModel extends ChangeNotifier{
+class DashboardViewModel extends ChangeNotifier{
 
-  AmmeterModel ammeterModel;
-  AmmeterModel? currentSelectedAmmeterModel;
-  List<AmmeterModel> _l1WorkspaceHeaderList = [];
-  List<AmmeterModel> _l2WorkspaceHeaderList = [];
+  // temp data which just for testing
 
-  int _currentSelectedL1Index = 0;
-  int _currentSelectedL2Index = 0;
-  ElectricityDataDashboardViewModel({required this.ammeterModel}){
-    _l1WorkspaceHeaderList = [
-      ammeterModel,
-      ...ammeterModel.subAmmeters
-    ];
-    currentSelectedAmmeterModel = ammeterModel;
-    _currentSelectedL1Index = 0;
-    _currentSelectedL2Index = 0;
-    l1Selected = true;
-  }
+  // Variable declaration
+  int _currentSelectedFactoryIndex = 0;
+  int _currentSelectedCategoryIndex = 0;
+  List<String> factoryName = ["煉製一廠", "煉製二廠", "煉製三廠"];
+  List<String> categoryName = ["氣體", "水質", "毒化物"];
+  List<IconData> categoryIcon = [Icons.air, Icons.water, Icons.science];
 
-  int get currentSelectedL1Index => _currentSelectedL1Index;
-  int get currentSelectedL2Index => _currentSelectedL2Index;
+  // get method
 
-  List<AmmeterModel> get l1WorkspaceHeaderList => _l1WorkspaceHeaderList;
-  List<AmmeterModel> get l2WorkspaceHeaderList => [
-    l1WorkspaceHeaderList[currentSelectedL1Index],
-    ...l1WorkspaceHeaderList[currentSelectedL1Index].subAmmeters
-  ];
-  AmmeterModel get rootAmmeter => ammeterModel;
-  AmmeterModel get currentSelectedAmmeter => currentSelectedAmmeterModel!;
-  ElectricityFlowData get currentSelectedAmmeterEData => currentSelectedAmmeter.ammeterData;
-  String get queryName => "${currentSelectedAmmeter.name}-${currentSelectedAmmeter.label}";
-  List<AmmeterModel> get subAmmeterData => currentSelectedAmmeter.subAmmeters;
-  List<ElectricityAmountProportion> get weaklyAccumulatedElectricityFlow => currentSelectedAmmeter.getProportion;
-  bool l1Selected = true;
-  
-  set currentL1SelectedIndex(int value){
-    _currentSelectedL1Index = value;
-    currentSelectedAmmeterModel = l1WorkspaceHeaderList[value];
+  int get currentSelectedFactoryIndex => _currentSelectedFactoryIndex;
+  String get currentSelectedFactoryName => factoryName[_currentSelectedFactoryIndex];
+  int get currentSelectedCategoryIndex => _currentSelectedCategoryIndex;
+  String get currentSelectedCategoryName => categoryName[_currentSelectedCategoryIndex];
+  IconData get currentSelectedCategoryIcon => categoryIcon[_currentSelectedCategoryIndex];
+  String get dashboardTitle => "$currentSelectedFactoryName - $currentSelectedCategoryName";
+
+  // set method (with notifyListeners()) 
+
+  set currentSelectedFactoryIndex(int value){
+    _currentSelectedFactoryIndex = value;
     notifyListeners();
-  }
-  
-  set currentL2SelectedIndex(int value){
-    _currentSelectedL2Index = value;
-    currentSelectedAmmeterModel = l2WorkspaceHeaderList[value];
-    // currentSelectedAmmeterModel = value;
+  } 
+  set currentSelectedCategoryIndex(int value){
+    _currentSelectedCategoryIndex = value;
     notifyListeners();
   }
 
-
-  List<AmmeterErrorReportModel> get ammeterErrorReportList => FakeData.generateFakeErrorReport(currentSelectedAmmeterModel!);
+  // functional method
 
 }

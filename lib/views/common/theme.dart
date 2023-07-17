@@ -5,10 +5,10 @@ import 'package:flutter_brand_palettes/flutter_brand_palettes.dart';
 
 class DashboardThemeManager extends ChangeNotifier{
 
-  ThemeData _theme = ThemeData(
+  final ThemeData _theme = ThemeData(
     colorScheme: ColorScheme.fromSeed(
       seedColor: const Ibm.blue().color, 
-      brightness: Brightness.light
+      brightness: Brightness.dark
     ),
     useMaterial3: true,
   );
