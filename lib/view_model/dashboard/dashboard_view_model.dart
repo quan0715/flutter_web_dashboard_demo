@@ -6,7 +6,7 @@ class DashboardViewModel extends ChangeNotifier{
 
   // Variable declaration
   int _currentSelectedFactoryIndex = 0;
-  int _currentSelectedCategoryIndex = 1;
+  int _currentSelectedCategoryIndex = 0;
   int _currentSelectedCardIndex = 0;
   List<String> factoryName = ["煉製一廠", "煉製二廠", "煉製三廠"];
   List<String> categoryName = ["氣體", "水質", "毒化物"];
@@ -104,13 +104,6 @@ class DashboardViewModel extends ChangeNotifier{
           "unit" : "ppm",
           "bounds": getBound(132),
         },
-        // {
-        //   "name" : "SO\u2083",
-        //   "value" : 102,
-        //   "lastTimeValue": 240,
-        //   "unit" : "ppm",
-        //   "bounds": getBound(102),
-        // },
       ];
 
     get waterData => [

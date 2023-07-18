@@ -280,12 +280,12 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
                           ],
                         ))
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: FittedBox(
-                        child: Text(vm.tar["value"].toString(), style: DashboardText.titleMedium(context))
-                      )
-                    )
+                    // Expanded(
+                    //   flex: 1,
+                    //   child: FittedBox(
+                    //     child: Text(vm.tar["value"].toString(), style: DashboardText.titleMedium(context))
+                    //   )
+                    // )
                   ],
                 )
               ),
@@ -428,6 +428,7 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
   }
 
   Widget splineChartsFrame(){
+    List<EmissionTimeData> data = EmissionTimeData.generateFakeWeaklyData();
     return Consumer<DashboardViewModel>(
       builder: (context, vm, child) => 
       SingleChildScrollDashboardFrame(
@@ -442,7 +443,7 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
                   notes: "最近7天 每8小時統計數據",
                 ),
                 EmissionTimeLineChart(
-                  data: EmissionTimeData.generateFakeWeaklyData(),
+                  data: data,
                   unit: "ppm",
                 ),
               ],
@@ -455,7 +456,7 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
                   notes: "最近1天 每8小時統計數據",
                 ),
                 EmissionTimeLineChart(
-                  data: EmissionTimeData.generateFakeWeaklyData().sublist(0, 3),
+                  data: data.sublist(data.length-3, ),
                   unit: "ppm",
                 ),
               ],
@@ -607,6 +608,7 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
   }
 
   Widget waterSplineChartsFrame(){
+    List<EmissionTimeData> data = EmissionTimeData.generateFakeWeaklyData();
     return Consumer<DashboardViewModel>(
       builder: (context, vm, child) => 
       SingleChildScrollDashboardFrame(
@@ -622,7 +624,7 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
                 ),
                 EmissionTimeLineChart(
                   unit: vm.waterData[vm.currentSelectedCardIndex]["unit"],
-                  data: EmissionTimeData.generateFakeWeaklyData()
+                  data: data
                 ),
               ],
             ),
@@ -635,7 +637,7 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
                 ),
                 EmissionTimeLineChart(
                   unit: vm.waterData[vm.currentSelectedCardIndex]["unit"],
-                  data: EmissionTimeData.generateFakeWeaklyData().sublist(0, 3)
+                  data: data.sublist(data.length-3, )
                 ),
               ],
             )
