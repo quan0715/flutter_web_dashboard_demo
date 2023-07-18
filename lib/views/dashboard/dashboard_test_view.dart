@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:prologium_project_demo/models/emmission_time_data.dart';
 import 'package:prologium_project_demo/view_model/dashboard/dashboard_view_model.dart';
+import 'package:prologium_project_demo/views/chart/components/dashboard_frame.dart';
 import 'package:prologium_project_demo/views/chart/components/frame_quote.dart';
+import 'package:prologium_project_demo/views/chart/electricity_time_line_chart.dart';
+import 'package:prologium_project_demo/views/chart/inspection_timelise_chart.dart';
+import 'package:prologium_project_demo/views/chart/quality_inspect_card.dart';
 import 'package:prologium_project_demo/views/common/color.dart';
 import 'package:prologium_project_demo/views/common/divider.dart';
 import 'package:prologium_project_demo/views/common/padding.dart';
@@ -252,157 +257,452 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
 
   Widget qualityIndexFrame() {
     return Consumer<DashboardViewModel>(
-      builder: (context, vm, _) => Card(
-          elevation: 0,
-          child: DashboardPadding.object(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  FrameQuote( quoteText: "${vm.dashboardTitle} 指標數據"),
-                  DashboardSizedBox.small(),
-                  AspectRatio(
-                    aspectRatio: 1.5,
-                    child: Card(
-                      child: DashboardPadding.small(
+      builder: (context, vm, _) => SingleChildScrollDashboardFrame(
+        elevation: 0,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            FrameQuote( quoteText: "${vm.dashboardTitle} 日AQI指標"),
+            AspectRatio(
+              aspectRatio:3,
+              child: DashboardFrame(
+                color: (vm.tar["bounds"][3] as Color).withOpacity(0.07),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: FrameQuote(
+                        color: vm.tar["bounds"][3],
+                        quoteText: "監測點總指標",
                         child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                          // FrameQuote(quoteText: "PM 2.5", notes: "單位: ppm", color:  DashboardColor.correct),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            // crossAxisAlignment: CrossAxisAlignment.stretch, 
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text("PM 2.5",style: DashboardText.titleLarge(context)),
-                                    Text("Excellent",style: DashboardText.headLineLarge(context)),
-                                    Text("0.0 - 15.4(μg/m3 )",style: DashboardText.bodyMedium(context).copyWith(color: DashboardText.headLineMedium(context).color!.withOpacity(0.5))),
-                                  ],
-                                )),
-                              Expanded(
-                                child: Center(
-                                  child: SfRadialGauge(axes: <RadialAxis>[
-                                    RadialAxis(
-                                      showLabels: false,
-                                      showTicks: false,
-                                      radiusFactor: 0.8,
-                                      startAngle: 120,
-                                      endAngle: 60,
-                                      minimum: 0,
-                                      maximum: 50,
-                                      axisLineStyle: AxisLineStyle(
-                                        thickness: 0.2,
-                                        cornerStyle: CornerStyle.bothCurve,
-                                        color: DashboardColor.correct.withOpacity(0.2),
-                                        thicknessUnit: GaugeSizeUnit.factor,
-                                      ),
-                                      pointers: <GaugePointer>[
-                                        RangePointer(
-                                            color: DashboardColor.correct,
-                                            value: 30,
-                                            cornerStyle: CornerStyle.bothCurve,
-                                            width: 0.2,
-                                            sizeUnit: GaugeSizeUnit.factor,
-                                            enableAnimation: true,
-                                            animationDuration: 20,
-                                            animationType: AnimationType.linear
-                                        ),
-                                      ],
-                                      annotations: <GaugeAnnotation>[
-                                        GaugeAnnotation(
-                                            positionFactor: 0.1,
-                                            angle: 90,
-                                            widget: Text(
-                                              "30",
-                                              style: DashboardText.bodyLarge(context),
-                                            )
-                                        ),
-                                        GaugeAnnotation(
-                                          angle: 114,
-                                          positionFactor: 1.0,
-                                          widget:
-                                              Text('0', style: TextStyle(fontSize: 10)),
-                                        ),
-                                        GaugeAnnotation(
-                                          angle: 66,
-                                          positionFactor: 1.0,
-                                          widget: Text('50',
-                                              style: TextStyle(fontSize: 10)),
-                                        ),
-                                      ]
-                                    ),],
-                                    enableLoadingAnimation: true,
-                                    )
-                                )
-                              )
-                            ]
-                          )
+                            Text(vm.tar["bounds"][2], style: DashboardText.titleLarge(context)),
                           ],
-                        ),
-                      )),
-                  )
-                ],
+                        ))
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: FittedBox(
+                        child: Text(vm.tar["value"].toString(), style: DashboardText.titleMedium(context))
+                      )
+                    )
+                  ],
+                )
               ),
             ),
-          ),
-        )
+            DashboardSizedBox.small(),
+            GridView.builder(
+                physics: const AlwaysScrollableScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 1.1,
+                  mainAxisSpacing: 4,
+                  crossAxisSpacing: 4,
+                ),
+                itemCount: vm.data.length,
+                itemBuilder: (context, index) {
+                  return DashboardFrame(
+                    color: (vm.data[index]["bounds"][3] as Color).withOpacity(0.07),
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        FrameQuote(
+                          quoteText: vm.data[index]["name"] as String, 
+                          color: vm.data[index]["bounds"][3] as Color,
+                          
+                        ),
+                        SizedBox(
+                          width: 100,
+                          child: AspectRatio(
+                            aspectRatio: 1,
+                            child: QualityInspectCard(
+                              category: vm.data[index]["name"],
+                              detail: "",
+                              label: "",
+                              color: vm.data[index]["bounds"][3] as Color,
+                              upperBound: vm.data[index]["bounds"][1] as double,
+                              lowerBound: vm.data[index]["bounds"][0] as double,
+                              value: vm.data[index]["value"],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),    
+          ],
+        ),
+      )
       );
   }
 
+  Widget qualityIndexFrame2() {   
+    return Consumer<DashboardViewModel>(
+      builder: (context, vm, _) => SingleChildScrollDashboardFrame(
+        elevation: 0,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            FrameQuote( quoteText: "${vm.dashboardTitle} AQI紀錄數據"),
+            DashboardSizedBox.small(),
+            GridView.builder(
+                physics: const AlwaysScrollableScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 1,
+                  childAspectRatio: 2.3,
+                ),
+                itemCount: vm.data.length,
+                itemBuilder: (context, index) {
+                  return MaterialButton(
+                    padding: EdgeInsets.zero,
+                    visualDensity: VisualDensity.compact,
+                    onPressed: (){
+                      vm.currentSelectedCardIndex = index;
+                    },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      side: BorderSide(
+                        color: vm.currentSelectedCardIndex == index ? (vm.data[index]["bounds"][3] as Color).withOpacity(0.4) : Colors.transparent,
+                        width: 2
+                      ),
+                    ), 
+                    child: DashboardFrame(
+                      // color:  vm.currentSelectedCardIndex == index ? (vm.data[index]["bounds"][3] as Color).withOpacity(0.07) : null,
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          FrameQuote(quoteText: vm.data[index]["name"] as String, color: vm.data[index]["bounds"][3] as Color,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Text(vm.data[index]['value'].toString(), style: DashboardText.titleLarge(context)),
+                                  // DashboardSizedBox.small(),
+                                  Text("當前值", style: DashboardText.titleSmall(context).copyWith(fontStyle: FontStyle.italic, fontWeight: FontWeight.normal)),
+                                ],
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(vm.data[index]['lastTimeValue'].toString(), style: DashboardText.titleLarge(context)),        
+                                  // ashboardSizedBox.small(),
+                                  Text("前次值", style:DashboardText.titleSmall(context).copyWith(fontStyle: FontStyle.italic, fontWeight: FontWeight.normal)),
+                                ],
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    (vm.data[index]['value'] - vm.data[index]['lastTimeValue'])
+                                    .toString(), style: DashboardText.titleLarge(context)
+                                  ),
+                                  // DashboardSizedBox.small(),
+                                  Text("變動值", style:DashboardText.titleSmall(context).copyWith(fontStyle: FontStyle.italic, fontWeight: FontWeight.normal)),
+                                ],
+                              ),
+                            ]
+                          )  
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),    
+          ],
+        ),
+      )
+      );
+  }
+
+  Widget splineChartsFrame(){
+    return Consumer<DashboardViewModel>(
+      builder: (context, vm, child) => 
+      SingleChildScrollDashboardFrame(
+        elevation: 0,
+        child: Column(
+          children: [
+            Column(
+              children: [
+                FrameQuote(
+                  quoteText: "${vm.data[vm.currentSelectedCardIndex]["name"]} 一週趨勢", 
+                  color: vm.data[vm.currentSelectedCardIndex]["bounds"][3] as Color,
+                  notes: "最近7天 每8小時統計數據",
+                ),
+                EmissionTimeLineChart(
+                  data: EmissionTimeData.generateFakeWeaklyData(),
+                  unit: "ppm",
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                FrameQuote(
+                  quoteText: "${vm.data[vm.currentSelectedCardIndex]["name"]} 今日趨勢",
+                  color: vm.data[vm.currentSelectedCardIndex]["bounds"][3] as Color,
+                  notes: "最近1天 每8小時統計數據",
+                ),
+                EmissionTimeLineChart(
+                  data: EmissionTimeData.generateFakeWeaklyData().sublist(0, 3),
+                  unit: "ppm",
+                ),
+              ],
+            )
+          ],
+          ),
+      ),
+    );
+  }  
+  
+  Widget waterQualityIndexFrame() {
+    return Consumer<DashboardViewModel>(
+      builder: (context, vm, _) => SingleChildScrollDashboardFrame(
+        elevation: 0,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            FrameQuote( quoteText: "${vm.dashboardTitle} 水觀測指標"),
+            DashboardSizedBox.small(),
+            GridView.builder(
+                physics: const AlwaysScrollableScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 1,
+                  childAspectRatio: 3,
+                  mainAxisSpacing: 4,
+                  crossAxisSpacing: 4,
+                ),
+                itemCount: vm.waterData.length,
+                itemBuilder: (context, index) {
+                  return DashboardFrame(
+                color: (vm.waterData[index]["color"] as Color).withOpacity(0.07),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: FrameQuote(
+                        notes: vm.waterData[index]["unit"] as String,
+                        color: vm.waterData[index]["color"],
+                        quoteText: "${vm.waterData[index]["name"]}",
+                        child: Column(
+                          children: [
+                            Text(vm.waterData[index]["label"], style: DashboardText.titleLarge(context)),
+                          ],
+                        ))
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: FittedBox(
+                        child: Text(vm.waterData[index]["value"].toString(), style: DashboardText.titleSmall(context))
+                      )
+                    )
+                  ],
+                )
+              );
+                },
+            ),    
+          ],
+        ),
+      )
+      );
+  }
+
+  Widget waterQualityIndexFrame2() {   
+    return Consumer<DashboardViewModel>(
+      builder: (context, vm, _) => SingleChildScrollDashboardFrame(
+        elevation: 0,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            FrameQuote(quoteText: "${vm.dashboardTitle} AQI紀錄數據"),
+            DashboardSizedBox.small(),
+            GridView.builder(
+                physics: const AlwaysScrollableScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 1,
+                  childAspectRatio: 2.3,
+                ),
+                itemCount: vm.waterData.length,
+                itemBuilder: (context, index) {
+                  return MaterialButton(
+                    padding: EdgeInsets.zero,
+                    visualDensity: VisualDensity.compact,
+                    onPressed: (){
+                      vm.currentSelectedCardIndex = index;
+                    },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      side: BorderSide(
+                        color: vm.currentSelectedCardIndex == index ? (vm.waterData[index]["color"] as Color).withOpacity(0.4) : Colors.transparent,
+                        width: 2
+                      ),
+                    ),
+                    child: DashboardFrame(
+                      // color:  vm.currentSelectedCardIndex == index ? (vm.waterData[index]["color"] as Color).withOpacity(0.07) : null,
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          FrameQuote(quoteText: vm.waterData[index]["name"] as String, notes: vm.waterData[index]["unit"] as String, color: vm.waterData[index]["color"] as Color,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Text(vm.waterData[index]['value'].toString(), style: DashboardText.titleLarge(context)),
+                                  // DashboardSizedBox.small(),
+                                  Text("當前值", style: DashboardText.titleSmall(context).copyWith(fontStyle: FontStyle.italic, fontWeight: FontWeight.normal)),
+                                ],
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(vm.waterData[index]['lastTimeValue'].toString(), style: DashboardText.titleLarge(context)),        
+                                  // ashboardSizedBox.small(),
+                                  Text("前次值", style:DashboardText.titleSmall(context).copyWith(fontStyle: FontStyle.italic, fontWeight: FontWeight.normal)),
+                                ],
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    (vm.waterData[index]['value'] - vm.waterData[index]['lastTimeValue'])
+                                    .toString(), style: DashboardText.titleLarge(context)
+                                  ),
+                                  // DashboardSizedBox.small(),
+                                  Text("變動值", style:DashboardText.titleSmall(context).copyWith(fontStyle: FontStyle.italic, fontWeight: FontWeight.normal)),
+                                ],
+                              ),
+                            ]
+                          )  
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),    
+          ],
+        ),
+      )
+      );
+  }
+
+  Widget waterSplineChartsFrame(){
+    return Consumer<DashboardViewModel>(
+      builder: (context, vm, child) => 
+      SingleChildScrollDashboardFrame(
+        elevation: 0,
+        child: Column(
+          children: [
+            Column(
+              children: [
+                FrameQuote(
+                  quoteText: "${vm.waterData[vm.currentSelectedCardIndex]["name"]} 監測點一週趨勢", 
+                  color: vm.waterData[vm.currentSelectedCardIndex]["color"] as Color,
+                  notes: "最近7天 每8小時統計數據",
+                ),
+                EmissionTimeLineChart(
+                  unit: vm.waterData[vm.currentSelectedCardIndex]["unit"],
+                  data: EmissionTimeData.generateFakeWeaklyData()
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                FrameQuote(
+                  quoteText: "${vm.waterData[vm.currentSelectedCardIndex]["name"]} 監測點今日趨勢",
+                  color: vm.waterData[vm.currentSelectedCardIndex]["color"] as Color,
+                  notes: "最近1天 每8小時統計數據",
+                ),
+                EmissionTimeLineChart(
+                  unit: vm.waterData[vm.currentSelectedCardIndex]["unit"],
+                  data: EmissionTimeData.generateFakeWeaklyData().sublist(0, 3)
+                ),
+              ],
+            )
+          ],
+          ),
+      ),
+    );
+  }  
+  
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<DashboardViewModel>(
       create: (context) => DashboardViewModel(),
       child: HomePageBaseView(
-          body: DashboardPadding.object(
-        child: Card(
-          child: DashboardPadding.medium(
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Expanded(flex: 1, child: getFactoryInfoFrame()),
-                  DashboardDivider.small(),
-                  DashboardSizedBox.large(),
-                  Expanded(
-                    flex: 12,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(flex: 3, child: qualityIndexFrame()),
-                        Expanded(
-                          flex: 8,
-                          child: Card(
-                              elevation: 0,
-                              child: Column(
-                                children: [
-                                  DashboardPadding.object(
-                                      child: const FrameQuote(
-                                    quoteText: "監測點數據",
-                                    child: Text("監測站詳細數據與時間圖"),
-                                  )),
-                                ],
-                              )),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
+        body: DashboardPadding.object(
+          child: DashboardFrame(
+            padding: const EdgeInsets.all(0.0),
+            child: DashboardPadding.medium(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Expanded(flex: 1, child: getFactoryInfoFrame()),
+                    // DashboardDivider.small(),
+                    DashboardSizedBox.large(),
+                    Consumer<DashboardViewModel>(
+                      builder: (context, vm, child){
+                        if(vm.currentSelectedCategoryIndex == 0){
+                          return Expanded(
+                            flex: 14,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Expanded(flex: 4, child: qualityIndexFrame()),
+                                Expanded(flex: 3, child: qualityIndexFrame2()),
+                                Expanded(flex: 8, child: splineChartsFrame()),
+                              ],
+                            ),
+                          );
+                        }else{
+                          return Expanded(
+                            flex: 14,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                
+                                 Expanded(flex: 4, child: waterQualityIndexFrame()),
+                                Expanded(flex: 3, child: waterQualityIndexFrame2()),
+                                Expanded(flex: 8, child: waterSplineChartsFrame()),
+                              ],
+                            ),
+                          );
+                        }
+                      }
+                    )
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      )),
+        )
+      ),
     );
   }
 }

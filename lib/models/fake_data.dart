@@ -16,12 +16,12 @@ class FakeData{
         duration: const Duration(hours: 1),
         electricityConsumed: (
           model.weaklyAccumulatedElectricityFlow.isNotEmpty 
-          ? model.weaklyAccumulatedElectricityFlow.last.power * (Random().nextBool() ? 2.25 : 0.45)
+          ? model.weaklyAccumulatedElectricityFlow.last.amount * (Random().nextBool() ? 2.25 : 0.45)
           : 0
         ).toInt(),
         averageElectricityConsumed: (
           model.weaklyAccumulatedElectricityFlow.isNotEmpty
-          ? model.weaklyAccumulatedElectricityFlow.last.power : 0
+          ? model.weaklyAccumulatedElectricityFlow.last.amount : 0
         ).toInt()
       ),
     );

@@ -30,10 +30,10 @@ class FrameQuote extends StatelessWidget{
     TextStyle notesStyle = this.notesStyle ?? DashboardText.bodySmall(context).copyWith(
       color: DashboardText.bodyMedium(context).color!.withOpacity(0.5),
     );
-    return DashboardPadding.small(
-      child: IntrinsicHeight(
+    return IntrinsicHeight(
+      child: DashboardPadding.small(
         child: Row(
-          mainAxisSize: MainAxisSize.max, 
+          mainAxisSize: MainAxisSize.min, 
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
@@ -46,12 +46,12 @@ class FrameQuote extends StatelessWidget{
             DashboardSizedBox.small(),
             Expanded(
               child: Column(
-                // mainAxisSize: MainAxisSize.min,
+                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisSize: MainAxisSize.max,
+                    mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(quoteText,style: textStyle),
@@ -59,7 +59,6 @@ class FrameQuote extends StatelessWidget{
                       if(notes!=null) Text(notes!,style: notesStyle)
                     ],
                   ),   
-                  // child !=null ? DashboardDivider.large() : const SizedBox(),
                   child ?? const SizedBox(),
                 ],
               ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prologium_project_demo/models/electricity_amount_proportion.dart';
 import 'package:prologium_project_demo/models/electricity_flow_data.dart';
-import 'package:prologium_project_demo/models/electricity_time_data.dart';
+import 'package:prologium_project_demo/models/emmission_time_data.dart';
 import 'package:prologium_project_demo/models/error_report_model.dart';
 import 'package:prologium_project_demo/models/workspace_model.dart';
 
@@ -59,18 +59,18 @@ class AmmeterModel{
           lastMonthlyAccumulatedElectricityFlow: subAmmeters.map((e) => e.ammeterData.lastMonthlyAccumulatedElectricityFlow).reduce((value, element) => value + element),
       );  
       
-  List<ElectricityTimeData> get weaklyAccumulatedElectricityFlow{
+  List<EmissionTimeData> get weaklyAccumulatedElectricityFlow{
     if(data != null) return data!.weaklyAccumulatedElectricityFlow;
-    List<ElectricityTimeData> result = [];
+    List<EmissionTimeData> result = [];
     for(AmmeterModel child in subAmmeters){
-      List<ElectricityTimeData> data = child.weaklyAccumulatedElectricityFlow;
+      List<EmissionTimeData> data = child.weaklyAccumulatedElectricityFlow;
       if(result.isEmpty) {
         result.addAll(data);
       } else{
         for(int i = 0; i < result.length; i++){
-          result[i] = ElectricityTimeData(
+          result[i] = EmissionTimeData(
             time: result[i].time,
-            power: result[i].power + data[i].power
+            amount: result[i].amount + data[i].amount
           );
         }
       }
@@ -79,18 +79,18 @@ class AmmeterModel{
     return result;
   }
 
-  List<ElectricityTimeData> get lastWeaklyAccumulatedElectricityFlow{
+  List<EmissionTimeData> get lastWeaklyAccumulatedElectricityFlow{
     if(data != null) return data!.lastWeaklyAccumulatedElectricityFlow;
-    List<ElectricityTimeData> result = [];
+    List<EmissionTimeData> result = [];
     for(AmmeterModel child in subAmmeters){
-      List<ElectricityTimeData> data = child.lastWeaklyAccumulatedElectricityFlow;
+      List<EmissionTimeData> data = child.lastWeaklyAccumulatedElectricityFlow;
       if(result.isEmpty) {
         result.addAll(data);
       } else{
         for(int i = 0; i < result.length; i++){
-          result[i] = ElectricityTimeData(
+          result[i] = EmissionTimeData(
             time: result[i].time,
-            power: result[i].power + data[i].power
+            amount: result[i].amount + data[i].amount
           );
         }
       }
