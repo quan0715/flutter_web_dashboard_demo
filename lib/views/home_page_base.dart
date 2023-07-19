@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prologium_project_demo/view_model/home_page_view_model.dart';
+import 'package:prologium_project_demo/views/common/theme.dart';
 import 'package:provider/provider.dart';
 
 class HomePageBaseView extends StatefulWidget {
@@ -45,20 +46,29 @@ class _HomePageBaseViewState extends State<HomePageBaseView> {
     return AppBar(
       leading: MaterialButton(
         onPressed: (){},
-        child: Image.network(
-         // "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8SmO_2F2_Pi8LSur7KYo09DSlUozTD78MTqi-QWRNIieV4ppcmfL4iakkVrrKGf15_sI&usqp=CAU"
-        'https://campustalent.careercenter.ncu.edu.tw/storage/company_logo/28224797_logo.png',
+        child: Image.asset(
+         'images/logo.png'
         ),
       ),
       leadingWidth: 100,
-      title: Text('IBM能源管理平台', style: Theme.of(context).textTheme.titleLarge),
+      title: Text('IBM能源管理平台', style: Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold)),
       titleTextStyle: const TextStyle(
         color: Colors.black,
         fontSize: 20,
         fontWeight: FontWeight.bold,
       ),
       centerTitle: false,
-      actions: getActionButtonList(vm),
+      actions: [
+        Consumer<DashboardThemeManager>(
+          builder: (context, themeManager, child) => IconButton(
+            onPressed: (){
+              themeManager.toggleTheme();
+            },
+            icon: themeManager.isDark ? const Icon(Icons.dark_mode) : const Icon(Icons.light_mode),
+          ),
+        ),
+        ...getActionButtonList(vm)
+      ],
     );
   }
 

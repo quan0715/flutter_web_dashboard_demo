@@ -25,41 +25,44 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => HomePageBaseViewModel()),
+        ChangeNotifierProvider(create: (context) => DashboardThemeManager())
       ],
-      child: MaterialApp(
-        title: 'web dashboard project',
-        theme: DashboardThemeManager().theme,
-        routes: {
-          "/dashboard/1": (context) => const DashBoardOneView(),
-          "/dashboard/2": (context) => const DashBoardTwoView(),
-          "/dashboard/test": (context) => const DashBoardTestView(),
-        },
-        initialRoute: "/dashboard/test",
-        onGenerateRoute: (settings) {
-          return PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) {
-              // 页面构建器
-              switch (settings.name) {
-                case '/dashboard/1':
-                  return const DashBoardOneView();
-                case '/dashboard/2':
-                  return const DashBoardTwoView();
-                case '/dashboard/test':
-                  return const DashBoardTestView();
-                default:
-                  return const DashBoardOneView();
-              }
-            },
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              return FadeTransition(
-                opacity: animation,
-                child: child,
-              );
-            },
-          );
-        },
-        // home: const HomePageBaseView(),
+      child: Consumer<DashboardThemeManager>(
+        builder: (context, themeManager, child) => MaterialApp(
+          title: 'web dashboard project',
+          theme: themeManager.theme,
+          routes: {
+            "/dashboard/1": (context) => const DashBoardOneView(),
+            "/dashboard/2": (context) => const DashBoardTwoView(),
+            "/dashboard/test": (context) => const DashBoardTestView(),
+          },
+          initialRoute: "/dashboard/test",
+          onGenerateRoute: (settings) {
+            return PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) {
+                // 页面构建器
+                switch (settings.name) {
+                  case '/dashboard/1':
+                    return const DashBoardOneView();
+                  case '/dashboard/2':
+                    return const DashBoardTwoView();
+                  case '/dashboard/test':
+                    return const DashBoardTestView();
+                  default:
+                    return const DashBoardOneView();
+                }
+              },
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              },
+            );
+          },
+          // home: const HomePageBaseView(),
+        ),
       ),
     );
   }

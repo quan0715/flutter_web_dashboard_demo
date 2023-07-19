@@ -14,7 +14,26 @@ class DashboardThemeManager extends ChangeNotifier{
   );
 
   get theme => _theme;
+  get isDark => _theme.brightness == Brightness.dark;
   
   // void toggle
+  void toggleTheme(){
+    _theme = _theme.brightness == Brightness.dark 
+    ? ThemeData(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: const Ibm.blue().color, 
+        brightness: Brightness.light
+      ),
+      useMaterial3: true,
+    )
+    : ThemeData(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: const Ibm.blue().color, 
+        brightness: Brightness.dark
+      ),
+      useMaterial3: true,
+    );
+    notifyListeners();
+  }
 
 }
