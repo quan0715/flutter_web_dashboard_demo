@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:prologium_project_demo/models/error_report_model.dart';
-import 'package:prologium_project_demo/views/common/color.dart';
-import 'package:prologium_project_demo/views/common/format.dart';
+import 'package:web_dashboard/models/error_report_model.dart';
+import 'package:web_dashboard/views/theme/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class AmmeterGridDataSource extends DataGridSource {

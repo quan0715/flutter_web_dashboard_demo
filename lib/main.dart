@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_brand_palettes/palettes.dart';
-import 'package:prologium_project_demo/view_model/home_page_view_model.dart';
-import 'package:prologium_project_demo/views/common/theme.dart';
-import 'package:prologium_project_demo/views/dashboard/dashboard_test_view.dart';
-import 'package:prologium_project_demo/views/dashboard/dashboard_one_view.dart';
-import 'package:prologium_project_demo/views/dashboard/dashboard_two_view.dart';
+import 'package:web_dashboard/view_model/home_page_view_model.dart';
+import 'package:web_dashboard/theme_manager.dart';
+import 'package:web_dashboard/views/dashboards/dashboard_test_view.dart';
+import 'package:web_dashboard/views/dashboards/dashboard_one_view.dart';
+import 'package:web_dashboard/views/dashboards/dashboard_two_view.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';

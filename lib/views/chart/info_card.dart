@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:prologium_project_demo/views/common/color.dart';
-import 'package:prologium_project_demo/views/common/format.dart';
-import 'package:prologium_project_demo/views/common/padding.dart';
-import 'package:prologium_project_demo/views/common/sizedbox.dart';
+import 'package:web_dashboard/views/theme/theme.dart';
+
 class InfoCard extends StatelessWidget {
   final String title;
   final int value;

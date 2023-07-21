@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:prologium_project_demo/view_model/home_page_view_model.dart';
-import 'package:prologium_project_demo/views/common/theme.dart';
+import 'package:web_dashboard/view_model/home_page_view_model.dart';
+import 'package:web_dashboard/theme_manager.dart';
 import 'package:provider/provider.dart';
 
 class HomePageBaseView extends StatefulWidget {

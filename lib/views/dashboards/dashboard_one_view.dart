@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:prologium_project_demo/view_model/dashboard/dashboard_view_model.dart';
-import 'package:prologium_project_demo/views/common/padding.dart';
-import 'package:prologium_project_demo/views/home_page_base.dart';
-import 'package:provider/provider.dart';
+import 'package:web_dashboard/views/theme/theme.dart';
+import 'package:web_dashboard/views/home_page_base.dart';
 
 class DashBoardOneView extends StatefulWidget {
   const DashBoardOneView({super.key});

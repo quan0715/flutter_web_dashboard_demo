@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:prologium_project_demo/models/ammeter_model.dart';
+import 'package:web_dashboard/models/ammeter_model.dart';
 
 class AmmeterErrorReportModel{
   // String AmmeterLocation;

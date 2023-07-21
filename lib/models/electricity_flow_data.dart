@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:prologium_project_demo/models/electricity_time_data.dart';
+import 'package:web_dashboard/models/electricity_time_data.dart';
 
 class ElectricityFlowData {
   static int countCycle = 8; // hour

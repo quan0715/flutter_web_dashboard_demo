@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:prologium_project_demo/models/ammeter_model.dart';
-import 'package:prologium_project_demo/models/electricity_amount_proportion.dart';
-import 'package:prologium_project_demo/models/electricity_flow_data.dart';
-import 'package:prologium_project_demo/models/electricity_time_data.dart';
-import 'package:prologium_project_demo/models/error_report_model.dart';
-import 'package:prologium_project_demo/models/fake_data.dart';
-import 'package:prologium_project_demo/models/workspace_model.dart';
+import 'package:web_dashboard/models/ammeter_model.dart';
+import 'package:web_dashboard/models/electricity_amount_proportion.dart';
+import 'package:web_dashboard/models/electricity_flow_data.dart';
+import 'package:web_dashboard/models/error_report_model.dart';
+import 'package:web_dashboard/models/fake_data.dart';
 
 class ElectricityDataDashboardViewModel extends ChangeNotifier{
 

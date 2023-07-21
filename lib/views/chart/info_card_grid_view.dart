@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:prologium_project_demo/models/ammeter_model.dart';
-import 'package:prologium_project_demo/views/common/color.dart';
-import 'package:prologium_project_demo/views/common/format.dart';
-import 'package:prologium_project_demo/views/common/padding.dart';
+import 'package:web_dashboard/models/ammeter_model.dart';
+import 'package:web_dashboard/views/theme/theme.dart';
+
 class InfoCardGridView extends StatelessWidget {
   const InfoCardGridView({
     super.key, 

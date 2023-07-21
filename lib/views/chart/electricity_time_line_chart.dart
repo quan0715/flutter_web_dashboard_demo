@@ -1,11 +1,6 @@
-
-
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_brand_palettes/flutter_brand_palettes.dart';
-import 'package:prologium_project_demo/models/electricity_time_data.dart';
-import 'package:prologium_project_demo/views/common/format.dart';
+import 'package:web_dashboard/models/electricity_time_data.dart';
+import 'package:web_dashboard/views/theme/format.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ElectricityTimeLineChart extends StatelessWidget{

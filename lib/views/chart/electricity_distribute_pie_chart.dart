@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_brand_palettes/flutter_brand_palettes.dart';
 import 'package:flutter_brand_palettes/gradients.dart';
-import 'package:prologium_project_demo/models/electricity_amount_proportion.dart';
-import 'package:prologium_project_demo/views/common/format.dart';
+import 'package:web_dashboard/models/electricity_amount_proportion.dart';
+import 'package:web_dashboard/views/theme/format.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ElectricityDistributionPieChartPieChart extends StatelessWidget {

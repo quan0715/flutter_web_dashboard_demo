@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:prologium_project_demo/view_model/dashboard/dashboard_view_model.dart';
-import 'package:prologium_project_demo/views/chart/ammeter_error_report_col.dart';
-import 'package:prologium_project_demo/views/common/color.dart';
-import 'package:prologium_project_demo/views/common/sizedbox.dart';
+import 'package:web_dashboard/view_model/dashboard/dashboard_view_model.dart';
+import 'package:web_dashboard/views/chart/ammeter_error_report_col.dart';
+import 'package:web_dashboard/views/theme/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 

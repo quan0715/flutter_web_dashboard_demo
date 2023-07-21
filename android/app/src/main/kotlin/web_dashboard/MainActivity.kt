@@ -1,4 +1,4 @@
-package com.example.prologium_project_demo
+package web_dashboard
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prologium_project_demo/views/home_page_base.dart';
+import 'package:web_dashboard/views/home_page_base.dart';
 
 class DashBoardTwoView extends StatefulWidget {
   const DashBoardTwoView({super.key});
