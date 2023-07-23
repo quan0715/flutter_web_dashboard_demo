@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/view_model/home_page_view_model.dart';
 import 'package:web_dashboard/theme_manager.dart';
@@ -12,6 +14,32 @@ class HomePageBaseView extends StatefulWidget {
 }
 
 class _HomePageBaseViewState extends State<HomePageBaseView> {
+
+  // late Timer _timer;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _startTimer();
+  // }
+
+  // @override
+  // void dispose() {
+  //   _cancelTimer();
+  //   super.dispose();
+  // }
+
+  // void _startTimer() {
+  //   _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+  //     debugPrint("timer");
+  //     setState(() {});
+  //   });
+  // }
+
+  // // 取消定时器的函数
+  // void _cancelTimer() {
+  //   _timer.cancel();
+  // }
   
   List<Widget> getActionButtonList(HomePageBaseViewModel vm){
     Color? selectedColor = Theme.of(context).colorScheme.primary;

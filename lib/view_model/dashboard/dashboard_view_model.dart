@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/models/ammeter_model.dart';
 import 'package:web_dashboard/models/electricity_amount_proportion.dart';
@@ -57,4 +59,9 @@ class ElectricityDataDashboardViewModel extends ChangeNotifier{
 
   List<AmmeterErrorReportModel> get ammeterErrorReportList => FakeData.generateFakeErrorReport(currentSelectedAmmeterModel!);
 
+  void refreshPage(){
+    debugPrint("update");
+    ammeterModel = FakeData.generateFakeData();
+    notifyListeners();
+  }
 }

@@ -19,18 +19,18 @@ class InfoCardGridView extends StatelessWidget {
   factory InfoCardGridView.factory(BuildContext context, AmmeterModel ammeter, bool isSelected) {
     return InfoCardGridView(
       ammeter: ammeter,
-      textTitleStyle: Theme.of(context).textTheme.labelLarge!.copyWith(fontWeight: FontWeight.bold),
-      textValueStyle: Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
-      textHeadLineStyle : Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
+      textTitleStyle: DashboardText.labelLarge(context),
+      textValueStyle: DashboardText.titleLarge(context),
+      textHeadLineStyle : DashboardText.titleLarge(context),
       isSelected: isSelected,
     );
   }
   factory InfoCardGridView.workspace(BuildContext context, AmmeterModel ammeter) {
     return InfoCardGridView(
       ammeter: ammeter,
-      textTitleStyle: Theme.of(context).textTheme.labelMedium!.copyWith(fontWeight: FontWeight.bold),
-      textValueStyle: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold,),
-      textHeadLineStyle : Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
+      textTitleStyle: DashboardText.labelMedium(context),
+      textValueStyle: DashboardText.titleMedium(context),
+      textHeadLineStyle : DashboardText.titleMedium(context),
       isSelected: false,
     );
   }

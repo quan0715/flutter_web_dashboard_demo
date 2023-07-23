@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/models/ammeter_model.dart';
 import 'package:web_dashboard/models/fake_data.dart';
@@ -163,7 +165,7 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FrameQuote(quoteText: '${vm.queryName} 總電量使用分佈',),
+          FrameQuote(quoteText: '${vm.queryName} 總電量使用分佈', notes: "更新時間\n${DashBoardFormat.timeWithSecond(time)}",),
           ElectricityDistributionPieChartPieChart(
             chartData: vm.weaklyAccumulatedElectricityFlow,
           ),
@@ -276,76 +278,114 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
     );
   }
 
+  // update every 1 minutes
+  // final Duration duration = const Duration(seconds: 5);
+  // Timer.periodic(duration, (timer) { }),
+
+  late Timer _timer;
+  ElectricityDataDashboardViewModel? vm;
+  DateTime time = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    _startTimer();
+  }
+
+  @override
+  void dispose() {
+    _cancelTimer();
+    super.dispose();
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      setState(() {
+        debugPrint("timer");
+        time = DateTime.now();
+        vm = ElectricityDataDashboardViewModel(ammeterModel: FakeData.generateFakeData());
+      });
+    });
+  }
+
+  // 取消定时器的函数
+  void _cancelTimer() {
+    _timer.cancel();
+  }
+
   @override
   Widget build(BuildContext context) {
     return HomePageBaseView(
-      body: ChangeNotifierProvider<ElectricityDataDashboardViewModel>(
-      create: (context) => ElectricityDataDashboardViewModel(ammeterModel: FakeData.generateFakeData()),
-      child:DashboardPadding.object(
-        child: DashboardFrameCard(
-          elevation: 1,
-          child: SizedBox.expand(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Expanded(flex: 1, child: getFactoryInfoFrame()),
-                DashboardDivider.small(),
-                DashboardSizedBox.large(),
-                Expanded(
-                  flex: 12,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: DashboardFrameCard(
-                          elevation: 0,
-                          child: Column(
-                            children: [
-                              getPieChartFrame(),
-                              DashboardDivider.small(),
-                              DashboardSizedBox.small(),
-                              getInfoCardListFrame(),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Expanded( flex: 2,
-                        child: DashboardFrameCard(
-                          elevation: 0,
+      body: ChangeNotifierProvider<ElectricityDataDashboardViewModel>.value(
+      value: vm ?? ElectricityDataDashboardViewModel(ammeterModel: FakeData.generateFakeData()),
+      child: Consumer<ElectricityDataDashboardViewModel>(
+        builder: (context, vm, _) => 
+          DashboardPadding.object(
+          child: DashboardFrameCard(
+            elevation: 1,
+            child: SizedBox.expand(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(flex: 1, child: getFactoryInfoFrame()),
+                  DashboardDivider.small(),
+                  DashboardSizedBox.large(),
+                  Expanded(
+                    flex: 12,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: DashboardFrameCard(
+                            elevation: 0,
                             child: Column(
                               children: [
-                                allAreaDataCardFrame(),
-                                const Spacer()
+                                getPieChartFrame(),
+                                DashboardDivider.small(),
+                                DashboardSizedBox.small(),
+                                getInfoCardListFrame(),
                               ],
-                            )),
-                      ),
-                      Expanded( flex: 4,
-                        child: Column(
-                          children: [
-                            Expanded(
-                                flex: 1,
-                                child: DashboardFrameCard(
-                                    elevation: 0,
-                                    child: getLineChartFrame())),
-                            Expanded(
-                                flex: 1,
-                                child: DashboardFrameCard(
-                                    elevation: 0,
-                                    child: getErrorDataGridFrame())),
-                          ],
+                            ),
+                          ),
                         ),
-                      )
-                    ],
-                  ),
-                )
-              ],
+                        Expanded( flex: 2,
+                          child: DashboardFrameCard(
+                            elevation: 0,
+                              child: Column(
+                                children: [
+                                  allAreaDataCardFrame(),
+                                  const Spacer()
+                                ],
+                              )),
+                        ),
+                        Expanded( flex: 4,
+                          child: Column(
+                            children: [
+                              Expanded(
+                                  flex: 1,
+                                  child: DashboardFrameCard(
+                                      elevation: 0,
+                                      child: getLineChartFrame())),
+                              Expanded(
+                                  flex: 1,
+                                  child: DashboardFrameCard(
+                                      elevation: 0,
+                                      child: getErrorDataGridFrame())),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
-        ),
+              ),
       ),
-    ));
+      ));
   }
 }
