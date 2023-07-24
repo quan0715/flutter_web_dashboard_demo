@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/models/error_report_model.dart';
-import 'package:web_dashboard/views/theme/theme.dart';
+import 'package:web_dashboard/theme/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class AmmeterGridDataSource extends DataGridSource {
@@ -25,14 +25,14 @@ class AmmeterGridDataSource extends DataGridSource {
         cells: row.getCells().map<Widget>((dataCell) {
           if(dataCell.columnName == '異常狀態'){
             if(dataCell.value == '突增'){
-              return Center(
+              return const Center(
                 child: RawChip(
                   avatar: Icon(Icons.trending_up, color: Colors.amber),
                   label:const Text('突增')
                 ),
               );
             }else if(dataCell.value == '突降'){
-              return Center(
+              return const Center(
                 child: RawChip(
                   avatar: Icon(Icons.trending_down, color: Colors.red),
                   label:const Text('突降')

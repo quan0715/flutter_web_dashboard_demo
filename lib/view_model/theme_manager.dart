@@ -34,5 +34,7 @@ class DashboardThemeManager extends ChangeNotifier{
     );
     notifyListeners();
   }
-
+  String get logoPath => _theme.brightness == Brightness.dark ? "ibm/IBM_logo_dark.png" : "ibm/IBM_logo_light.png";
+  IconData get icon => _theme.brightness == Brightness.dark ? Icons.dark_mode : Icons.light_mode;
+  Image get logo => _theme.brightness == Brightness.dark ? Image.asset(logoPath) : Image.asset(logoPath);
 }

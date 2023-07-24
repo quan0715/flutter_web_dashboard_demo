@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:web_dashboard/models/ammeter_model.dart';
 import 'package:web_dashboard/models/fake_data.dart';
 import 'package:web_dashboard/view_model/dashboard/dashboard_view_model.dart';
-import 'package:web_dashboard/views/chart/electricity_distribute_pie_chart.dart';
-import 'package:web_dashboard/views/chart/electricity_time_line_chart.dart';
-import 'package:web_dashboard/views/chart/error_report_grid.dart';
-import 'package:web_dashboard/views/chart/info_card.dart';
-import 'package:web_dashboard/views/chart/info_card_grid_view.dart';
+import 'package:web_dashboard/views/components/chart/electricity_distribute_pie_chart.dart';
+import 'package:web_dashboard/views/components/chart/electricity_time_line_chart.dart';
+import 'package:web_dashboard/views/components/chart/error_report_grid.dart';
+import 'package:web_dashboard/views/components/chart/info_card.dart';
+import 'package:web_dashboard/views/components/chart/info_card_grid_view.dart';
+import 'package:web_dashboard/views/components/app_bar.dart';
 import 'package:web_dashboard/views/components/dashboard_frame_card.dart';
-import 'package:web_dashboard/views/components/quate.dart';
-import 'package:web_dashboard/views/theme/theme.dart';
-import 'package:web_dashboard/views/home_page_base.dart';
+import 'package:web_dashboard/views/components/drawer.dart';
+import 'package:web_dashboard/views/components/quote.dart';
+import 'package:web_dashboard/theme/theme.dart';
+
 import 'package:provider/provider.dart';
 
 class DashBoardTestView extends StatefulWidget {
@@ -22,26 +24,10 @@ class DashBoardTestView extends StatefulWidget {
   State<DashBoardTestView> createState() => _DashBoardTestViewState();
 }
 
+
 class HeadLineDropdownView extends StatelessWidget {
   const HeadLineDropdownView({super.key, required this.data});
   final AmmeterModel data;
-
-  Widget getHeadlineSection(String text, BuildContext context) {
-    return Text(
-      text,
-      style: Theme.of(context)
-          .textTheme
-          .headlineSmall!
-          .copyWith(fontWeight: FontWeight.bold),
-    );
-  }
-
-  TextStyle getRawChipStyle(BuildContext context) {
-    return Theme.of(context)
-        .textTheme
-        .labelMedium!
-        .copyWith(fontWeight: FontWeight.bold);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +43,7 @@ class HeadLineDropdownView extends StatelessWidget {
                 avatar: const Icon(Icons.location_city_outlined),
                 visualDensity: VisualDensity.compact,
                 label: Text(data.location),
-                labelStyle: getRawChipStyle(context),
+                labelStyle: DashboardText.labelMedium(context),
               ),
             DashboardSizedBox.medium(),
           ],
@@ -68,6 +54,7 @@ class HeadLineDropdownView extends StatelessWidget {
 }
 
 class _DashBoardTestViewState extends State<DashBoardTestView> {
+ 
   Widget getFactoryInfoFrame() {
     return Consumer<ElectricityDataDashboardViewModel>(
         builder: (context, vm, _) {
@@ -78,8 +65,7 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             DropdownButton<int>(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
+              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
               borderRadius: BorderRadius.circular(5.0),
               focusColor: Theme.of(context).colorScheme.surface,
               elevation: 0,
@@ -122,7 +108,12 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
                     },
                     value: vm.currentSelectedL2Index,
                   )
-                : Spacer(),
+                : Container(),
+                const Spacer(),
+                Text("更新時間 ${DashBoardFormat.timeWithSecond(time)}", style: DashboardText.labelLarge(context).copyWith(
+                  color: DashboardColor.onSurface(context)
+                ))
+
             //getInfoCardListFrame(),
           ],
         ),
@@ -165,7 +156,7 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FrameQuote(quoteText: '${vm.queryName} 總電量使用分佈', notes: "更新時間\n${DashBoardFormat.timeWithSecond(time)}",),
+          FrameQuote(quoteText: '${vm.queryName} 總電量使用分佈'),
           ElectricityDistributionPieChartPieChart(
             chartData: vm.weaklyAccumulatedElectricityFlow,
           ),
@@ -289,12 +280,12 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
   @override
   void initState() {
     super.initState();
-    _startTimer();
+    // _startTimer();
   }
 
   @override
   void dispose() {
-    _cancelTimer();
+    // _cancelTimer();
     super.dispose();
   }
 
@@ -315,7 +306,9 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
 
   @override
   Widget build(BuildContext context) {
-    return HomePageBaseView(
+    return Scaffold(
+      appBar: const DashboardAppBar(title: "用電紀錄儀表板",),
+      drawer: const DashboardDrawer(),
       body: ChangeNotifierProvider<ElectricityDataDashboardViewModel>.value(
       value: vm ?? ElectricityDataDashboardViewModel(ammeterModel: FakeData.generateFakeData()),
       child: Consumer<ElectricityDataDashboardViewModel>(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:web_dashboard/views/theme/theme.dart';
+import 'package:web_dashboard/theme/theme.dart';
 
 class FrameQuote extends StatelessWidget{
   const FrameQuote({

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/models/ammeter_model.dart';
-import 'package:web_dashboard/views/theme/theme.dart';
+import 'package:web_dashboard/theme/theme.dart';
 
 class InfoCardGridView extends StatelessWidget {
   const InfoCardGridView({
@@ -71,11 +71,9 @@ class InfoCardGridView extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(ammeter.name, style: textHeadLineStyle.copyWith(
-                  fontWeight: FontWeight.bold,
-                )),
+                    Text(ammeter.name, style: textHeadLineStyle),
                 Text(ammeter.ammeterId, style: textHeadLineStyle.copyWith(
-                  color: Theme.of(context).colorScheme.secondary,
+                  color: DashboardColor.secondary(context),
                   //fontWeight: FontWeight.bold,
                 )),
                   ],

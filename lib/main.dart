@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:web_dashboard/view_model/home_page_view_model.dart';
-import 'package:web_dashboard/theme_manager.dart';
+import 'package:web_dashboard/view_model/theme_manager.dart';
 import 'package:web_dashboard/views/dashboards/dashboard_test_view.dart';
-import 'package:web_dashboard/views/dashboards/dashboard_one_view.dart';
-import 'package:web_dashboard/views/dashboards/dashboard_two_view.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:web_dashboard/views/auth/login_view.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -23,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => HomePageBaseViewModel()),
+        // ChangeNotifierProvider(create: (context) => HomePageBaseViewModel()),
         ChangeNotifierProvider(create: (context) => DashboardThemeManager())
       ],
       child: Consumer<DashboardThemeManager>(
@@ -31,36 +29,11 @@ class MyApp extends StatelessWidget {
           title: 'web dashboard project',
           theme: themeManager.theme,
           routes: {
-            "/dashboard/1": (context) => const DashBoardOneView(),
-            "/dashboard/2": (context) => const DashBoardTwoView(),
             "/dashboard/test": (context) => const DashBoardTestView(),
+            "/login":(context) => const LoginPageView(),
           },
-          initialRoute: "/dashboard/test",
-          onGenerateRoute: (settings) {
-            return PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) {
-                // 页面构建器
-                switch (settings.name) {
-                  case '/dashboard/1':
-                    return const DashBoardOneView();
-                  case '/dashboard/2':
-                    return const DashBoardTwoView();
-                  case '/dashboard/test':
-                    return const DashBoardTestView();
-                  default:
-                    return const DashBoardOneView();
-                }
-              },
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                return FadeTransition(
-                  opacity: animation,
-                  child: child,
-                );
-              },
-            );
-          },
-          // home: const HomePageBaseView(),
+          initialRoute: "/login",
+
         ),
       ),
     );
