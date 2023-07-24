@@ -1,7 +1,4 @@
 import 'dart:math';
-
-import 'package:flutter/material.dart';
-
 class ElectricityTimeData{
   final DateTime time;
   final double power;
@@ -48,7 +45,7 @@ class ElectricityTimeData{
   }
 
   static List<ElectricityTimeData> generateThisWeakData() {
-    List<ElectricityTimeData> data = [];
+    // List<ElectricityTimeData> data = [];
     DateTime now = DateTime.now();
     // int monitoringCycleTime = 8;
     //DateTime lastWeekTime = DateTime(year)

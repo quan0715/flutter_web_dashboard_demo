@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/models/ammeter_model.dart';
 import 'package:web_dashboard/models/electricity_amount_proportion.dart';
@@ -12,7 +10,7 @@ class ElectricityDataDashboardViewModel extends ChangeNotifier{
   AmmeterModel ammeterModel;
   AmmeterModel? currentSelectedAmmeterModel;
   List<AmmeterModel> _l1WorkspaceHeaderList = [];
-  List<AmmeterModel> _l2WorkspaceHeaderList = [];
+  // List<AmmeterModel> _l2WorkspaceHeaderList = [];
 
   int _currentSelectedL1Index = 0;
   int _currentSelectedL2Index = 0;

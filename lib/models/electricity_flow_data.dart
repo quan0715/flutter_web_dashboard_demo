@@ -19,7 +19,7 @@ class ElectricityFlowData {
   });
 
   factory ElectricityFlowData.fakeData() {
-    int _date = DateTime.now().day;
+    int date = DateTime.now().day;
     List<ElectricityTimeData> weaklyAccumulatedElectricityFlow =
         ElectricityTimeData.generateThisWeakData();
     List<ElectricityTimeData> lastWeaklyAccumulatedElectricityFlow =
@@ -30,7 +30,7 @@ class ElectricityFlowData {
                     .reduce((value, element) => value + element)
                     .toInt() /
                 7 *
-                _date *
+                date *
                 (1 + Random().nextDouble() * Random().nextDouble()))
             .toInt();
     var w1 = ElectricityTimeData.generateFakeWeaklyData();
@@ -39,7 +39,7 @@ class ElectricityFlowData {
                 .reduce((value, element) => value + element)
                 .toInt() *
             4 *
-            _date *
+            date *
             (1 + Random().nextDouble() * Random().nextDouble()))
         .toInt();
 
