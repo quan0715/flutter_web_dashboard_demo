@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/models/ammeter_model.dart';
-import 'package:web_dashboard/models/fake_data.dart';
-import 'package:web_dashboard/view_model/dashboard/dashboard_view_model.dart';
+import 'package:web_dashboard/models/test/fake_data.dart';
+import 'package:web_dashboard/view_model/dashboard/electricity_consumption_dashboard_view_model.dart';
 import 'package:web_dashboard/views/components/chart/electricity_distribute_pie_chart.dart';
 import 'package:web_dashboard/views/components/chart/electricity_time_line_chart.dart';
-import 'package:web_dashboard/views/components/chart/error_report_grid.dart';
+import 'package:web_dashboard/views/components/data/error_report_table/data_grid.dart';
 import 'package:web_dashboard/views/components/chart/info_card.dart';
 import 'package:web_dashboard/views/components/chart/info_card_grid_view.dart';
 import 'package:web_dashboard/views/components/app_bar.dart';
@@ -17,11 +17,11 @@ import 'package:web_dashboard/theme/theme.dart';
 
 import 'package:provider/provider.dart';
 
-class DashBoardTestView extends StatefulWidget {
-  const DashBoardTestView({super.key});
+class ElectricityConsumptionDashboard extends StatefulWidget {
+  const ElectricityConsumptionDashboard({super.key});
 
   @override
-  State<DashBoardTestView> createState() => _DashBoardTestViewState();
+  State<ElectricityConsumptionDashboard> createState() => _ElectricityConsumptionDashboardState();
 }
 
 
@@ -53,12 +53,11 @@ class HeadLineDropdownView extends StatelessWidget {
   }
 }
 
-class _DashBoardTestViewState extends State<DashBoardTestView> {
+class _ElectricityConsumptionDashboardState extends State<ElectricityConsumptionDashboard> {
  
   Widget getFactoryInfoFrame() {
     return Consumer<ElectricityDataDashboardViewModel>(
         builder: (context, vm, _) {
-      // ElectricityFlowData data = vm.currentSelectedFactoryData;
       return DashboardPadding.object(
         padding: const EdgeInsets.all(10),
         child: Row(
@@ -208,6 +207,7 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
     return Consumer<ElectricityDataDashboardViewModel>(
       builder: (context, electricityDataDashboardViewModel, child) =>SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FrameQuote(quoteText: "${electricityDataDashboardViewModel.queryName} 用電趨勢圖(最近7天)"),
               ElectricityTimeLineChart(
@@ -229,6 +229,7 @@ class _DashBoardTestViewState extends State<DashBoardTestView> {
         builder: (context, electricityDataDashboardViewModel, child) =>
             DashboardPadding.object( child: SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   FrameQuote(quoteText: "${electricityDataDashboardViewModel.queryName} 用電量錯誤回報"),
                   DashboardSizedBox.small(),

@@ -3,7 +3,7 @@ import 'package:web_dashboard/models/ammeter_model.dart';
 import 'package:web_dashboard/models/electricity_amount_proportion.dart';
 import 'package:web_dashboard/models/electricity_flow_data.dart';
 import 'package:web_dashboard/models/error_report_model.dart';
-import 'package:web_dashboard/models/fake_data.dart';
+import 'package:web_dashboard/models/test/fake_data.dart';
 
 class ElectricityDataDashboardViewModel extends ChangeNotifier{
 

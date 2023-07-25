@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:web_dashboard/view_model/dashboard/dashboard_view_model.dart';
-import 'package:web_dashboard/views/components/chart/ammeter_error_report_col.dart';
+import 'package:web_dashboard/view_model/dashboard/electricity_consumption_dashboard_view_model.dart';
+import 'package:web_dashboard/views/components/data/error_report_table/data_source.dart';
 import 'package:web_dashboard/theme/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
