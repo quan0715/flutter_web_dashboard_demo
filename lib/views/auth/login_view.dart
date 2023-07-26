@@ -122,11 +122,11 @@ class LoginPageView extends StatelessWidget {
                                 Container(
                                   width: 300,
                                   height: 90,
-                                  decoration: const BoxDecoration(
+                                  decoration: BoxDecoration(
                                     // color: const DashboardColor.error(context),
                                     image: DecorationImage(
                                       fit: BoxFit.cover,
-                                      image: AssetImage("ibm/IBM_logo_dark.png"),
+                                      image: AssetImage(themeManager.logoPath),
                                     )
                                   ),
                                 ),
