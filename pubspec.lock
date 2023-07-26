@@ -33,6 +33,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  buffer:
+    dependency: transitive
+    description:
+      name: buffer
+      sha256: "8962c12174f53e2e848a6acd7ac7fd63d8a1a6a316c20c458a832d87eba5422a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   change_app_package_name:
     dependency: "direct main"
     description:
@@ -81,6 +89,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  dio:
+    dependency: "direct main"
+    description:
+      name: dio
+      sha256: "7d328c4d898a61efc3cd93655a0955858e29a0aa647f0f9e02d59b3bb275e2e8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.6"
+  elastic_app_search:
+    dependency: "direct main"
+    description:
+      name: elastic_app_search
+      sha256: "2837863e9dbbcf27267d27802af3f4a93a5359b550eb0748ef122f2149c7b401"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.0"
+  elastic_client:
+    dependency: "direct main"
+    description:
+      name: elastic_client
+      sha256: e32b6222d49be4c806b2c8ff14b220c567ccb45d113fe39ad42ddb9d520dfd5a
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.12"
   eo_color:
     dependency: transitive
     description:
@@ -89,6 +121,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.1"
+  executor:
+    dependency: transitive
+    description:
+      name: executor
+      sha256: "87d935b31b2bdf7fe2af0b77dd8ffe8864eaade25715e9c68bc49497e48c9851"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.3"
   fake_async:
     dependency: transitive
     description:
@@ -200,6 +240,38 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  freezed_annotation:
+    dependency: transitive
+    description:
+      name: freezed_annotation
+      sha256: c3fd9336eb55a38cc1bbd79ab17573113a8deccd0ecbbf926cca3c62803b5c2d
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.1"
+  html_unescape:
+    dependency: transitive
+    description:
+      name: html_unescape
+      sha256: "15362d7a18f19d7b742ef8dcb811f5fd2a2df98db9f80ea393c075189e0b61e3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
+  http:
+    dependency: transitive
+    description:
+      name: http
+      sha256: "5895291c13fa8a3bd82e76d5627f69e0d85ca6a30dcac95c4ea19a5d555879c2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.13.6"
+  http_client:
+    dependency: transitive
+    description:
+      name: http_client
+      sha256: "9e6e1cf0064d78da50754d7b7f8d342a55eea9790d029594073087b2e5d38012"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.2"
   http_parser:
     dependency: transitive
     description:
@@ -224,6 +296,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.7"
+  json_annotation:
+    dependency: transitive
+    description:
+      name: json_annotation
+      sha256: b10a7b2ff83d83c777edba3c6a0f97045ddadd56c944e1a23a3fdf43a1bf4467
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.8.1"
   lints:
     dependency: transitive
     description:

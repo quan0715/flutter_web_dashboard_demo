@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:web_dashboard/models/repo/monitoring_device.dart';
 import 'package:web_dashboard/theme/theme.dart';
 import 'package:web_dashboard/view_model/dashboard/monitoring_device_manage_view_model.dart';
 import 'package:web_dashboard/views/components/app_bar.dart';
@@ -35,11 +36,11 @@ class _MonitoringDeviceManageViewState extends State<MonitoringDeviceManageView>
             children: [
               FrameQuote(quoteText: "檢測點設備管理", style: DashboardText.headLineMedium(context)),
               const Spacer(),
-              // ElevatedButton.icon(
-              //   style: buttonStyle,
-              //   onPressed: (){}, 
-              //   icon: const Icon(Icons.upload), 
-              //   label: const Text("匯出")),
+              ElevatedButton.icon(
+                style: buttonStyle,
+                onPressed: MonitoringDeviceModel.getFromRepo, 
+                icon: const Icon(Icons.upload), 
+                label: const Text("讀取")),
               DashboardSizedBox.large(),
               ElevatedButton.icon(
                 style: buttonStyle,
@@ -77,7 +78,7 @@ class _MonitoringDeviceManageViewState extends State<MonitoringDeviceManageView>
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<MonitoringDeviceManageViewModel>(
-      create: (context) => MonitoringDeviceManageViewModel(),
+      create: (context) => MonitoringDeviceManageViewModel()..init(),
       child: Consumer<MonitoringDeviceManageViewModel>(
         builder: (context, viewModel, child) => Scaffold(
           appBar: const DashboardAppBar(title: "監測點管理",),

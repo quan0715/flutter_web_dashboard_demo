@@ -8,22 +8,8 @@ import 'package:web_dashboard/views/components/data/device_manage_table/data_sou
 class DeviceManagingTableDataGrid extends StatelessWidget{
   final List<MonitoringDeviceModel> dataSource;
   DeviceManagingTableDataGrid({super.key, required this.dataSource});
-  final columnsLabel = [ {
-      "name" : "工廠",
-      "label" : "工廠",
-    },{
-      "name" : "區域",
-      "label" : "區域",
-    },{
-      "name" : "群組編號",
-      "label" : "群組編號",
-    },{
-      "name" : "設備編號",
-      "label" : "設備編號",
-    },{
-      "name" : "詳述",
-      "label" : "詳述",
-    }
+  final columnsLabel = [
+    "工廠", "區域", "群組編號", "設備編號", "詳述", "修改者", "修改時間"
   ];
   @override
   Widget build(BuildContext context) {
@@ -31,27 +17,28 @@ class DeviceManagingTableDataGrid extends StatelessWidget{
       data: SfDataGridThemeData(
         headerColor: DashboardColor.tertiaryContainer(context),
         rowHoverColor: DashboardColor.primaryContainer(context),
-        rowHoverTextStyle: DashboardText.titleMedium(context).copyWith(color: DashboardColor.onPrimaryContainer(context)),
+        // rowHoverTextStyle: DashboardText.titleMedium(context).copyWith(color: DashboardColor.onPrimaryContainer(context)),
         gridLineStrokeWidth: 1,
         gridLineColor: DashboardColor.primary(context).withOpacity(0.2)
       ),
       child: SfDataGrid(
         // isScrollbarAlwaysShown: true,
-        allowFiltering: true,
+        // allowFiltering: true,
         // allowColumnsDragging: true,
         // allowColumnsResizing: true,
+        // footer: Divider(thickness: 1,),
         allowPullToRefresh: true,
         allowMultiColumnSorting: true,
         gridLinesVisibility: GridLinesVisibility.vertical,
         headerGridLinesVisibility: GridLinesVisibility.vertical,
         columnWidthMode: ColumnWidthMode.fill,
         source: DeviceManagingTableDataSource(dataSource: dataSource),
-        columns: columnsLabel.map((c) => GridColumn(
-          columnName: c["name"] as String,
+        columns: columnsLabel.map((label) => GridColumn(
+          columnName: label,
           label: Container(
             // color: DashboardColor.secondaryContainer(context),
             child: Center(
-              child: Text(c["label"] as String, style: DashboardText.titleMedium(context).copyWith(
+              child: Text(label, style: DashboardText.titleMedium(context).copyWith(
                 color: DashboardColor.onTertiaryContainer(context),
               )),
             ),

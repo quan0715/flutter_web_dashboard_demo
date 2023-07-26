@@ -8,14 +8,29 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:web_dashboard/models/repo/monitoring_device.dart';
 
 class MonitoringDeviceManageViewModel extends ChangeNotifier{
+  bool _isLoading = false;
   List<MonitoringDeviceModel> _monitoringDeviceList = [];
+  bool get isLoading => _isLoading;
   List<MonitoringDeviceModel> get monitoringDeviceList => _monitoringDeviceList;
 
   set updateMonitoringDeviceData(List<MonitoringDeviceModel> value) {
     _monitoringDeviceList = value;
     notifyListeners();
-
   }
+
+  set isLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
+  Future<void> init() async{
+    isLoading = true;
+    notifyListeners();
+    updateMonitoringDeviceData = await MonitoringDeviceModel.getFromRepo();
+    isLoading = false;
+    notifyListeners();
+  }
+
   Future<void> upload() async {
     try {
       FilePickerResult? result = await FilePickerWeb.platform.pickFiles(

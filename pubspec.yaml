@@ -49,6 +49,9 @@ dependencies:
   csv: ^5.0.2
   syncfusion_flutter_core: ^22.1.39
   file_picker: ^5.3.3
+  elastic_client: ^0.3.12
+  elastic_app_search: ^0.4.0
+  dio: ^4.0.6
 
 dev_dependencies:
   flutter_test:
