@@ -106,10 +106,8 @@ class DashboardDrawer extends StatelessWidget{
                           leading: const Icon(Icons.error),
                           // isThreeLine: true,
                           title: const Text('錯誤回報紀錄'),
-                          onTap: () {
-                            // Update the state of the app.
-                            // ...
-                          },
+                          onTap: () => Navigator.pushNamed(context, "/dashboard/device_error_report")
+                          
                         ),
                         ListTile(
                           leading: const Icon(Icons.factory),

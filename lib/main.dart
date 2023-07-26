@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/view_model/auth_manager.dart';
 import 'package:web_dashboard/view_model/theme_manager.dart';
+import 'package:web_dashboard/views/dashboards/device_error_report_view.dart';
 import 'package:web_dashboard/views/dashboards/electricity_consumption_dashboard_view.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
             routes: {
               "/dashboard/main": (context) => const ElectricityConsumptionDashboard(),
               "/dashboard/monitoring_device_manage": (context) => const MonitoringDeviceManageView(),
+              "/dashboard/device_error_report": (context) => const DeviceErrorReportView(),
               "/login":(context) => LoginPageView(),
               '/' :(context) => LoginPageView(),
             },

@@ -4,7 +4,7 @@
 // 每分鐘更新資料
 import 'package:flutter/material.dart';
 
-class ErrorReportModel{
+class DeviceErrorReportModel{
   final ElectricityConsumptionErrorType? errorType;
   final String? errorDescription;
   final DateTime? startTime;
@@ -15,7 +15,7 @@ class ErrorReportModel{
   final int? volt;
   final int? power;
   // constructor
-  ErrorReportModel({
+  DeviceErrorReportModel({
     this.errorType,
     this.errorDescription,
     this.startTime,
@@ -27,8 +27,8 @@ class ErrorReportModel{
     this.power
   });
   // from json
-  factory ErrorReportModel.fromJson(Map<String, dynamic> json){
-    return ErrorReportModel(
+  factory DeviceErrorReportModel.fromJson(Map<String, dynamic> json){
+    return DeviceErrorReportModel(
       errorType: json['errorType'],
       errorDescription: json['errorDescription'],
       startTime: json['startTime'],
