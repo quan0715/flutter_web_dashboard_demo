@@ -17,12 +17,14 @@ class DeviceErrorReportTableDataGrid extends StatelessWidget{
     "設備編號",
     "當下電流",
     "當下電壓",
-    "當下功率",
-    "異常描述", 
+    "當下功率", 
+    "UB",
+    "LB"
   ];
   
   @override
   Widget build(BuildContext context) {
+    // final columnsLabel = DeviceErrorReportTableDataSource(dataSource: dataSource).rows.first.getCells().map<String>((cell) => cell.columnName).toList();
     return SfDataGridTheme(
       data: SfDataGridThemeData(
         headerColor: DashboardColor.tertiaryContainer(context)

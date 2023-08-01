@@ -1,13 +1,13 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_dashboard/models/repo/base_repo.dart';
+import 'package:web_dashboard/models/repo/db_config.dart';
 
 class ElasticSearchClient<model extends RepoModel>{
-  static String baseURI = "http://es.lab.nick983.app";
-  static String apiKey = "ApiKey YWdxZGpZa0JJUV90ZlhMR3AwMlc6Z1RGdW1DR1dTLTZGMWN1dDZkWEJsdw==";
-  static int searchMaxSize = 1000;
+  static String baseURI = DBConfig.baseURI;
+  static String apiKey = DBConfig.apiKey;
+  static int searchMaxSize = DBConfig.searchMaxSize;
   static Map<String, String> headers = {
     'Content-Type': 'application/json; charset=UTF-8',
     'Authorization': apiKey
@@ -22,6 +22,7 @@ class ElasticSearchClient<model extends RepoModel>{
   final Map<String, dynamic> Function() toJson;
   int missionCount = 0;
   int missionCompleteCount = 0;
+  
   
   Future<List<model>> search() async{
     List<model> result = [];
@@ -40,8 +41,13 @@ class ElasticSearchClient<model extends RepoModel>{
           return [];
         }
         for(var item in data['hits']['hits']){
-          result.add(fromJson(item));
-          debugPrint(result.toString());
+          debugPrint(item.toString());
+          try{
+            result.add(fromJson(item));
+          } catch (e){
+            debugPrint(e.toString());
+          }
+          // debugPrint(result.toString());
         }
         return result;
       }else{
@@ -104,17 +110,17 @@ class ElasticSearchClient<model extends RepoModel>{
         await post(item);
       }
   }
-  Stream<Map<String, int>> test(List<model> data) async*  {
+  
+  Stream<Map<String, dynamic>> test(List<model> data) async*  {
       List<model> oldData = await search();
+      missionCount = oldData.length + data.length;
       for (model item in oldData) {
         await delete(item.repoId!);
-        yield {"missionCount": missionCount, "missionCompleteCount": missionCompleteCount++};
+        yield {"missionCount": missionCount, "missionCompleteCount": ++missionCompleteCount, "missionDescription" : "刪除 ${item.repoId}"};
       }
-      missionCount = 0;
-      missionCompleteCount = 0;
       for (model item in data) {
         await post(item);
-        yield {"missionCount": missionCount, "missionCompleteCount": missionCompleteCount++};
+        yield {"missionCount": missionCount, "missionCompleteCount": ++missionCompleteCount, "missionDescription" : "上傳中"};
       }
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:web_dashboard/models/repo/monitoring_device.dart';
 import 'package:web_dashboard/theme/theme.dart';
 import 'package:web_dashboard/view_model/dashboard/monitoring_device_manage_view_model.dart';
 import 'package:web_dashboard/views/components/app_bar.dart';
@@ -43,43 +42,80 @@ class _MonitoringDeviceManageViewState extends State<MonitoringDeviceManageView>
     return Consumer<MonitoringDeviceManageViewModel>(
       builder: (context, viewModel, child) => 
         DashboardPadding.object(
-          child: Row(
+          child: Column(
             children: [
-              FrameQuote(quoteText: "檢測點設備管理", style: DashboardText.headLineMedium(context)),
-              const Spacer(),
-              // ElevatedButton.icon(
-              //   style: saveButtonStyle,
-              //   onPressed: MonitoringDeviceModel.getFromRepo, 
-              //   icon: const Icon(Icons.save), 
-              //   label: const Text("儲存")),
+              Row(
+                children: [
+                  FrameQuote(quoteText: "檢測點設備管理", style: DashboardText.headLineMedium(context)),
+                  const Spacer(),
+                  // ElevatedButton.icon(
+                  //   style: saveButtonStyle,
+                  //   onPressed: MonitoringDeviceModel.getFromRepo, 
+                  //   icon: const Icon(Icons.save), 
+                  //   label: const Text("儲存")),
 							DashboardSizedBox.large(),
 							ElevatedButton.icon(
 								style: buttonStyle,
 								onPressed: ()async{
-                  var checker = await showDialog(context: context, builder: (context) => AlertDialog(
-                    title: const Text("確定要上傳新的監測資料嗎？"),
-                    content: const Text("匯入監測資料將會覆蓋原有的監測資料"),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, false), 
-                        child: const Text("取消")),
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, true), 
-                        child: const Text("確定")),
-                    ],
-                  ));
-                  if(checker){
-                    viewModel.uploadDataToRepo();
-                  }
-                }, 
+                      var checker = await showDialog(context: context, builder: (context) => AlertDialog(
+                        title: const Text("確定要上傳新的監測資料嗎？"),
+                        content: const Text("匯入監測資料將會覆蓋原有的監測資料"),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, false), 
+                            child: const Text("取消")),
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, true), 
+                            child: const Text("確定")),
+                        ],
+                      ));
+                      if(checker){
+                        await viewModel.uploadDataToRepo();
+                        if(mounted){
+                           ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("上傳成功"),
+                              duration: Duration(seconds: 2),
+                              behavior: SnackBarBehavior.floating,
+                            ));
+                        }
+                      }
+                    }, 
 								icon: const Icon(Icons.upload_file), 
 								label: const Text("save file")),
-              DashboardSizedBox.large(),
-              ElevatedButton.icon(
-                style: buttonStyle,
-                onPressed: viewModel.uploadCsvFile,
-                icon: const Icon(Icons.download), 
-                label: const Text("匯入監測資料")),
+                  DashboardSizedBox.large(),
+                  ElevatedButton.icon(
+                    style: buttonStyle,
+                    onPressed: ()async{
+                      await viewModel.uploadCsvFile();
+                      if(mounted){
+                           ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("匯入成功"),
+                              duration: Duration(seconds: 2),
+                              behavior: SnackBarBehavior.floating,
+                            ));
+                        }
+                    },
+                    icon: const Icon(Icons.download), 
+                    label: const Text("匯入監測資料")),
+                ],
+              ),
+              Visibility(
+                visible: viewModel.isLoading,
+                child: DashboardPadding.small(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(viewModel.missionDescription),
+                      LinearProgressIndicator(
+                        value: viewModel.missionProgressValue.toDouble(),
+                        semanticsLabel: "Loading",
+                      ),
+                    ],
+                  ),
+                )
+              ),
             ],
           )
         ),

@@ -20,7 +20,7 @@ class _DeviceErrorReportViewState extends State<DeviceErrorReportView> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<DeviceErrorReportViewModel>(
-      create: (context) => DeviceErrorReportViewModel(),
+      create: (context) => DeviceErrorReportViewModel()..init(),
       child: Consumer<DeviceErrorReportViewModel>(
         builder: (context, viewModel, child) => Scaffold(
           appBar: const DashboardAppBar(title: "設備異常報告"),

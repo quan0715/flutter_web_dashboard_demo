@@ -1,9 +1,11 @@
-import 'dart:convert'; import 'package:flutter/material.dart';  
-import 'package:http/http.dart' as http;
 import 'package:web_dashboard/models/repo/base_repo.dart';
+import 'package:web_dashboard/models/repo/db_config.dart';
 class MonitoringDeviceModel implements RepoModel{
   @override
-  String index = "metermsd";
+  String index = DBConfig.meterRepoIndex;
+
+  @override
+  String? repoId;
   
   final String? loc;
   final String? building;
@@ -12,7 +14,6 @@ class MonitoringDeviceModel implements RepoModel{
   final String? description;
   final String? changeBy;
   final DateTime? changeDate;
-  final String? repoId;
 
   MonitoringDeviceModel({
 	  this.loc,
@@ -63,9 +64,4 @@ class MonitoringDeviceModel implements RepoModel{
 		};
 	}
   
-   @override
-   set repoId(String? _repoId) {
-    repoId = _repoId;
-   }
-
 }

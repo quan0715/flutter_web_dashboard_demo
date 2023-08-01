@@ -19,7 +19,9 @@ class DeviceErrorReportTableDataSource extends DataGridSource{
       DataGridCell(columnName: "當下電流", value: data.ampere),
       DataGridCell(columnName: "當下電壓", value: data.volt),
       DataGridCell(columnName: "當下功率", value: data.power),
-      DataGridCell(columnName: "異常描述", value: data.errorDescription),
+      DataGridCell(columnName: "UB", value: data.ub),
+      DataGridCell(columnName: "LB", value: data.lb),
+      // DataGridCell(columnName: "異常描述", value: data.errorDescription),
     ])).toList();
 
   Widget errorTypeLabel(ElectricityConsumptionErrorType errorType){

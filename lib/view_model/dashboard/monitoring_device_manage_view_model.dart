@@ -4,16 +4,24 @@ import 'package:csv/csv.dart';
 import 'package:file_picker/_internal/file_picker_web.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:web_dashboard/models/repo/elastic_search.dart';
 import 'package:web_dashboard/models/repo/monitoring_device.dart';
 
 class MonitoringDeviceManageViewModel extends ChangeNotifier {
   bool _isLoading = false;
   List<MonitoringDeviceModel> _monitoringDeviceList = [];
+  String _missionDescription = "";
+  int _missionCount = 0;
+  int _missionCompleteCount = 0; 
   bool get isLoading => _isLoading;
   List<MonitoringDeviceModel> get monitoringDeviceList => _monitoringDeviceList;
-  ElasticSearchClient<MonitoringDeviceModel> client = ElasticSearchClient<MonitoringDeviceModel>(
+  int get missionCount => _missionCount;
+  int get missionCompleteCount => _missionCompleteCount;
+  String get missionDescription => _missionDescription;
+  double get missionProgressValue => client.missionCount == 0 ? 0 : client.missionCompleteCount / client.missionCount;
+  
+
+  ElasticSearchClient<MonitoringDeviceModel> client = ElasticSearchClient(
     index: MonitoringDeviceModel.getInstance().index,
     fromJson: MonitoringDeviceModel.getInstance().fromJson,
     toJson: MonitoringDeviceModel.getInstance().toJson,
@@ -64,7 +72,7 @@ class MonitoringDeviceManageViewModel extends ChangeNotifier {
         List<Map<String, dynamic>> r = listData.map((e)
           => {'_source' : Map.fromIterables(key, e)}).toList();
         updateMonitoringDeviceData = r.map<MonitoringDeviceModel>((json) => client.fromJson(json)).toList();
-        _monitoringDeviceList.forEach((element) {debugPrint(element.toString());});
+        //monitoring_device_manage_view_model.dart.forEach((element) {debugPrint(element.toString());});
       }
     } catch (error) {
       debugPrint('Error: $error');
@@ -73,16 +81,24 @@ class MonitoringDeviceManageViewModel extends ChangeNotifier {
 
   // update current monitoring device data to the server
   Future<void> uploadDataToRepo() async{
-    // TODO : just for test
     // debugPrint(_monitoringDeviceList.toString());
     // MonitoringDeviceModel target =  monitoringDeviceList.first;
     // await MonitoringDeviceModel.postToRepo(target);
     isLoading = true;
+    _missionCount = 0;
+    _missionCompleteCount = 0;
+    _missionDescription = "";
     notifyListeners();
-    client.test(monitoringDeviceList).listen((event) {
-      debugPrint(event.toString());
-    });
     // await client.updateWholeDocumentToRepo(monitoringDeviceList);
+    await for (Map<String, dynamic> event in client.test(_monitoringDeviceList)){
+      _missionCount = event['missionCount'] as int;
+      _missionCompleteCount = event['missionCompleteCount'] as int;
+      _missionDescription = "${event['missionDescription'] as String} ($_missionCompleteCount/$_missionCount)";
+      notifyListeners();
+    }
+    // debugPrint("test");
+    _missionDescription = "重整中";
+    updateMonitoringDeviceData = await client.search();
     isLoading = false; 
     notifyListeners();
   }
