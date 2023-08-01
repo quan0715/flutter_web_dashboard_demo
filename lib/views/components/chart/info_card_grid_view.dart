@@ -19,18 +19,18 @@ class InfoCardGridView extends StatelessWidget {
   factory InfoCardGridView.factory(BuildContext context, AmmeterModel ammeter, bool isSelected) {
     return InfoCardGridView(
       ammeter: ammeter,
-      textTitleStyle: DashboardText.labelLarge(context),
+      textTitleStyle: DashboardText.labelMedium(context),
       textValueStyle: DashboardText.titleLarge(context),
-      textHeadLineStyle : DashboardText.titleLarge(context),
+      textHeadLineStyle : DashboardText.titleMedium(context),
       isSelected: isSelected,
     );
   }
   factory InfoCardGridView.workspace(BuildContext context, AmmeterModel ammeter) {
     return InfoCardGridView(
       ammeter: ammeter,
-      textTitleStyle: DashboardText.labelMedium(context),
-      textValueStyle: DashboardText.titleMedium(context),
-      textHeadLineStyle : DashboardText.titleMedium(context),
+      textTitleStyle: DashboardText.labelSmall(context),
+      textValueStyle: DashboardText.labelLarge(context),
+      textHeadLineStyle : DashboardText.titleSmall(context),
       isSelected: false,
     );
   }
@@ -51,6 +51,7 @@ class InfoCardGridView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      // clipBehavior: Clip.hardEdge,
       elevation: isSelected ? 12 : 1,
       shape: isSelected ? RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
@@ -60,12 +61,11 @@ class InfoCardGridView extends StatelessWidget {
         )
       ) : null,
       child: DashboardPadding.small(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Column(
@@ -78,6 +78,8 @@ class InfoCardGridView extends StatelessWidget {
                 )),
                   ],
                 ),
+                DashboardSizedBox.large(),
+                DashboardSizedBox.large(),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -89,7 +91,7 @@ class InfoCardGridView extends StatelessWidget {
                   labelStyle: textTitleStyle,
                   side: BorderSide.none,
                 ) : Container(),
-                const SizedBox(height: 8,),
+                DashboardSizedBox.small(),
                 ammeter.label.isNotEmpty
                 ? RawChip(
                   avatar: Text(ammeter.label),
@@ -103,7 +105,7 @@ class InfoCardGridView extends StatelessWidget {
           ]),
             const Spacer(),
             Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 getTitleWithContent(

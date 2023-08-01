@@ -14,9 +14,9 @@ class DeviceManagingTableDataSource extends DataGridSource{
       DataGridCell<String>(columnName: '區域', value: data.building),
       DataGridCell<String>(columnName: '群組編號', value: data.groupId ?? ""),
       DataGridCell<String>(columnName: '設備編號', value: data.tagId),
+      DataGridCell<String>(columnName: '詳述', value: data.description ?? ""),
       DataGridCell<String>(columnName: '修改者', value: data.changeBy ?? ""),
       DataGridCell<String>(columnName: '修改時間', value: DashBoardFormat.time(data.changeDate!)),
-      DataGridCell<String>(columnName: '詳述', value: data.description ?? ""),
     ]))
     .toList();
 

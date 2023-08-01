@@ -29,6 +29,17 @@ class _MonitoringDeviceManageViewState extends State<MonitoringDeviceManageView>
       ),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
     );
+    ButtonStyle saveButtonStyle = ElevatedButton.styleFrom(
+      foregroundColor: DashboardColor.error(context),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+        side: BorderSide(
+          color: DashboardColor.secondary(context),
+          width: 1,
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+    );
     return Consumer<MonitoringDeviceManageViewModel>(
       builder: (context, viewModel, child) => 
         DashboardPadding.object(
@@ -36,17 +47,39 @@ class _MonitoringDeviceManageViewState extends State<MonitoringDeviceManageView>
             children: [
               FrameQuote(quoteText: "檢測點設備管理", style: DashboardText.headLineMedium(context)),
               const Spacer(),
-              ElevatedButton.icon(
-                style: buttonStyle,
-                onPressed: MonitoringDeviceModel.getFromRepo, 
-                icon: const Icon(Icons.upload), 
-                label: const Text("讀取")),
+              // ElevatedButton.icon(
+              //   style: saveButtonStyle,
+              //   onPressed: MonitoringDeviceModel.getFromRepo, 
+              //   icon: const Icon(Icons.save), 
+              //   label: const Text("儲存")),
+							DashboardSizedBox.large(),
+							ElevatedButton.icon(
+								style: buttonStyle,
+								onPressed: ()async{
+                  var checker = await showDialog(context: context, builder: (context) => AlertDialog(
+                    title: const Text("確定要上傳新的監測資料嗎？"),
+                    content: const Text("匯入監測資料將會覆蓋原有的監測資料"),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false), 
+                        child: const Text("取消")),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, true), 
+                        child: const Text("確定")),
+                    ],
+                  ));
+                  if(checker){
+                    viewModel.uploadDataToRepo();
+                  }
+                }, 
+								icon: const Icon(Icons.upload_file), 
+								label: const Text("save file")),
               DashboardSizedBox.large(),
               ElevatedButton.icon(
                 style: buttonStyle,
-                onPressed: viewModel.upload, 
+                onPressed: viewModel.uploadCsvFile,
                 icon: const Icon(Icons.download), 
-                label: const Text("匯入")),
+                label: const Text("匯入監測資料")),
             ],
           )
         ),
@@ -64,7 +97,7 @@ class _MonitoringDeviceManageViewState extends State<MonitoringDeviceManageView>
             dataSource: viewModel.monitoringDeviceList,
           ): Center(
             child: MaterialButton(
-              onPressed: viewModel.upload, 
+              onPressed: viewModel.uploadCsvFile, 
               child: Text("尚無監測點 +", style: DashboardText.titleLarge(context).copyWith(
                 color: DashboardColor.onSurface(context).withOpacity(0.6)
               )),

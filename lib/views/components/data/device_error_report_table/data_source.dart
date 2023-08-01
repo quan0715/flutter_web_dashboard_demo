@@ -22,12 +22,24 @@ class DeviceErrorReportTableDataSource extends DataGridSource{
       DataGridCell(columnName: "異常描述", value: data.errorDescription),
     ])).toList();
 
+  Widget errorTypeLabel(ElectricityConsumptionErrorType errorType){
+    return RawChip(
+      label: Text(errorType.label),
+      avatar: Icon(errorType.icon),
+    );
+  }
+
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
-    return DataGridRowAdapter(cells: row.getCells().map<Widget>((dataCell) => Align(
+    return DataGridRowAdapter(cells: row.getCells().map<Widget>((dataCell){
+      if(dataCell.columnName == "異常類別"){
+        return errorTypeLabel(ElectricityConsumptionErrorType.fromLabel(dataCell.value));
+      }
+      return Align(
         alignment: Alignment.center,
         child: Text(dataCell.value.toString())
-      )).toList()
+      );
+    }).toList()
     );
   }
 }

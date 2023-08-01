@@ -29,8 +29,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => DashboardThemeManager())
       ],
       child: Consumer<AuthManager>(
-        builder: (context, authManager, child) => 
-          Consumer<DashboardThemeManager>(
+        builder: (context, authManager, child) => Consumer<DashboardThemeManager>(
           builder: (context, themeManager, child) => MaterialApp(
             title: 'web dashboard project',
             theme: themeManager.theme,
@@ -38,8 +37,8 @@ class MyApp extends StatelessWidget {
               "/dashboard/main": (context) => const ElectricityConsumptionDashboard(),
               "/dashboard/monitoring_device_manage": (context) => const MonitoringDeviceManageView(),
               "/dashboard/device_error_report": (context) => const DeviceErrorReportView(),
-              "/login":(context) => LoginPageView(),
-              '/' :(context) => LoginPageView(),
+              "/login": (context) => LoginPageView(),
+              '/': (context) => LoginPageView(),
             },
             initialRoute: authManager.isLogin ? "/dashboard/main" : "/login",
           ),

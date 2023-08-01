@@ -134,7 +134,7 @@ class _ElectricityConsumptionDashboardState extends State<ElectricityConsumption
               scrollDirection: Axis.vertical,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1,
-                childAspectRatio: 2.1,
+                childAspectRatio: 1.8,
                 mainAxisSpacing: 6,
                 crossAxisSpacing: 8,
               ),
@@ -335,25 +335,29 @@ class _ElectricityConsumptionDashboardState extends State<ElectricityConsumption
                           flex: 2,
                           child: DashboardFrameCard(
                             elevation: 0,
-                            child: Column(
-                              children: [
-                                getPieChartFrame(),
-                                DashboardDivider.small(),
-                                DashboardSizedBox.small(),
-                                getInfoCardListFrame(),
-                              ],
+                            child: SizedBox.expand(
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    getPieChartFrame(),
+                                    DashboardDivider.small(),
+                                    DashboardSizedBox.small(),
+                                    getInfoCardListFrame(),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                        Expanded( flex: 2,
+                        Expanded(flex: 2,
                           child: DashboardFrameCard(
                             elevation: 0,
-                              child: Column(
-                                children: [
-                                  allAreaDataCardFrame(),
-                                  const Spacer()
-                                ],
-                              )),
+                            child: SizedBox.expand(
+                              child: SingleChildScrollView(
+                                child: allAreaDataCardFrame(),
+                              ),
+                            )
+                          ),
                         ),
                         Expanded( flex: 4,
                           child: Column(

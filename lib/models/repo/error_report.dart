@@ -58,7 +58,7 @@ class DeviceErrorReportModel{
 
 enum ElectricityConsumptionErrorType{
   sharplyIncrease(
-    label: "徒增",
+    label: "突增",
     iconsColor: Colors.red,
     icon: Icons.arrow_upward
   ),
@@ -85,4 +85,7 @@ enum ElectricityConsumptionErrorType{
   final String label;
   final Color iconsColor;
   final IconData icon;
+  static ElectricityConsumptionErrorType fromLabel(String label){
+    return ElectricityConsumptionErrorType.values.firstWhere((element) => element.label == label);
+  }
 }
