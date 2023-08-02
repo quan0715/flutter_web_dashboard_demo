@@ -45,7 +45,7 @@ class ElasticSearchClient<M extends RepoModel>{
           return [];
         }
         for(var item in data['hits']['hits']){
-          debugPrint(item.toString());
+          // debugPrint(item.toString());
           try{
             result.add(fromJson(item));
           } catch (e){

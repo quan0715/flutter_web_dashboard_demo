@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/models/repo/consumption_repo_model.dart';
-import 'package:web_dashboard/db/db_config.dart';
 import 'package:web_dashboard/db/elastic_search.dart';
 import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
 
@@ -15,6 +14,7 @@ class ElectricityConsumptionDashboardViewModel extends ChangeNotifier{
   bool isDashboardView = true;
 
   List<ElectricityConsumptionDataModel> electricityConsumptionDataList = [];
+  List<SumOfElectricityConsumptionDataModel> sumOfElectricityConsumptionDataList = [];
   ElasticSearchClient<ElectricityConsumptionDataModel> client = ElasticSearchClient.fromModel(ElectricityConsumptionDataModel.getInstance());
   ElasticSearchClient<SumOfElectricityConsumptionDataModel> sumClient = ElasticSearchClient.fromModel(SumOfElectricityConsumptionDataModel.getInstance());
 
@@ -48,8 +48,11 @@ class ElectricityConsumptionDashboardViewModel extends ChangeNotifier{
   Future<void> init() async{
     isLoading = true;
     notifyListeners();
-    // electricityConsumptionDataList = await client.search();
-    final result = await sumClient.search();
+    // load data from repo
+    electricityConsumptionDataList = await client.search();
+    sumOfElectricityConsumptionDataList = await sumClient.search();
+    
+    // set dashboard dropdown menu list 
     factoryList = electricityConsumptionDataList.map<String>((data) => data.loc!).toSet().toList();
     buildingList = electricityConsumptionDataList.map<String>((data) => data.building!).toSet().toList();
     buildingList.insert(0, "全");

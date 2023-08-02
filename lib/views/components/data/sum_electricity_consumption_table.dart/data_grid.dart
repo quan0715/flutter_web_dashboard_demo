@@ -1,24 +1,26 @@
 
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-import 'package:web_dashboard/models/repo/consumption_repo_model.dart';
-import 'package:web_dashboard/views/components/data/electricity_consumption_table/data_source.dart';
+import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
+import 'package:web_dashboard/views/components/data/sum_electricity_consumption_table.dart/data_source.dart';
 
-class ElectricityConsumptionDataGrid extends StatelessWidget{
-  final List<ElectricityConsumptionDataModel> dataSource;
+class SumOfElectricityConsumptionDataGrid extends StatelessWidget{
+  final List<SumOfElectricityConsumptionDataModel> dataSource;
   late final DataGridSource? dataGridSource;
   late final List<String> columnsLabel;
-  ElectricityConsumptionDataGrid({super.key, required this.dataSource}){
-    dataGridSource = ElectricityConsumptionDataSource(dataSource: dataSource);
+  SumOfElectricityConsumptionDataGrid({super.key, required this.dataSource}){
+    dataGridSource = SumOfElectricityConsumptionDataSource(dataSource: dataSource);
     columnsLabel =  dataGridSource!.rows[0].getCells().map<String>((dataCell) => dataCell.columnName).toList();
   }
   @override
   Widget build(BuildContext context) {
     return Card(
+      clipBehavior: Clip.hardEdge,
       elevation: 0,
-      clipBehavior: Clip.antiAlias,
       child: SfDataGrid(
         allowPullToRefresh: true,
+        showFilterIconOnHover: true,
         gridLinesVisibility: GridLinesVisibility.vertical,
         headerGridLinesVisibility: GridLinesVisibility.vertical,
         columnWidthMode: ColumnWidthMode.fill,

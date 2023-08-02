@@ -13,6 +13,9 @@ class ElectricityConsumptionDataModel implements RepoModel{
   final DateTime? startTime; // db: datetime
   final String? loc; // db: loc 
   final String? building; // db: building
+  final String? tagId; // db: tagid
+  final String? lineType; // db: linetype
+  final String? assetType; // db: assetType
   final int? power; // db: kw
   final int? energyConsumed; // db: kwh
   final int? sumOfEnergyConsumed; // db: sum_kwh
@@ -28,6 +31,9 @@ class ElectricityConsumptionDataModel implements RepoModel{
     this.power,
     this.energyConsumed,
     this.sumOfEnergyConsumed,
+    this.tagId,
+    this.lineType,
+    this.assetType,
     this.repoId,
   });
 
@@ -45,6 +51,9 @@ class ElectricityConsumptionDataModel implements RepoModel{
       sumOfEnergyConsumed: json['_source']['sum_kwh'],
       ampere: json['_source']['ampere'],
       volt: json['_source']['voltage'],
+      tagId: json['_source']['tagid'] as String,
+      lineType: json['_source']['linetype'] as String,
+      assetType: json['_source']['assetType'] as String,
       repoId: json['_id'] as String,
     );
   }
@@ -60,6 +69,9 @@ class ElectricityConsumptionDataModel implements RepoModel{
       'sum_kwh': sumOfEnergyConsumed,
       'ampere': ampere,
       'voltage': volt,
+      'tagid': tagId,
+      'linetype': lineType,
+      'assetType': assetType,
     };
   }
 

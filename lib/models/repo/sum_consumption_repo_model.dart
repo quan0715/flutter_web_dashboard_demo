@@ -9,25 +9,16 @@ class SumOfElectricityConsumptionDataModel implements RepoModel{
 
   @override
   String? repoId; // db: _id
-
-  // final DateTime? startTime; // db: datetime
-  // final String? loc; // db: loc 
-  // final String? building; // db: building
-  // final int? power; // db: kw
-  // final int? energyConsumed; // db: kwh
-  // final int? sumOfEnergyConsumed; // db: sum_kwh
-  // final int? ampere; // db: ampere
-  // final int? volt; // db: voltage
+  final String? tagId; // db:  _source/tagid
+  final int? dayConsumption; // db:  _source/d_com
+  final int? monthConsumption; // db:  _source/m_com
+  final int? averageMonthConsumptionPerMonth; //  _source/avg_m_h_com;
   // constructor
   SumOfElectricityConsumptionDataModel({
-    // this.startTime,
-    // this.loc,
-    // this.building,
-    // this.ampere,
-    // this.volt,
-    // this.power,
-    // this.energyConsumed,
-    // this.sumOfEnergyConsumed,
+    this.tagId,
+    this.dayConsumption,
+    this.monthConsumption,
+    this.averageMonthConsumptionPerMonth,
     this.repoId,
   });
 
@@ -35,16 +26,11 @@ class SumOfElectricityConsumptionDataModel implements RepoModel{
 
   @override
   SumOfElectricityConsumptionDataModel fromJson(Map<String, dynamic> json) {
-    // debugPrint(json.toString());
-    return SumOfElectricityConsumptionDataModel(
-      // startTime: DateTime.parse(json['_source']['datetime'] as String),
-      // loc: json['_source']['loc'] as String ,
-      // building: json['_source']['building'] as String,
-      // power: json['_source']['kw'],
-      // energyConsumed: json['_source']['kwh'],
-      // sumOfEnergyConsumed: json['_source']['sum_kwh'],
-      // ampere: json['_source']['ampere'],
-      // volt: json['_source']['voltage'],
+    return SumOfElectricityConsumptionDataModel( 
+      tagId: json['_source']['tagid'] as String,
+      dayConsumption: json['_source']['d_com'] as int,
+      monthConsumption: json['_source']['m_com'] as int,
+      averageMonthConsumptionPerMonth: json['_source']['avg_m_h_com'] as int,
       repoId: json['_id'] as String,
     );
   }
@@ -52,14 +38,10 @@ class SumOfElectricityConsumptionDataModel implements RepoModel{
   @override
   Map<String, dynamic> toJson() {
     return {
-      // 'datetime': startTime?.toIso8601String(),
-      // 'loc': loc,
-      // 'building': building,
-      // 'kw': power,
-      // 'kwh': energyConsumed,
-      // 'sum_kwh': sumOfEnergyConsumed,
-      // 'ampere': ampere,
-      // 'voltage': volt,
+      'tagid': tagId,
+      'd_com': dayConsumption,
+      'm_com': monthConsumption,
+      'avg_m_h_com': averageMonthConsumptionPerMonth,
     };
   }
 
