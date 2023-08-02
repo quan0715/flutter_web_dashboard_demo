@@ -1,5 +1,5 @@
 import 'package:web_dashboard/models/repo/base_repo.dart';
-import 'package:web_dashboard/models/repo/db_config.dart';
+import 'package:web_dashboard/db/db_config.dart';
 class MonitoringDeviceModel implements RepoModel{
   @override
   String index = DBConfig.meterRepoIndex;

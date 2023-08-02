@@ -4,8 +4,8 @@ import 'package:csv/csv.dart';
 import 'package:file_picker/_internal/file_picker_web.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:web_dashboard/models/repo/elastic_search.dart';
-import 'package:web_dashboard/models/repo/monitoring_device.dart';
+import 'package:web_dashboard/db/elastic_search.dart';
+import 'package:web_dashboard/models/repo/monitoring_device_repo_model.dart';
 
 class MonitoringDeviceManageViewModel extends ChangeNotifier {
   bool _isLoading = false;
@@ -18,7 +18,7 @@ class MonitoringDeviceManageViewModel extends ChangeNotifier {
   int get missionCount => _missionCount;
   int get missionCompleteCount => _missionCompleteCount;
   String get missionDescription => _missionDescription;
-  double get missionProgressValue => client.missionCount == 0 ? 0 : client.missionCompleteCount / client.missionCount;
+  double get missionProgressValue => missionCount == 0 ? 0 : missionCompleteCount / missionCount;
   
 
   ElasticSearchClient<MonitoringDeviceModel> client = ElasticSearchClient(

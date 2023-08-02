@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:web_dashboard/view_model/auth_manager.dart';
 import 'package:web_dashboard/view_model/theme_manager.dart';
 import 'package:provider/provider.dart';
-import 'package:web_dashboard/views/components/quote.dart';
+import 'package:web_dashboard/views/components/widget/quote.dart';
 import 'package:web_dashboard/theme/color.dart';
 import 'package:web_dashboard/theme/sized_box.dart';
 import 'package:web_dashboard/theme/text.dart';
@@ -68,7 +68,7 @@ class DashboardDrawer extends StatelessWidget{
                               DashboardSizedBox.small(),
                               Text("輝能能源管理平台", style: DashboardText.headLineSmall(context),),
                               DashboardSizedBox.small(),
-                              premiumLabelChip() 
+                              // premiumLabelChip() 
                           ]),
                         ),
                         DashboardSizedBox.large(),
@@ -76,19 +76,14 @@ class DashboardDrawer extends StatelessWidget{
                         ListTile(
                           leading: const Icon(Icons.dashboard),
                           // isThreeLine: true,
-                          title: const Text('用電紀錄儀表板'),
-                          onTap: () {
-                            Navigator.pushNamed(context, "/dashboard/main");
-                          },
+                          title: const Text('用電紀錄儀表板(Ｌ)'),
+                          onTap: () => Navigator.pushNamed(context, "/dashboard/main")
                         ),
                         ListTile(
                           leading: const Icon(Icons.dashboard),
                           // isThreeLine: true,
-                          title: const Text('電表數據總覽'),
-                          onTap: () {
-                            // Update the state of the app.
-                            // ...
-                          },
+                          title: const Text('用電紀錄儀表板(R)'),
+                          onTap: () => Navigator.pushNamed(context, "/dashboard/device_consumption_report"),
                         ),
                         ListTile(
                           // isThreeLine: true,

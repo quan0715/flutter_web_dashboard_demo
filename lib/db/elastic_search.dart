@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_dashboard/models/repo/base_repo.dart';
-import 'package:web_dashboard/models/repo/db_config.dart';
+import 'package:web_dashboard/db/db_config.dart';
 
-class ElasticSearchClient<model extends RepoModel>{
+class ElasticSearchClient<M extends RepoModel>{
   static String baseURI = DBConfig.baseURI;
   static String apiKey = DBConfig.apiKey;
   static int searchMaxSize = DBConfig.searchMaxSize;
@@ -17,15 +17,19 @@ class ElasticSearchClient<model extends RepoModel>{
     required this.fromJson,
     required this.toJson,
   });
+  factory ElasticSearchClient.fromModel(M model){
+    return ElasticSearchClient(
+      index: model.index,
+      fromJson: model.fromJson,
+      toJson: model.toJson,
+    );
+  }
   final String index;
-  final model Function(Map<String, dynamic>) fromJson;
-  final Map<String, dynamic> Function() toJson;
-  int missionCount = 0;
-  int missionCompleteCount = 0;
+  final Function(Map<String, dynamic>) fromJson;
+  final Map<String, dynamic>? Function() toJson;
   
-  
-  Future<List<model>> search() async{
-    List<model> result = [];
+  Future<List<M>> search() async{
+    List<M> result = [];
     // BaseRepo currentType = BaeRepo() as T;
     debugPrint("load Device data from repo");
     try{
@@ -60,7 +64,7 @@ class ElasticSearchClient<model extends RepoModel>{
     return [];
   }
 
-  Future<void> post(model data) async {
+  Future<void> post(M data) async {
     debugPrint("testing: update Device data to repo");
     // debugPrint(data.toJson().toString());
     try{
@@ -101,24 +105,26 @@ class ElasticSearchClient<model extends RepoModel>{
     }
   }
 
-  Future<void> updateWholeDocumentToRepo(List<model> data) async {
-      List<model> oldData = await search();
-      for (model item in oldData) {
+  Future<void> updateWholeDocumentToRepo(List<M> data) async {
+      List<M> oldData = await search();
+      for (M item in oldData) {
         await delete(item.repoId!);
       }
-      for (model item in data) {
+      for (M item in data) {
         await post(item);
       }
   }
   
-  Stream<Map<String, dynamic>> test(List<model> data) async*  {
-      List<model> oldData = await search();
+  Stream<Map<String, dynamic>> test(List<M> data) async*  {
+      int missionCount = 0;
+      int missionCompleteCount = 0;
+      List<M> oldData = await search();
       missionCount = oldData.length + data.length;
-      for (model item in oldData) {
+      for (M item in oldData) {
         await delete(item.repoId!);
         yield {"missionCount": missionCount, "missionCompleteCount": ++missionCompleteCount, "missionDescription" : "刪除 ${item.repoId}"};
       }
-      for (model item in data) {
+      for (M item in data) {
         await post(item);
         yield {"missionCount": missionCount, "missionCompleteCount": ++missionCompleteCount, "missionDescription" : "上傳中"};
       }

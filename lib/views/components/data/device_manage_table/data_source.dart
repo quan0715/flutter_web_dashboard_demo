@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-import 'package:web_dashboard/models/repo/monitoring_device.dart';
+import 'package:web_dashboard/models/repo/monitoring_device_repo_model.dart';
 import 'package:web_dashboard/theme/theme.dart';
 
 class DeviceManagingTableDataSource extends DataGridSource{

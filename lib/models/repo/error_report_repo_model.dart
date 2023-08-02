@@ -4,12 +4,12 @@
 // 每分鐘更新資料
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/models/repo/base_repo.dart';
-import 'package:web_dashboard/models/repo/db_config.dart';
+import 'package:web_dashboard/db/db_config.dart';
 
 class DeviceErrorReportModel implements RepoModel {
 
   @override
-  String index = DBConfig.errorReportIndex;
+  String index = DBConfig.errorReportRepoIndex;
 
   @override
   String? repoId;

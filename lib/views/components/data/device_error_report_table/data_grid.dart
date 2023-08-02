@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-import 'package:web_dashboard/models/repo/error_report.dart';
+import 'package:web_dashboard/models/repo/error_report_repo_model.dart';
 import 'package:web_dashboard/theme/color.dart';
 import 'package:web_dashboard/theme/text.dart';
 import 'package:web_dashboard/views/components/data/device_error_report_table/data_source.dart';

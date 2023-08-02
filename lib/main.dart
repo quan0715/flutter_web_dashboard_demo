@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:web_dashboard/views/auth/login_view.dart';
 import 'package:web_dashboard/views/dashboards/monitoring_device_manage_view.dart';
 import 'views/config/firebase_options.dart';
+import 'views/dashboards/consumption_dashboard_view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
               "/dashboard/main": (context) => const ElectricityConsumptionDashboard(),
               "/dashboard/monitoring_device_manage": (context) => const MonitoringDeviceManageView(),
               "/dashboard/device_error_report": (context) => const DeviceErrorReportView(),
+              "/dashboard/device_consumption_report": (context) => const ConsumptionReportView(),
               "/login": (context) => LoginPageView(),
               '/': (context) => LoginPageView(),
             },

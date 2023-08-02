@@ -28,7 +28,7 @@ class ErrorReportDataGrid extends StatelessWidget {
               columnName: '設備編號',
               label: Container(
                 color: DashboardColor.surfaceVariant(context).withOpacity(0.3),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Icon(Icons.inbox),
@@ -41,7 +41,7 @@ class ErrorReportDataGrid extends StatelessWidget {
               columnName: '設備名稱',
               label: Container(
                 color: DashboardColor.surfaceVariant(context).withOpacity(0.3),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Icon(Icons.device_hub),
@@ -54,7 +54,7 @@ class ErrorReportDataGrid extends StatelessWidget {
               columnName: '開始時間',
               label: Container(
                 color: DashboardColor.surfaceVariant(context).withOpacity(0.3),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     //Icon(Icons.timer),
@@ -67,7 +67,7 @@ class ErrorReportDataGrid extends StatelessWidget {
               columnName: '正常邊界',
               label: Container(
                 color: DashboardColor.surfaceVariant(context).withOpacity(0.3),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Icon(Icons.battery_0_bar),
@@ -80,7 +80,7 @@ class ErrorReportDataGrid extends StatelessWidget {
               columnName: '異常數值',
               label: Container(
                 color: DashboardColor.surfaceVariant(context).withOpacity(0.3),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Icon(Icons.electrical_services_rounded),
@@ -93,7 +93,7 @@ class ErrorReportDataGrid extends StatelessWidget {
               columnName: '異常狀態',
               label: Container(
                 color: DashboardColor.surfaceVariant(context).withOpacity(0.3),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Icon(Icons.error),

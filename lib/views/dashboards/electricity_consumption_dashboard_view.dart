@@ -9,10 +9,10 @@ import 'package:web_dashboard/views/components/chart/electricity_time_line_chart
 import 'package:web_dashboard/views/components/data/error_report_table/data_grid.dart';
 import 'package:web_dashboard/views/components/chart/info_card.dart';
 import 'package:web_dashboard/views/components/chart/info_card_grid_view.dart';
-import 'package:web_dashboard/views/components/app_bar.dart';
-import 'package:web_dashboard/views/components/dashboard_frame_card.dart';
-import 'package:web_dashboard/views/components/drawer.dart';
-import 'package:web_dashboard/views/components/quote.dart';
+import 'package:web_dashboard/views/components/widget/app_bar.dart';
+import 'package:web_dashboard/views/components/widget/dashboard_frame_card.dart';
+import 'package:web_dashboard/views/components/widget/drawer.dart';
+import 'package:web_dashboard/views/components/widget/quote.dart';
 import 'package:web_dashboard/theme/theme.dart';
 
 import 'package:provider/provider.dart';

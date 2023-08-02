@@ -28,14 +28,14 @@ class AmmeterGridDataSource extends DataGridSource {
               return const Center(
                 child: RawChip(
                   avatar: Icon(Icons.trending_up, color: Colors.amber),
-                  label:const Text('突增')
+                  label: Text('突增')
                 ),
               );
             }else if(dataCell.value == '突降'){
               return const Center(
                 child: RawChip(
                   avatar: Icon(Icons.trending_down, color: Colors.red),
-                  label:const Text('突降')
+                  label: Text('突降')
                 ),
               );
             }

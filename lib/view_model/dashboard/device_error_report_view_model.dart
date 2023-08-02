@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:web_dashboard/models/repo/elastic_search.dart';
-import 'package:web_dashboard/models/repo/error_report.dart';
+import 'package:web_dashboard/db/elastic_search.dart';
+import 'package:web_dashboard/models/repo/error_report_repo_model.dart';
 
 class DeviceErrorReportViewModel extends ChangeNotifier{
   // view model data
