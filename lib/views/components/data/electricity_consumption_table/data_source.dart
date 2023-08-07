@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:web_dashboard/models/repo/consumption_repo_model.dart';
-import 'package:web_dashboard/theme/format.dart';
+import 'package:web_dashboard/views/theme/format.dart';
 
 class ElectricityConsumptionDataSource extends DataGridSource{
   List<ElectricityConsumptionDataModel> dataSource;

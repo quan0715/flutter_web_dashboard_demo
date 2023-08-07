@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_brand_palettes/flutter_brand_palettes.dart';
 import 'package:flutter_brand_palettes/gradients.dart';
-import 'package:web_dashboard/models/electricity_amount_proportion.dart';
+import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
 import 'package:web_dashboard/views/theme/format.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class ElectricityDistributionPieChartPieChart extends StatelessWidget {
-  const ElectricityDistributionPieChartPieChart({
+class SumOfConsumptionPieChart extends StatelessWidget {
+  const SumOfConsumptionPieChart({
     super.key,
-    required this.chartData
+    required this.dataSource,
   });
-  final List<ElectricityAmountProportion> chartData;
+  final List<PieChartProportion<SumOfElectricityConsumptionDataModel>> dataSource;
+
 
   @override
   Widget build(BuildContext context) {
+    int amount = 0;
+    for (var item in dataSource) {
+      amount += item.amount;
+    }
     return SfCircularChart(
       legend: const Legend(
         isVisible: true,
@@ -35,7 +40,7 @@ class ElectricityDistributionPieChartPieChart extends StatelessWidget {
                 fontSize: 14,
                 fontWeight: FontWeight.bold
               ),),
-              Text(DashBoardFormat.number(ElectricityAmountProportion.countAmount(chartData)), style: TextStyle(
+              Text(DashBoardFormat.number(amount), style: TextStyle(
                 color: Theme.of(context).colorScheme.onSurface,
                 fontSize: 20,
                 fontWeight: FontWeight.bold
@@ -49,22 +54,22 @@ class ElectricityDistributionPieChartPieChart extends StatelessWidget {
           )
         )
       ],
-      series: <DoughnutSeries<ElectricityAmountProportion, String>>[
-        DoughnutSeries<ElectricityAmountProportion, String>(
+      series: <DoughnutSeries<PieChartProportion<SumOfElectricityConsumptionDataModel>, String>>[
+        DoughnutSeries<PieChartProportion<SumOfElectricityConsumptionDataModel>, String>(
             radius: '80%',
             innerRadius: '70%',
             explode: true,
             explodeOffset: '10%',
-            dataSource: chartData,
-            xValueMapper: (ElectricityAmountProportion data, _) => data.name,
-            yValueMapper: (ElectricityAmountProportion data, _) => data.amount,
-            dataLabelMapper: (ElectricityAmountProportion data, _)
-              => "${data.name}\n${(data.amount / ElectricityAmountProportion.countAmount(chartData) * 100).toStringAsFixed(1)}%",
+            dataSource: dataSource,
+            xValueMapper: (PieChartProportion<SumOfElectricityConsumptionDataModel> data, _) => data.model.tagId,
+            yValueMapper: (PieChartProportion<SumOfElectricityConsumptionDataModel> data, _) => data.amount,
+            dataLabelMapper: (PieChartProportion data, _)
+              => "${data.model.tagId}\n${data.proportion.toStringAsFixed(1)}%",
             animationDuration: 500,
             dataLabelSettings: const DataLabelSettings(
               alignment: ChartAlignment.near,
               labelPosition: ChartDataLabelPosition.outside,
-              isVisible: true,
+              isVisible: false,
               overflowMode: OverflowMode.none,
             ))
       ],

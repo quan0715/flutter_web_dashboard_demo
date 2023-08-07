@@ -17,7 +17,12 @@ class ElectricityConsumptionDataGrid extends StatelessWidget{
     return Card(
       elevation: 0,
       clipBehavior: Clip.antiAlias,
-      child: SfDataGrid(
+      child: 
+      dataSource.isEmpty ? 
+      const Center(
+        child: Text("無資料"),
+      ) :
+      SfDataGrid(
         allowPullToRefresh: true,
         gridLinesVisibility: GridLinesVisibility.vertical,
         headerGridLinesVisibility: GridLinesVisibility.vertical,

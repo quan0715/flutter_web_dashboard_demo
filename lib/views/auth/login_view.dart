@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:web_dashboard/view_model/auth_manager.dart';
 import 'package:web_dashboard/view_model/theme_manager.dart';
-import 'package:web_dashboard/theme/theme.dart';
+import 'package:web_dashboard/views/theme/theme.dart';
 
 class LoginPageView extends StatelessWidget {
   LoginPageView({super.key});

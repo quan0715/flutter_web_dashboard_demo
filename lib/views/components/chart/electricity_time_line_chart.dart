@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/models/electricity_time_data.dart';
-import 'package:web_dashboard/theme/format.dart';
+import 'package:web_dashboard/views/theme/format.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ElectricityTimeLineChart extends StatelessWidget{
@@ -10,7 +10,7 @@ class ElectricityTimeLineChart extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    data.forEach((element) => debugPrint("${element.time} ${element.power}"));
+    // data.forEach((element) => debugPrint("${element.time} ${element.power}"));
     return SfCartesianChart(
         borderWidth: 2,
         // title: ChartTitle(text: '即時用電量趨勢圖(最近8小時)'),

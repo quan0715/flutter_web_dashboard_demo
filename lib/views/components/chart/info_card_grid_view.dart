@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/models/ammeter_model.dart';
-import 'package:web_dashboard/theme/theme.dart';
+import 'package:web_dashboard/views/theme/theme.dart';
 
 class InfoCardGridView extends StatelessWidget {
   const InfoCardGridView({

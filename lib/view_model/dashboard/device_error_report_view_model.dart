@@ -6,11 +6,7 @@ class DeviceErrorReportViewModel extends ChangeNotifier{
   // view model data
   bool _isLoading = false;
   List<DeviceErrorReportModel> _deviceErrorReportList = [];
-  ElasticSearchClient<DeviceErrorReportModel> client = ElasticSearchClient(
-    index: DeviceErrorReportModel.getInstance().index,
-    fromJson: DeviceErrorReportModel.getInstance().fromJson,
-    toJson: DeviceErrorReportModel.getInstance().toJson,
-  );
+  ElasticSearchClient<DeviceErrorReportModel> client = ElasticSearchClient.fromModel(DeviceErrorReportModel.getInstance());
   Future<void> init() async {
     isLoading = true;
     notifyListeners();

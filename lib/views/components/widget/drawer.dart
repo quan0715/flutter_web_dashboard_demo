@@ -9,9 +9,9 @@ import 'package:web_dashboard/view_model/auth_manager.dart';
 import 'package:web_dashboard/view_model/theme_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:web_dashboard/views/components/widget/quote.dart';
-import 'package:web_dashboard/theme/color.dart';
-import 'package:web_dashboard/theme/sized_box.dart';
-import 'package:web_dashboard/theme/text.dart';
+import 'package:web_dashboard/views/theme/color.dart';
+import 'package:web_dashboard/views/theme/sized_box.dart';
+import 'package:web_dashboard/views/theme/text.dart';
 
 class DashboardDrawer extends StatelessWidget{
   // implement dashboard drawer
@@ -100,7 +100,7 @@ class DashboardDrawer extends StatelessWidget{
                         ListTile(
                           leading: const Icon(Icons.error),
                           // isThreeLine: true,
-                          title: const Text('錯誤回報紀錄'),
+                          title: const Text('用電異常清單'),
                           onTap: () => Navigator.pushNamed(context, "/dashboard/device_error_report")
                           
                         ),

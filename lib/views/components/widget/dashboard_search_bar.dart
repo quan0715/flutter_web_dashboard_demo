@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:web_dashboard/theme/theme.dart';
+import 'package:web_dashboard/views/theme/theme.dart';
 import 'package:web_dashboard/view_model/dashboard/electricity_consumption_view_model.dart';
 import 'package:web_dashboard/views/components/widget/dashboard_frame_card.dart';
 
@@ -33,6 +33,7 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
                   (label) => DropdownMenuItem(
                     value: label,
                     child: RawChip(
+                      side: BorderSide.none,
                       avatar: Icon(Icons.factory_rounded, color: DashboardColor.primary(context)),
                       label: Text("工廠: $label")
                     )
@@ -41,7 +42,7 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
                 onChanged: (value) => viewModel.setTargetFactoryId = value!,
                 value: viewModel.targetFactoryId
             ),
-              DashboardSizedBox.large(),
+              VerticalDivider(width: 15, color: DashboardColor.surfaceVariant(context), thickness: 3, indent: 5,endIndent: 5,),
               DropdownButton<String>(
                 // drop down menu for building M1, M2, M3
                 padding: EdgeInsets.zero,
@@ -52,6 +53,7 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
                   (label) => DropdownMenuItem(
                     value: label,
                     child: RawChip(
+                      side: BorderSide.none,
                       avatar: Icon(Icons.home_rounded, color: DashboardColor.primary(context)),
                       label: Text("建築: $label")
                     )
@@ -59,14 +61,53 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
                 ).toList(),
                 onChanged: (value) => viewModel.setTargetBuildingId = value!,
                 value: viewModel.targetBuildingId),
+              VerticalDivider(width: 15, color: DashboardColor.surfaceVariant(context), thickness: 3, indent: 5,endIndent: 5,),
+              // DropdownButton<DateTime>(
+              //   // drop down menu for building M1, M2, M3
+              //   padding: EdgeInsets.zero,
+              //   elevation: 0,
+              //   style: DashboardText.titleMedium(context),
+              //   underline: Container(),
+              //   items: viewModel.dateTimeList.map<DropdownMenuItem<DateTime>>(
+              //     (label) => DropdownMenuItem(
+              //       value: label,
+              //       child: RawChip(
+              //         avatar: Icon(Icons.timer, color: DashboardColor.primary(context)),
+              //         label: Text("日期: ${DashBoardFormat.time(label)}")
+              //       )
+              //     ),
+              //   ).toList(),
+              //   onChanged: (value) => viewModel.setTargetDateTime = value!,
+              //   value: viewModel.targetDateTime),
+              DropdownButton<String>(
+                // drop down menu for assetType
+                padding: EdgeInsets.zero,
+                elevation: 0,
+                style: DashboardText.titleMedium(context),
+                underline: Container(),
+                items: viewModel.assetTypeList.map<DropdownMenuItem<String>>(
+                  (label) => DropdownMenuItem(
+                    value: label,
+                    child: RawChip(
+                      side: BorderSide.none,
+                      avatar: Icon(Icons.factory , color: DashboardColor.primary(context)),
+                      label: Text("設備類型: $label")
+                    )
+                  ),
+                ).toList(),
+                onChanged: (value) => viewModel.setTargetAssetType = value!,
+                value: viewModel.targetAssetType),
               const Spacer(),
-              SearchBar(
-                leading: Icon(Icons.search_rounded, color: DashboardColor.primary(context)),
-                elevation: MaterialStateProperty.all(0),
-                hintText: "搜尋電表",
-                onChanged: (value) => {},
+              Expanded(
+                flex: 3,
+                child: SearchBar(
+                  leading: Icon(Icons.search_rounded, color: DashboardColor.primary(context)),
+                  elevation: MaterialStateProperty.all(0),
+                  hintText: "搜尋電表",
+                  onChanged: (value) => {},
+                ),
               ),
-              const Spacer(flex: 2),
+              const Spacer(),
               ChoiceChip(
                 iconTheme: IconThemeData(color: DashboardColor.onError(context), size: 32),
                 backgroundColor: DashboardColor.surface(context),
@@ -79,7 +120,7 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
                     : BorderSide.none,
                 onSelected: (value) => viewModel.setIsShowAll = value,
               ),
-              DashboardSizedBox.large(),
+              VerticalDivider(width: 15, color: DashboardColor.surfaceVariant(context), thickness: 3, indent: 5,endIndent: 5,),
               Switch(
                 thumbIcon: MaterialStateProperty.all(
                   viewModel.isDashboardView

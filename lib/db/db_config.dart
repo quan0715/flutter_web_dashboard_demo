@@ -6,5 +6,5 @@ class DBConfig{
   static String meterRepoIndex = "metermsd";
   static String errorReportRepoIndex = "event_202307";
   static String deviceConsumptionRepoIndex = "consumption_202308"; // FIX: correct spelling
-  static String deviceConsumptionSumRepoIndex = "sumcomsumption_202307";
+  static String deviceConsumptionSumRepoIndex = "sumconsumption_202308";
 }

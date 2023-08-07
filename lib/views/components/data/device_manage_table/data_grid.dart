@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:web_dashboard/models/repo/monitoring_device_repo_model.dart';
-import 'package:web_dashboard/theme/theme.dart';
+import 'package:web_dashboard/views/theme/theme.dart';
 import 'package:web_dashboard/views/components/data/device_manage_table/data_source.dart';
 
 class DeviceManagingTableDataGrid extends StatelessWidget{
