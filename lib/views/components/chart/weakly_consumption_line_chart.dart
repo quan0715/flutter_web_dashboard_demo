@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:web_dashboard/models/electricity_time_data.dart';
 import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
 import 'package:web_dashboard/views/theme/format.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -37,20 +36,6 @@ class WeeklyConsumptionLineChart extends StatelessWidget{
             labelFormat: '{value} KW',
             majorTickLines: const MajorTickLines(size: 1)),
         series: <XyDataSeries<SumOfElectricityConsumptionDataModel, String>>[
-          // SplineAreaSeries<SumOfElectricityConsumptionDataModel, String>(
-          //   name: '本週用電紀錄',
-          //   dataSource: data, 
-          //   xValueMapper: (SumOfElectricityConsumptionDataModel data, index) => DashBoardFormat.dayTimeChartLabel(data.dateTime!), 
-          //   yValueMapper: (SumOfElectricityConsumptionDataModel data, _) => data.dayConsumption!.toInt(),
-          //   isVisible: true,
-          //   isVisibleInLegend: true,
-          //   borderDrawMode: BorderDrawMode.all,
-          //   // borderColor: Theme.of(context).colorScheme.secondary,
-          //   // borderWidth: 2,
-          //   color: Theme.of(context).colorScheme.primary,
-          //   splineType: SplineType.monotonic,
-          //   opacity: 0.6
-          // ),
           SplineSeries<SumOfElectricityConsumptionDataModel, String>(
             dataSource: data,
             xValueMapper: (SumOfElectricityConsumptionDataModel data, index) => DashBoardFormat.time(data.dateTime!),

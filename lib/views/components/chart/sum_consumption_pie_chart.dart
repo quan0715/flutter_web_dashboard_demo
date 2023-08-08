@@ -69,7 +69,7 @@ class SumOfConsumptionPieChart extends StatelessWidget {
             dataLabelSettings: const DataLabelSettings(
               alignment: ChartAlignment.near,
               labelPosition: ChartDataLabelPosition.outside,
-              isVisible: false,
+              isVisible: true,
               overflowMode: OverflowMode.none,
             ))
       ],

@@ -46,6 +46,7 @@ class DeviceErrorReportModel implements RepoModel {
   }
   @override
   DeviceErrorReportModel fromJson(Map<String, dynamic> json){
+    debugPrint(json.toString());
     return DeviceErrorReportModel(
       errorType: ElectricityConsumptionErrorType.fromDBField(json['_source']['e_typ'] as String),
       // errorDescription: json['_source']['errorDescription'] as String,

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
+import 'package:web_dashboard/models/state.dart';
 import 'package:web_dashboard/views/components/chart/info_card.dart';
 import 'package:web_dashboard/views/components/chart/sum_consumption_detail_grid_view.dart';
 import 'package:web_dashboard/views/components/chart/sum_consumption_pie_chart.dart';
 import 'package:web_dashboard/views/components/chart/weakly_consumption_line_chart.dart';
+import 'package:web_dashboard/views/components/data/device_error_report_table/data_grid.dart';
 import 'package:web_dashboard/views/theme/padding.dart';
 import 'package:web_dashboard/view_model/dashboard/electricity_consumption_view_model.dart';
 import 'package:web_dashboard/views/components/data/electricity_consumption_table/data_grid.dart';
@@ -38,15 +40,19 @@ class _ConsumptionReportViewState extends State<ConsumptionReportView> with Sing
   }
   
   Widget errorReportTableView(ElectricityConsumptionDashboardViewModel viewModel){
-    return const DashboardFrameCard(
+    return DashboardFrameCard(
       elevation: 0,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FrameQuote(
+          const FrameQuote(
             quoteText: "異常回報清單（篩）",
           ),
-          Spacer()
+          Expanded(child: SingleChildScrollView(
+            child: DeviceErrorReportTableDataGrid.smallView(
+              dataSource: viewModel.deviceErrorReportList,
+            ),
+          ))
         ],
       ),
     );
@@ -100,6 +106,20 @@ class _ConsumptionReportViewState extends State<ConsumptionReportView> with Sing
   }
 
   Widget overViewFrame(ElectricityConsumptionDashboardViewModel viewModel){
+    final data = [{
+        "title" : "總用電量",
+        "value" : viewModel.groupDataSource.totalConsumptionOfToday,
+        "unit" : "kWh", 
+      },{
+        "title" : "累積總月用電量",
+        "value" : viewModel.groupDataSource.totalConsumptionOfMonth,
+        "unit" : "kWh", 
+      },{
+        "title" : "每小時平均用電量",
+        "value" : viewModel.groupDataSource.totalConsumptionOfMonthPerHour.toInt(),
+        "unit" : "kWh", 
+      },
+    ];
     return DashboardFrameCard(
       elevation: 0,
       child: Column(
@@ -108,24 +128,22 @@ class _ConsumptionReportViewState extends State<ConsumptionReportView> with Sing
             quoteText: "總用電量分佈(圓餅圖)",
           ),
           SumOfConsumptionPieChart(
-            dataSource: PieChartProportion.fromSumOfConsumption(viewModel.sumOfElectricityConsumptionDataList),
+          dataSource: PieChartProportion.fromSumOfConsumption(viewModel.sumOfElectricityConsumptionDataList),
           ),
-          InfoCard(
-            title: "總用電量",
-            value: viewModel.sumOfElectricityConsumptionDataList.fold<int>(0, (previousValue, element) => previousValue + element.dayConsumption!),
-            unit: "kWh",
+          Expanded(
+            flex: 1,
+            child: SingleChildScrollView(
+              child: Column(
+                children: data.map<Widget>(
+                  (d) => InfoCard(
+                    title: d["title"] as String,
+                    value: d["value"] as int,
+                    unit: d["unit"] as String,
+                  )
+                ).toList()
+              ),
+            ),
           ),
-          InfoCard(
-            title: "累積總月用電量",
-            value: viewModel.sumOfElectricityConsumptionDataList.fold<int>(0, (previousValue, element) => previousValue + element.monthConsumption!),
-            unit: "kWh",
-          ),
-          InfoCard(
-            title: "每小時平均用電量",
-            value: viewModel.sumOfElectricityConsumptionDataList.fold<double>(0, (previousValue, element) => previousValue + element.averageMonthConsumptionPerMonth!).toInt(),
-            unit: "kWh",
-          ),
-          const Spacer()
         ],
       ),
     );
@@ -222,7 +240,7 @@ class _ConsumptionReportViewState extends State<ConsumptionReportView> with Sing
                         child: DashboardFrameCard(
                           elevation: 3,
                           child: 
-                          viewModel.isLoading 
+                          viewModel.loadingState == LoadingState.loading 
                           ? loadingView()
                           : !viewModel.isDashboardView
                             ? tableViewFrame(viewModel)

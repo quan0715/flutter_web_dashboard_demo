@@ -23,7 +23,7 @@ class FrameQuote extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     Color quoteColor = color ?? DashboardColor.primary(context);
-    TextStyle textStyle = style ?? DashboardText.titleMedium(context);
+    TextStyle textStyle = style ?? DashboardText.titleSmall(context);
     TextStyle notesStyle = this.notesStyle ?? DashboardText.bodySmall(context).copyWith(
       color: DashboardText.bodyMedium(context).color!.withOpacity(0.5),
     );
