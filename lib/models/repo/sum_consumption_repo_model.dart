@@ -1,4 +1,5 @@
 
+import 'package:intl/intl.dart';
 import 'package:web_dashboard/models/repo/base_repo.dart';
 import 'package:web_dashboard/db/db_config.dart';
 // sample data: 
@@ -44,17 +45,27 @@ class SumOfElectricityConsumptionDataModel implements RepoModel{
 
   @override
   SumOfElectricityConsumptionDataModel fromJson(Map<String, dynamic> json) {
-    return SumOfElectricityConsumptionDataModel( 
+    // print(json['_source']['datetime'].toString());
+    // print(DateFormat("yyyy-MM-ddTHH:mm:ssZ").parse(json['_source']['datetime'] as String));
+    try{
+      return SumOfElectricityConsumptionDataModel( 
       tagId: json['_source']['tagid'] as String,
       dayConsumption: json['_source']['d_com'] as int,
       monthConsumption: json['_source']['m_com'] as int,
       averageMonthConsumptionPerMonth: json['_source']['avg_m_h_com'] as double,
-      dateTime: DateTime.parse(json['_source']['datetime'] as String),
+      // dateTime: DateTime.parse(json['_source']['datetime']),
+      dateTime: DateFormat("yyyy-MM-ddTHH:mm:ssZ").parse(json['_source']['datetime'] as String),
       loc: json['_source']['loc'] as String,
       building: json['_source']['building'] as String,
       assetType: json['_source']['assettype'] as String,
       repoId: json['_id'] as String,
     );
+    } catch(e){
+      print(json.toString());
+      print(e.toString());
+      throw e;
+    }
+    
   }
 
   @override

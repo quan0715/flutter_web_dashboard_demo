@@ -111,19 +111,44 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
     setLoadingState(LoadingState.loading);
 
     try{
-      _electricityConsumptionDataList = await consumptionClient.search();
+      _electricityConsumptionDataList = await consumptionClient.search(
+        query: {
+          "sort": [
+            {
+              "datetime": {
+                "order": "desc"
+              }
+            } 
+          ],
+          "query": {
+            "bool": {
+              "must": [
+                {
+                  "range": {
+                    "datetime": {
+                      "time_zone": "+08:00",
+                      "gte": targetDateTime.toIso8601String(),
+                      "lte": targetDateTime.add(Duration(days: 1)).toIso8601String()
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      );
       _sumOfElectricityConsumptionDataList = await sumOfConsumptionClient.search();
       _deviceErrorReportList = await errorReportClient.search();
     }catch(e){
       debugPrint(e.toString());
       setLoadingState(LoadingState.error);
     }
-    
+    _electricityConsumptionDataList.sort((a, b) => a.startTime!.compareTo(b.startTime!));
     _sumOfElectricityConsumptionDataList.sort((a, b) => a.dateTime!.compareTo(b.dateTime!));
     _allDeviceConsumptionDataGroup = GroupConsumptionDataModel.fromDataSource(_sumOfElectricityConsumptionDataList);
 
     targetDateTime = dateTimeList.reduce((value, element) => 
-      (value.difference(targetDateTime).inDays.abs() < element.difference(targetDateTime).inDays.abs()) ? value : element
+      (value.difference(targetDateTime).inDays.abs() <= element.difference(targetDateTime).inDays.abs()) ? value : element
     );
 
     targetFactoryId = factoryList.first;

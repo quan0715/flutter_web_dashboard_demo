@@ -6,14 +6,16 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/db/elastic_search.dart';
 import 'package:web_dashboard/models/repo/monitoring_device_repo_model.dart';
+import 'package:web_dashboard/models/state.dart';
+import 'package:web_dashboard/view_model/base_view_model.dart';
 
-class MonitoringDeviceManageViewModel extends ChangeNotifier {
-  bool _isLoading = false;
+class MonitoringDeviceManageViewModel extends BaseViewModel {
+  // bool _isLoading = false;
   List<MonitoringDeviceModel> _monitoringDeviceList = [];
   String _missionDescription = "";
   int _missionCount = 0;
   int _missionCompleteCount = 0; 
-  bool get isLoading => _isLoading;
+  // bool get isLoading => _isLoading;
   List<MonitoringDeviceModel> get monitoringDeviceList => _monitoringDeviceList;
   int get missionCount => _missionCount;
   int get missionCompleteCount => _missionCompleteCount;
@@ -33,17 +35,16 @@ class MonitoringDeviceManageViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  set isLoading(bool value) {
-    _isLoading = value;
-    notifyListeners();
-  }
-
+  @override
   Future<void> init() async {
-    isLoading = true;
-    notifyListeners();
-    updateMonitoringDeviceData = await client.search();
-    isLoading = false;
-    notifyListeners();
+    setLoadingState(LoadingState.loading);
+    try{
+      updateMonitoringDeviceData = await client.search();
+      setLoadingState(LoadingState.free);
+    } catch (e){
+      debugPrint(e.toString());
+      setLoadingState(LoadingState.error);
+    }
   }
 
   // upload csv file using file picker
@@ -84,11 +85,11 @@ class MonitoringDeviceManageViewModel extends ChangeNotifier {
     // debugPrint(_monitoringDeviceList.toString());
     // MonitoringDeviceModel target =  monitoringDeviceList.first;
     // await MonitoringDeviceModel.postToRepo(target);
-    isLoading = true;
+    
+    setLoadingState(LoadingState.loading);
     _missionCount = 0;
     _missionCompleteCount = 0;
     _missionDescription = "";
-    notifyListeners();
     // await client.updateWholeDocumentToRepo(monitoringDeviceList);
     await for (Map<String, dynamic> event in client.test(_monitoringDeviceList)){
       _missionCount = event['missionCount'] as int;
@@ -99,7 +100,6 @@ class MonitoringDeviceManageViewModel extends ChangeNotifier {
     // debugPrint("test");
     _missionDescription = "重整中";
     updateMonitoringDeviceData = await client.search();
-    isLoading = false; 
-    notifyListeners();
+    setLoadingState(LoadingState.free);
   }
 }

@@ -26,23 +26,15 @@ class _DeviceErrorReportViewState extends State<DeviceErrorReportView> {
           drawer: const DashboardDrawer(),
           body: SizedBox.expand(
             child: DashboardPadding.large(
-              child: Column(
-                children: [
-                  DashboardPadding.object(
-                    child: Row(
-                      children: [
-                        Expanded(child: FrameQuote(quoteText: "設備異常報告", style: DashboardText.titleLarge(context),)),
-                      ],
+              child: DashboardFrameCard(
+                child: Column(
+                  children: [
+                    FrameQuote(quoteText: "設備異常報告",),
+                    Expanded(
+                      child:  DeviceErrorReportTableDataGrid(dataSource: viewModel.dataSource),
                     ),
-                  ),
-                  Expanded(
-                    child: DashboardPadding.object(
-                      child: DashboardFrameCard(
-                        child: DeviceErrorReportTableDataGrid(dataSource: viewModel.dataSource),
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

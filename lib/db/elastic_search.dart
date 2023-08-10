@@ -28,14 +28,15 @@ class ElasticSearchClient<M extends RepoModel>{
   final Function(Map<String, dynamic>) fromJson;
   final Map<String, dynamic>? Function() toJson;
   
-  Future<List<M>> search() async{
+  Future<List<M>> search({Map<String, dynamic>? query}) async{
     List<M> result = [];
     // BaseRepo currentType = BaeRepo() as T;
     debugPrint("load Device data from repo");
     try{
-      final response = await http.get(
-        Uri.parse("$baseURI/$index/_search?&size=$searchMaxSize"),
-        headers: headers
+      final response = await http.post(
+        Uri.parse("$baseURI/$index/_search?&size=$searchMaxSize",),
+        headers: headers,
+        body: jsonEncode(query ?? {"query": {"match_all": {}}}),
       );
       if(response.statusCode == 200){
         // debugPrint(response.body);

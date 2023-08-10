@@ -15,12 +15,12 @@ class ElectricityConsumptionDataSource extends DataGridSource{
       DataGridCell<String>(columnName: '設備設備', value: data.assetType),
       DataGridCell<String>(columnName: '設備產線', value: data.lineType),
       DataGridCell<String>(columnName: '設備編號', value: data.tagId),
-      DataGridCell<String>(columnName: '耗電', value: data.power.toString()),
+      DataGridCell<String>(columnName: '耗電(KW)', value: data.power.toString()),
       DataGridCell<String>(columnName: '電壓', value: data.volt.toString()),
       DataGridCell<String>(columnName: '電流', value: data.ampere.toString()),
       DataGridCell<String>(columnName: '耗電量', value: data.energyConsumed.toString()),
       DataGridCell<String>(columnName: '總耗電量', value: data.sumOfEnergyConsumed.toString()),
-      DataGridCell<String>(columnName: '更新時間', value: DashBoardFormat.time(data.startTime!)),
+      DataGridCell<String>(columnName: '更新時間', value: DashBoardFormat.timeWithSecond(data.startTime!)),
     ]))
     .toList();
 

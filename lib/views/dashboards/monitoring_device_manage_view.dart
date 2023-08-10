@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:web_dashboard/models/state.dart';
 import 'package:web_dashboard/views/theme/theme.dart';
 import 'package:web_dashboard/view_model/dashboard/monitoring_device_manage_view_model.dart';
 import 'package:web_dashboard/views/components/widget/app_bar.dart';
@@ -46,7 +47,7 @@ class _MonitoringDeviceManageViewState extends State<MonitoringDeviceManageView>
             children: [
               Row(
                 children: [
-                  FrameQuote(quoteText: "檢測點設備管理", style: DashboardText.headLineMedium(context)),
+                  FrameQuote(quoteText: "檢測點設備管理", style: DashboardText.headLineSmall(context)),
                   const Spacer(),
                   // ElevatedButton.icon(
                   //   style: saveButtonStyle,
@@ -102,7 +103,7 @@ class _MonitoringDeviceManageViewState extends State<MonitoringDeviceManageView>
                 ],
               ),
               Visibility(
-                visible: viewModel.isLoading,
+                visible: viewModel.loadingState == LoadingState.loading,
                 child: DashboardPadding.small(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
