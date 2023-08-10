@@ -23,8 +23,10 @@ class DeviceErrorReportModel implements RepoModel {
   final int? ampere;
   final int? volt;
   final int? power;
-  final int? lb;
-  final int? ub;
+  final int? lb;  // lower bound
+  final int? ub;  // upper bound
+  final int? wub; // warning upper bound
+  final int? wlb; // warning lower bound
   // constructor
   DeviceErrorReportModel({
     this.errorType,
@@ -38,6 +40,8 @@ class DeviceErrorReportModel implements RepoModel {
     this.power,
     this.lb,
     this.ub,
+    this.wub,
+    this.wlb,
     this.repoId,
   });
   // from json
@@ -59,6 +63,8 @@ class DeviceErrorReportModel implements RepoModel {
       power: json['_source']['kw'],
       lb: json['_source']['lb'],
       ub: json['_source']['ub'],
+      wub: json['_source']['wub'],
+      wlb: json['_source']['wlb'],
       repoId: json['_id'] as String,
     );
   }

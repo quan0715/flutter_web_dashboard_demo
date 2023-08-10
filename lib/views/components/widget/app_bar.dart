@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:web_dashboard/views/theme/text.dart';
 
 class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget{
   const DashboardAppBar({super.key, required this.title});
@@ -9,7 +10,7 @@ class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget{
     return AppBar(
       automaticallyImplyLeading: true,
       centerTitle: false,
-      title: Text(title),
+      title: Text(title, style: DashboardText.titleLarge(context)),
     ); 
   }
   

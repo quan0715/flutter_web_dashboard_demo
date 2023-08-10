@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:web_dashboard/models/repo/consumption_repo_model.dart';
+import 'package:web_dashboard/views/components/data/electricity_consumption_table/config.dart';
 import 'package:web_dashboard/views/components/data/electricity_consumption_table/data_source.dart';
 
 class ElectricityConsumptionDataGrid extends StatelessWidget{
@@ -10,7 +11,8 @@ class ElectricityConsumptionDataGrid extends StatelessWidget{
   late final List<String> columnsLabel;
   ElectricityConsumptionDataGrid({super.key, required this.dataSource}){
     dataGridSource = ElectricityConsumptionDataSource(dataSource: dataSource);
-    columnsLabel =  dataGridSource!.rows[0].getCells().map<String>((dataCell) => dataCell.columnName).toList();
+    columnsLabel = ConsumptionTableConfig.columName;
+    // columnsLabel =  dataGridSource!.rows[0].getCells().map<String>((dataCell) => dataCell.columnName).toList();
   }
   @override
   Widget build(BuildContext context) {

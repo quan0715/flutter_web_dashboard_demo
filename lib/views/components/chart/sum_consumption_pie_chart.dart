@@ -61,10 +61,10 @@ class SumOfConsumptionPieChart extends StatelessWidget {
             explode: true,
             explodeOffset: '10%',
             dataSource: dataSource,
-            xValueMapper: (PieChartProportion<SumOfElectricityConsumptionDataModel> data, _) => data.model.tagId,
+            xValueMapper: (PieChartProportion<SumOfElectricityConsumptionDataModel> data, _) => data.model.deviceData!.tagId,
             yValueMapper: (PieChartProportion<SumOfElectricityConsumptionDataModel> data, _) => data.amount,
             dataLabelMapper: (PieChartProportion data, _)
-              => "${data.model.tagId}\n${data.proportion.toStringAsFixed(1)}%",
+              => "${data.model.deviceData!.tagId}\n${data.proportion.toStringAsFixed(1)}%",
             animationDuration: 500,
             dataLabelSettings: const DataLabelSettings(
               alignment: ChartAlignment.near,

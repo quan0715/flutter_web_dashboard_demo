@@ -31,7 +31,7 @@ class ElasticSearchClient<M extends RepoModel>{
   Future<List<M>> search({Map<String, dynamic>? query}) async{
     List<M> result = [];
     // BaseRepo currentType = BaeRepo() as T;
-    debugPrint("load Device data from repo");
+    debugPrint("load Device data from repo ($index)");
     try{
       final response = await http.post(
         Uri.parse("$baseURI/$index/_search?&size=$searchMaxSize",),
@@ -50,6 +50,7 @@ class ElasticSearchClient<M extends RepoModel>{
           try{
             result.add(fromJson(item));
           } catch (e){
+            delete(item['_id'] as String);
             debugPrint(e.toString());
           }
           // debugPrint(result.toString());

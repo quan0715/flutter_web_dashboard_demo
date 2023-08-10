@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-import 'package:web_dashboard/models/repo/consumption_repo_model.dart';
-import 'package:web_dashboard/views/components/data/electricity_consumption_table/config.dart';
+import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
+import 'package:web_dashboard/views/components/data/sum_consumption_table.dart/config.dart';
 
-class ElectricityConsumptionDataSource extends DataGridSource{
-  List<ElectricityConsumptionDataModel> dataSource;
-  ElectricityConsumptionDataSource({required this.dataSource});
+
+class SumOfElectricityConsumptionDataSource extends DataGridSource{
+  List<SumOfElectricityConsumptionDataModel> dataSource;
+  SumOfElectricityConsumptionDataSource({required this.dataSource});
 
   @override
   List<DataGridRow> get rows => dataSource
-    .map<DataGridRow>(ConsumptionTableConfig.getRows)
+    .map<DataGridRow>(SumConsumptionTableConfig.getRows)
     .toList();
 
   @override

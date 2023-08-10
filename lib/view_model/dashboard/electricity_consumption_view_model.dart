@@ -3,6 +3,7 @@ import 'package:web_dashboard/models/group_consumption_data_model.dart';
 import 'package:web_dashboard/models/repo/consumption_repo_model.dart';
 import 'package:web_dashboard/db/elastic_search.dart';
 import 'package:web_dashboard/models/repo/error_report_repo_model.dart';
+import 'package:web_dashboard/models/repo/monitoring_device_repo_model.dart';
 import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
 import 'package:web_dashboard/models/state.dart';
 import 'package:web_dashboard/view_model/base_view_model.dart';
@@ -60,17 +61,19 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
         SumOfElectricityConsumptionDataModel(
           dateTime: date,
           dayConsumption: _sumOfElectricityConsumptionDataList.where((element) => element.dateTime == date).map<int>((e) => e.dayConsumption!).reduce((value, element) => value + element),
-          loc: targetFactoryId,
-          building: targetBuildingId,
+          deviceData: MonitoringDeviceModel(
+            loc: targetFactoryId,
+            building: targetBuildingId,
+          )
         )
       ).toList();
   } 
 
   bool deviceFilter(SumOfElectricityConsumptionDataModel element) => 
-    (element.loc == targetFactoryId || targetFactoryId == "全")
-    && (element.building == targetBuildingId || targetBuildingId == "全")
+    (element.deviceData!.loc == targetFactoryId || targetFactoryId == "全")
+    && (element.deviceData!.building == targetBuildingId || targetBuildingId == "全")
     && (element.dateTime! == targetDateTime)
-    && (element.assetType == targetAssetType || targetAssetType == "全");
+    && (element.deviceData!.assetType == targetAssetType || targetAssetType == "全");
 
   set setTargetFactoryId(String id){
     targetFactoryId = id;
@@ -109,41 +112,41 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
   @override
   Future<void> init() async{
     setLoadingState(LoadingState.loading);
-
     try{
       _electricityConsumptionDataList = await consumptionClient.search(
-        query: {
-          "sort": [
-            {
-              "datetime": {
-                "order": "desc"
-              }
-            } 
-          ],
-          "query": {
-            "bool": {
-              "must": [
-                {
-                  "range": {
-                    "datetime": {
-                      "time_zone": "+08:00",
-                      "gte": targetDateTime.toIso8601String(),
-                      "lte": targetDateTime.add(Duration(days: 1)).toIso8601String()
-                    }
-                  }
-                }
-              ]
-            }
-          }
-        }
+        // query: {
+          // "sort": [
+          //   {
+          //     "datetime": {
+          //       "order": "desc"
+          //     }
+          //   } 
+          // ],
+          // "query": {
+          //   "bool": {
+          //     "must": [
+          //       {
+          //         "range": {
+          //           "datetime": {
+          //             "time_zone": "+08:00",
+          //             "gte": targetDateTime.toIso8601String(),
+          //             "lte": targetDateTime.add(Duration(days: 1)).toIso8601String()
+          //           }
+          //         }
+          //       }
+          //     ]
+          //   }
+          // }
+        // }
       );
+      debugPrint("electricityConsumptionDataList: ${_electricityConsumptionDataList.first.toJson()}");
       _sumOfElectricityConsumptionDataList = await sumOfConsumptionClient.search();
       _deviceErrorReportList = await errorReportClient.search();
     }catch(e){
       debugPrint(e.toString());
       setLoadingState(LoadingState.error);
     }
-    _electricityConsumptionDataList.sort((a, b) => a.startTime!.compareTo(b.startTime!));
+    _electricityConsumptionDataList.sort((a, b) => a.recordTime!.compareTo(b.recordTime!));
     _sumOfElectricityConsumptionDataList.sort((a, b) => a.dateTime!.compareTo(b.dateTime!));
     _allDeviceConsumptionDataGroup = GroupConsumptionDataModel.fromDataSource(_sumOfElectricityConsumptionDataList);
 

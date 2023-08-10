@@ -45,8 +45,8 @@ class SumOfConsumptionDetailGridView extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(dataSource.assetType!, style: DashboardText.titleMedium(context)),
-                    Text(dataSource.building!, style: DashboardText.titleSmall(context).copyWith(
+                    Text(dataSource.deviceData!.assetType!, style: DashboardText.titleMedium(context)),
+                    Text(dataSource.deviceData!.building!, style: DashboardText.titleSmall(context).copyWith(
                       color: DashboardColor.secondary(context),
                     )),
                     // Text(dataSource.loc!, style: DashboardText.titleSmall(context).copyWith(

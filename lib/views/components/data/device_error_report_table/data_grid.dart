@@ -24,7 +24,7 @@ class DeviceErrorReportTableDataGrid extends StatelessWidget{
     // final columnsLabel = DeviceErrorReportTableDataSource(dataSource: dataSource).rows.first.getCells().map<String>((cell) => cell.columnName).toList();
     return SfDataGridTheme(
       data: SfDataGridThemeData(
-        headerColor: isLarge ? DashboardColor.tertiaryContainer(context) : null 
+        headerColor: isLarge ? DashboardColor.primaryContainer(context).withOpacity(0.4) : null 
       ),
       child: SfDataGrid(
         columnWidthMode: ColumnWidthMode.fill,
@@ -35,8 +35,8 @@ class DeviceErrorReportTableDataGrid extends StatelessWidget{
             label: Align(
               alignment: Alignment.center,
               child: Text(col, style: DashboardText.titleSmall(context).copyWith(
-                color:  isLarge 
-                  ? DashboardColor.onTertiaryContainer(context)
+                color: isLarge 
+                  ? DashboardColor.onPrimaryContainer(context)
                   : DashboardColor.onSurface(context)
               )),
             ),

@@ -22,9 +22,9 @@ class GroupConsumptionDataModel {
       totalConsumptionOfToday = dataSource.fold<int>(0, (previousValue, element) => previousValue + element.dayConsumption!);
       totalConsumptionOfMonthPerHour = dataSource.fold<double>(0, (previousValue, element) => previousValue + element.averageMonthConsumptionPerMonth!);
       
-      factoryList.addAll(dataSource.map<String>((e) => e.loc!).toSet().toList());
-      buildingList.addAll(dataSource.map<String>((e) => e.building!).toSet().toList());
-      assetTypeList.addAll(dataSource.map<String>((e) => e.assetType!).toSet().toList());
+      factoryList.addAll(dataSource.map<String>((e) => e.deviceData!.loc!).toSet().toList());
+      buildingList.addAll(dataSource.map<String>((e) => e.deviceData!.building!).toSet().toList());
+      assetTypeList.addAll(dataSource.map<String>((e) => e.deviceData!.assetType!).toSet().toList());
       dateTimeList.addAll(dataSource.map<DateTime>((e) => e.dateTime!).toSet().toList());
     }
   }

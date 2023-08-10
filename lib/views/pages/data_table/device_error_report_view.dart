@@ -22,16 +22,21 @@ class _DeviceErrorReportViewState extends State<DeviceErrorReportView> {
       create: (context) => DeviceErrorReportViewModel()..init(),
       child: Consumer<DeviceErrorReportViewModel>(
         builder: (context, viewModel, child) => Scaffold(
-          appBar: const DashboardAppBar(title: "設備異常報告"),
+          appBar: const DashboardAppBar(title: "用電異常清單"),
           drawer: const DashboardDrawer(),
           body: SizedBox.expand(
             child: DashboardPadding.large(
               child: DashboardFrameCard(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    FrameQuote(quoteText: "設備異常報告",),
-                    Expanded(
-                      child:  DeviceErrorReportTableDataGrid(dataSource: viewModel.dataSource),
+                    FrameQuote(quoteText: "用電異常清單", style: DashboardText.titleLarge(context)),
+                    // DashboardDivider.small(),
+                    // DashboardSizedBox.large(),
+                    DashboardPadding.object(
+                      child: Expanded(
+                        child:  DeviceErrorReportTableDataGrid(dataSource: viewModel.dataSource),
+                      ),
                     ),
                   ],
                 ),

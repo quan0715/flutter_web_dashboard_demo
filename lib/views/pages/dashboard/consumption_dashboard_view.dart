@@ -7,10 +7,11 @@ import 'package:web_dashboard/views/components/chart/sum_consumption_detail_grid
 import 'package:web_dashboard/views/components/chart/sum_consumption_pie_chart.dart';
 import 'package:web_dashboard/views/components/chart/weakly_consumption_line_chart.dart';
 import 'package:web_dashboard/views/components/data/device_error_report_table/data_grid.dart';
+import 'package:web_dashboard/views/components/widget/error_dialog.dart';
 import 'package:web_dashboard/views/theme/padding.dart';
 import 'package:web_dashboard/view_model/dashboard/electricity_consumption_view_model.dart';
 import 'package:web_dashboard/views/components/data/electricity_consumption_table/data_grid.dart';
-import 'package:web_dashboard/views/components/data/sum_electricity_consumption_table.dart/data_grid.dart';
+import 'package:web_dashboard/views/components/data/sum_consumption_table.dart/data_grid.dart';
 import 'package:web_dashboard/views/components/widget/app_bar.dart';
 import 'package:web_dashboard/views/components/widget/dashboard_frame_card.dart';
 import 'package:web_dashboard/views/components/widget/dashboard_search_bar.dart';
@@ -128,7 +129,7 @@ class _ConsumptionReportViewState extends State<ConsumptionReportView> with Sing
             quoteText: "總用電量分佈(圓餅圖)",
           ),
           SumOfConsumptionPieChart(
-          dataSource: PieChartProportion.fromSumOfConsumption(viewModel.sumOfElectricityConsumptionDataList),
+            dataSource: PieChartProportion.fromSumOfConsumption(viewModel.sumOfElectricityConsumptionDataList),
           ),
           Expanded(
             flex: 1,
@@ -239,25 +240,25 @@ class _ConsumptionReportViewState extends State<ConsumptionReportView> with Sing
                       Expanded(
                         child: DashboardFrameCard(
                           elevation: 3,
-                          child: 
-                          viewModel.loadingState == LoadingState.loading 
+                          child: viewModel.loadingState == LoadingState.loading
                           ? loadingView()
                           : !viewModel.isDashboardView
-                            ? tableViewFrame(viewModel)
-                            : Row( children: [
-                                Expanded(flex: 1, child: overViewFrame(viewModel)),
-                                Expanded(flex: 1, child: groupDetailDataFrame(viewModel)),
-                                Expanded(
-                                  flex: 2,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                                    children: [
-                                      Expanded(child: consumptionTimelineChartFrame(viewModel)),
-                                      Expanded(child: errorReportTableView(viewModel)),
-                                    ],
-                                  ),
-                                )],
-                              )))
+                              ? tableViewFrame(viewModel)
+                              : Row( children: [
+                                  Expanded(flex: 1, child: overViewFrame(viewModel)),
+                                  Expanded(flex: 1, child: groupDetailDataFrame(viewModel)),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      children: [
+                                        Expanded(child: consumptionTimelineChartFrame(viewModel)),
+                                        Expanded(child: errorReportTableView(viewModel)),
+                                      ],
+                                    ),
+                                  )],
+                                )
+                          ))
                     ],
                   ),
                 )),

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/view_model/auth_manager.dart';
 import 'package:web_dashboard/view_model/theme_manager.dart';
-import 'package:web_dashboard/views/dashboards/device_error_report_view.dart';
-import 'package:web_dashboard/views/dashboards/electricity_consumption_dashboard_view.dart';
+import 'package:web_dashboard/views/pages/data_table/device_error_report_view.dart';
+import 'package:web_dashboard/views/pages/dashboard/electricity_consumption_dashboard_view.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:web_dashboard/views/auth/login_view.dart';
-import 'package:web_dashboard/views/dashboards/monitoring_device_manage_view.dart';
+import 'package:web_dashboard/views/pages/auth/login_view.dart';
+import 'package:web_dashboard/views/pages/data_table/monitoring_device_manage_view.dart';
 import 'views/config/firebase_options.dart';
-import 'views/dashboards/consumption_dashboard_view.dart';
+import 'views/pages/dashboard/consumption_dashboard_view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,16 +1,9 @@
 
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:web_dashboard/models/repo/base_repo.dart';
 import 'package:web_dashboard/db/db_config.dart';
-// sample data: 
-// tagid: G1_M30_MACS_MACS0002_KWH
-// d_com: 25, m_com: 182
-// avg_m_h_com: 22.75
-// datetime: 2023-08-08T00:00:00.000+0800
-// loc: G1
-// building: M30
-// assettype: MACS
-
+import 'package:web_dashboard/models/repo/monitoring_device_repo_model.dart';
 
 class SumOfElectricityConsumptionDataModel implements RepoModel{
   // Device electricity consumption data model 
@@ -19,66 +12,76 @@ class SumOfElectricityConsumptionDataModel implements RepoModel{
 
   @override
   String? repoId; // db: _id
-  final String? tagId; // db:  _source/tagid
-  final int? dayConsumption; // db:  _source/d_com
-  final int? monthConsumption; // db:  _source/m_com
+  final int? dayConsumption; // db:  _source/d_con
+  final int? monthConsumption; // db:  _source/m_con
+  final int? yearConsumption; // db:  _source/y_con
+  final int? quarterConsumption; // db:  _source/q_con
   final double? averageMonthConsumptionPerMonth; //  _source/avg_m_h_com;
   final DateTime? dateTime; // db:  _source/datetime
-  final String? loc; // db:  _source/loc
-  final String? building; // db:  _source/building
-  final String? assetType; // db:  _source/assettype
-   
+  final MonitoringDeviceModel? deviceData;
   // constructor
   SumOfElectricityConsumptionDataModel({
-    this.tagId,
     this.dayConsumption,
     this.monthConsumption,
     this.averageMonthConsumptionPerMonth,
+    this.yearConsumption,
+    this.quarterConsumption,
+    this.deviceData,
     this.dateTime,
-    this.loc,
-    this.building,
-    this.assetType,
     this.repoId,
   });
   
   factory SumOfElectricityConsumptionDataModel.getInstance() => SumOfElectricityConsumptionDataModel();
 
   @override
+  String toString() {
+    return toJson().entries.map((e) => '${e.key}: ${e.value}').join(', ');
+  }
+
+  @override
   SumOfElectricityConsumptionDataModel fromJson(Map<String, dynamic> json) {
-    // print(json['_source']['datetime'].toString());
-    // print(DateFormat("yyyy-MM-ddTHH:mm:ssZ").parse(json['_source']['datetime'] as String));
     try{
+      var source = json['_source'];
       return SumOfElectricityConsumptionDataModel( 
-      tagId: json['_source']['tagid'] as String,
-      dayConsumption: json['_source']['d_com'] as int,
-      monthConsumption: json['_source']['m_com'] as int,
-      averageMonthConsumptionPerMonth: json['_source']['avg_m_h_com'] as double,
-      // dateTime: DateTime.parse(json['_source']['datetime']),
-      dateTime: DateFormat("yyyy-MM-ddTHH:mm:ssZ").parse(json['_source']['datetime'] as String),
-      loc: json['_source']['loc'] as String,
-      building: json['_source']['building'] as String,
-      assetType: json['_source']['assettype'] as String,
+      dayConsumption: source['d_con'] as int,
+      monthConsumption: source['m_con'] as int,
+      yearConsumption: source['y_con'] as int,
+      quarterConsumption: source['q_con'] as int,
+      averageMonthConsumptionPerMonth: source['avg_m_h_con'] as double,
+      dateTime: DateFormat("yyyy-MM-ddTHH:mm:ssZ").parse(source['datetime'] as String),
+      deviceData: MonitoringDeviceModel(
+        tagId: source['tagid'] as String,
+        loc: source['loc'] as String,
+        building: source['building'] as String,
+        assetType: source['assettype'] as String,
+        lineType: source['linetype'] as String,
+        department: source['department'] as String,
+      ),
       repoId: json['_id'] as String,
     );
     } catch(e){
-      print(json.toString());
-      print(e.toString());
-      throw e;
+      debugPrint(json.toString());
+      debugPrint(e.toString());
+      rethrow;
     }
     
   }
 
   @override
   Map<String, dynamic> toJson() {
-    return {
-      'tagid': tagId,
-      'd_com': dayConsumption,
-      'm_com': monthConsumption,
-      'avg_m_h_com': averageMonthConsumptionPerMonth,
+    return{
+      'd_con': dayConsumption,
+      'm_con': monthConsumption,
+      'avg_m_h_con': averageMonthConsumptionPerMonth,
+      'y_con': yearConsumption,
+      'q_con': quarterConsumption,
       'datetime': dateTime?.toIso8601String(),
-      'loc': loc,
-      'building': building,
-      'assettype': assetType,
+      'tagid': deviceData?.tagId,
+      'loc': deviceData?.loc,
+      'building': deviceData?.building,
+      'assettype': deviceData?.assetType,
+      'linetype': deviceData?.lineType,
+      'department': deviceData?.department,
     };
   }
 
@@ -97,6 +100,7 @@ class PieChartProportion<M>{
 
   static List<PieChartProportion<SumOfElectricityConsumptionDataModel>> fromSumOfConsumption(List<SumOfElectricityConsumptionDataModel> dataSource){
     List<PieChartProportion<SumOfElectricityConsumptionDataModel>> result = [];
+    // debugPrint(dataSource.toString());
     int total = 0;
     for(int i = 0; i < dataSource.length; i++){
       total += dataSource[i].dayConsumption ?? 0;

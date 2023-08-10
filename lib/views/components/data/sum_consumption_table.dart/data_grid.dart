@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
-import 'package:web_dashboard/views/components/data/sum_electricity_consumption_table.dart/data_source.dart';
+import 'package:web_dashboard/views/components/data/sum_consumption_table.dart/config.dart';
+import 'package:web_dashboard/views/components/data/sum_consumption_table.dart/data_source.dart';
 
 class SumOfElectricityConsumptionDataGrid extends StatelessWidget{
   final List<SumOfElectricityConsumptionDataModel> dataSource;
@@ -11,7 +11,7 @@ class SumOfElectricityConsumptionDataGrid extends StatelessWidget{
   late final List<String> columnsLabel;
   SumOfElectricityConsumptionDataGrid({super.key, required this.dataSource}){
     dataGridSource = SumOfElectricityConsumptionDataSource(dataSource: dataSource);
-    columnsLabel =  dataGridSource!.rows[0].getCells().map<String>((dataCell) => dataCell.columnName).toList();
+    columnsLabel =  SumConsumptionTableConfig.columNameList;
   }
   @override
   Widget build(BuildContext context) {
