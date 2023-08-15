@@ -6,10 +6,10 @@ class AuthManager extends ChangeNotifier{
   bool _isLoading = false;
   bool? _isError;
   // debug account
-  // String? account = "quan787887@gmail.com";
-  // String? password = "0987685806";
-  String? account;
-  String? password;
+  String? account = "nickyin@tw.ibm.com";
+  String? password = "123456";
+  // String? account;
+  // String? password;
   bool get isLogin => _isLogin;
   bool get isLoading => _isLoading;
   bool? get isError => _isError;
