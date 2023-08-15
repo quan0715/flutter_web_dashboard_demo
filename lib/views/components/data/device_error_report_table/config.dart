@@ -11,10 +11,12 @@ class LargeViewDeviceErrorReportTableConfig{
       DataGridCell(columnName: "建築物", value: data.building),
       DataGridCell(columnName: "設備編號", value: data.tagId),
       DataGridCell(columnName: "當下電流", value: data.ampere),
-      DataGridCell(columnName: "當下電壓", value: data.volt),
+      DataGridCell(columnName: "當下電壓", value: data.voltage),
       DataGridCell(columnName: "當下功率", value: data.power),
-      DataGridCell(columnName: "UB", value: data.ub),
-      DataGridCell(columnName: "LB", value: data.lb),
+      DataGridCell(columnName: "Ub", value: data.boundData?.upperBound ?? "-1"),
+      DataGridCell(columnName: "Lb", value: data.boundData?.lowerBound ?? "-1"),
+      DataGridCell(columnName: "WUb", value: data.boundData?.warningUpperBound ?? "-1"),
+      DataGridCell(columnName: "WLb", value: data.boundData?.warningLowerBound ?? "-1"),
     ]);
   }
   static List<String> columName = [
@@ -26,8 +28,10 @@ class LargeViewDeviceErrorReportTableConfig{
     "當下電流",
     "當下電壓",
     "當下功率", 
-    "UB",
-    "LB"
+    "Ub",
+    "Lb",
+    "WUb",
+    "WLb"
   ];
 }
 
@@ -39,10 +43,12 @@ class SmallViewDeviceErrorReportTableConfig{
       // DataGridCell(columnName: "建築", value: data.building),
       DataGridCell(columnName: "開始時間", value: DashBoardFormat.time(data.startTime!)),
       DataGridCell(columnName: "當下電流", value: data.ampere),
-      DataGridCell(columnName: "當下電壓", value: data.volt),
+      DataGridCell(columnName: "當下電壓", value: data.voltage),
       DataGridCell(columnName: "當下功率", value: data.power),
-      DataGridCell(columnName: "UB", value: data.ub),
-      DataGridCell(columnName: "LB", value: data.lb),
+      DataGridCell(columnName: "Ub", value: data.boundData?.upperBound ?? "-1"),
+      DataGridCell(columnName: "Lb", value: data.boundData?.lowerBound ?? "-1"),
+      DataGridCell(columnName: "WUb", value: data.boundData?.warningUpperBound ?? "-1"),
+      DataGridCell(columnName: "WLb", value: data.boundData?.warningLowerBound ?? "-1"),
     ]);
   }
   static List<String> columName = [
@@ -53,6 +59,8 @@ class SmallViewDeviceErrorReportTableConfig{
     "當下電流",
     "當下電壓",
     "當下功率", 
+    "WUb",
+    "WLb",
     "UB",
     "LB"
   ];

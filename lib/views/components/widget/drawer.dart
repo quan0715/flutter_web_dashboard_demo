@@ -68,21 +68,25 @@ class DashboardDrawer extends StatelessWidget{
                               DashboardSizedBox.small(),
                               Text("輝能能源管理平台", style: DashboardText.headLineSmall(context),),
                               DashboardSizedBox.small(),
-                              // premiumLabelChip() 
+                              RawChip(
+                                side: BorderSide.none,
+                                avatar: Icon(Icons.factory_rounded, color: DashboardColor.primary(context)),
+                                label: const Text("G1 廠")
+                              ),
                           ]),
                         ),
                         DashboardSizedBox.large(),
                         const FrameQuote(quoteText: "儀表板",),
+                        // ListTile(
+                        //   leading: const Icon(Icons.dashboard),
+                        //   // isThreeLine: true,
+                        //   title: const Text('用電紀錄儀表板(Ｌ)'),
+                        //   onTap: () => Navigator.pushNamed(context, "/dashboard/main")
+                        // ),
                         ListTile(
                           leading: const Icon(Icons.dashboard),
                           // isThreeLine: true,
-                          title: const Text('用電紀錄儀表板(Ｌ)'),
-                          onTap: () => Navigator.pushNamed(context, "/dashboard/main")
-                        ),
-                        ListTile(
-                          leading: const Icon(Icons.dashboard),
-                          // isThreeLine: true,
-                          title: const Text('用電紀錄儀表板(R)'),
+                          title: const Text('用電紀錄儀表板'),
                           onTap: () => Navigator.pushNamed(context, "/dashboard/device_consumption_report"),
                         ),
                         ListTile(
@@ -96,7 +100,7 @@ class DashboardDrawer extends StatelessWidget{
                             // ...
                           },
                         ),
-                        const FrameQuote(quoteText: "資料設定",), 
+                        const FrameQuote(quoteText: "工廠資料設定"), 
                         ListTile(
                           leading: const Icon(Icons.error),
                           // isThreeLine: true,

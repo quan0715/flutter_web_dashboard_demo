@@ -22,26 +22,30 @@ class DeviceErrorReportTableDataGrid extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     // final columnsLabel = DeviceErrorReportTableDataSource(dataSource: dataSource).rows.first.getCells().map<String>((cell) => cell.columnName).toList();
-    return SfDataGridTheme(
-      data: SfDataGridThemeData(
-        headerColor: isLarge ? DashboardColor.primaryContainer(context).withOpacity(0.4) : null 
-      ),
-      child: SfDataGrid(
-        columnWidthMode: ColumnWidthMode.fill,
-        source: DeviceErrorReportTableDataSource(dataSource: dataSource, isLarge: isLarge), 
-        columns: columnsLabel.map<GridColumn>(
-          (col) => GridColumn(
-            columnName: col,
-            label: Align(
-              alignment: Alignment.center,
-              child: Text(col, style: DashboardText.titleSmall(context).copyWith(
-                color: isLarge 
-                  ? DashboardColor.onPrimaryContainer(context)
-                  : DashboardColor.onSurface(context)
-              )),
-            ),
-          )
-        ).toList(),
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      elevation: 1,
+      child: SfDataGridTheme(
+        data: SfDataGridThemeData(
+          headerColor: isLarge ? DashboardColor.primaryContainer(context).withOpacity(0.4) : null 
+        ),
+        child: SfDataGrid(
+          columnWidthMode: ColumnWidthMode.fill,
+          source: DeviceErrorReportTableDataSource(dataSource: dataSource, isLarge: isLarge), 
+          columns: columnsLabel.map<GridColumn>(
+            (col) => GridColumn(
+              columnName: col,
+              label: Align(
+                alignment: Alignment.center,
+                child: Text(col, style: DashboardText.titleSmall(context).copyWith(
+                  color: isLarge 
+                    ? DashboardColor.onPrimaryContainer(context)
+                    : DashboardColor.onSurface(context)
+                )),
+              ),
+            )
+          ).toList(),
+        ),
       ),
     );
   }

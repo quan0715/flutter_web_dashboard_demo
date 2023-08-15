@@ -33,10 +33,8 @@ class _DeviceErrorReportViewState extends State<DeviceErrorReportView> {
                     FrameQuote(quoteText: "用電異常清單", style: DashboardText.titleLarge(context)),
                     // DashboardDivider.small(),
                     // DashboardSizedBox.large(),
-                    DashboardPadding.object(
-                      child: Expanded(
-                        child:  DeviceErrorReportTableDataGrid(dataSource: viewModel.dataSource),
-                      ),
+                    Expanded(
+                      child:  DashboardPadding.object(child: DeviceErrorReportTableDataGrid(dataSource: viewModel.dataSource)),
                     ),
                   ],
                 ),

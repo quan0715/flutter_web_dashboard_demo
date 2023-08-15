@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:web_dashboard/view_model/auth_manager.dart';
 import 'package:web_dashboard/view_model/theme_manager.dart';
 import 'package:web_dashboard/views/pages/data_table/device_error_report_view.dart';
-import 'package:web_dashboard/views/pages/dashboard/electricity_consumption_dashboard_view.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:web_dashboard/views/pages/auth/login_view.dart';
@@ -35,14 +34,13 @@ class MyApp extends StatelessWidget {
             title: 'web dashboard project',
             theme: themeManager.theme,
             routes: {
-              "/dashboard/main": (context) => const ElectricityConsumptionDashboard(),
+              "/dashboard/device_consumption_report": (context) => const ConsumptionReportView(),
               "/dashboard/monitoring_device_manage": (context) => const MonitoringDeviceManageView(),
               "/dashboard/device_error_report": (context) => const DeviceErrorReportView(),
-              "/dashboard/device_consumption_report": (context) => const ConsumptionReportView(),
               "/login": (context) => LoginPageView(),
               '/': (context) => LoginPageView(),
             },
-            initialRoute: authManager.isLogin ? "/dashboard/main" : "/login",
+            initialRoute: authManager.isLogin ? "/dashboard/device_consumption_report" : "/login",
           ),
         ),
       ),

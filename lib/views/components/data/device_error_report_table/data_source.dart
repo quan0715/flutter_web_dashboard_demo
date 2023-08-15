@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:web_dashboard/models/repo/error_report_repo_model.dart';
 import 'package:web_dashboard/views/components/data/device_error_report_table/config.dart';
-import 'package:web_dashboard/views/theme/format.dart';
 
 class DeviceErrorReportTableDataSource extends DataGridSource{
   final List<DeviceErrorReportModel> dataSource;

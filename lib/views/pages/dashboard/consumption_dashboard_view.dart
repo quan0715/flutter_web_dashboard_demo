@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:web_dashboard/models/group_consumption_data_model.dart';
 import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
 import 'package:web_dashboard/models/state.dart';
 import 'package:web_dashboard/views/components/chart/info_card.dart';
@@ -7,7 +8,6 @@ import 'package:web_dashboard/views/components/chart/sum_consumption_detail_grid
 import 'package:web_dashboard/views/components/chart/sum_consumption_pie_chart.dart';
 import 'package:web_dashboard/views/components/chart/weakly_consumption_line_chart.dart';
 import 'package:web_dashboard/views/components/data/device_error_report_table/data_grid.dart';
-import 'package:web_dashboard/views/components/widget/error_dialog.dart';
 import 'package:web_dashboard/views/theme/padding.dart';
 import 'package:web_dashboard/view_model/dashboard/electricity_consumption_view_model.dart';
 import 'package:web_dashboard/views/components/data/electricity_consumption_table/data_grid.dart';
@@ -17,6 +17,7 @@ import 'package:web_dashboard/views/components/widget/dashboard_frame_card.dart'
 import 'package:web_dashboard/views/components/widget/dashboard_search_bar.dart';
 import 'package:web_dashboard/views/components/widget/drawer.dart';
 import 'package:web_dashboard/views/components/widget/quote.dart';
+import 'package:web_dashboard/views/theme/theme.dart';
 
 class ConsumptionReportView extends StatefulWidget {
   const ConsumptionReportView({Key? key}) : super(key: key);
@@ -69,6 +70,7 @@ class _ConsumptionReportViewState extends State<ConsumptionReportView> with Sing
           Expanded( child: 
             WeeklyConsumptionLineChart(
               data: viewModel.weaklySumOfElectricityConsumptionDataList,
+              cmpLine: viewModel.lastWeakSumOfElectricityConsumptionDataList,
             )
           ),
         ],
@@ -77,6 +79,7 @@ class _ConsumptionReportViewState extends State<ConsumptionReportView> with Sing
   }
 
   Widget groupDetailDataFrame(ElectricityConsumptionDashboardViewModel viewModel){
+    List source = viewModel.getGroupDataSource;
     return DashboardFrameCard(
       elevation: 0,
       child: Column(
@@ -93,10 +96,10 @@ class _ConsumptionReportViewState extends State<ConsumptionReportView> with Sing
                 mainAxisSpacing: 6,
                 crossAxisSpacing: 8,
               ),
-              itemCount: viewModel.sumOfElectricityConsumptionDataList.length,
+              itemCount: source.length,
               itemBuilder: (context, index) {
                 return SumOfConsumptionDetailGridView(
-                  dataSource: viewModel.sumOfElectricityConsumptionDataList[index],
+                  dataSource: source[index],
                 );
               },
             ),
@@ -107,17 +110,19 @@ class _ConsumptionReportViewState extends State<ConsumptionReportView> with Sing
   }
 
   Widget overViewFrame(ElectricityConsumptionDashboardViewModel viewModel){
+    SumOfElectricityConsumptionDataModel dataSource = viewModel.getOverAllData;
+    debugPrint(dataSource.toString());
     final data = [{
         "title" : "總用電量",
-        "value" : viewModel.groupDataSource.totalConsumptionOfToday,
+        "value" : dataSource.dayConsumption,
         "unit" : "kWh", 
       },{
         "title" : "累積總月用電量",
-        "value" : viewModel.groupDataSource.totalConsumptionOfMonth,
+        "value" : dataSource.monthConsumption,
         "unit" : "kWh", 
       },{
         "title" : "每小時平均用電量",
-        "value" : viewModel.groupDataSource.totalConsumptionOfMonthPerHour.toInt(),
+        "value" : dataSource.averageMonthConsumptionPerMonth!.toInt(),
         "unit" : "kWh", 
       },
     ];
@@ -129,7 +134,7 @@ class _ConsumptionReportViewState extends State<ConsumptionReportView> with Sing
             quoteText: "總用電量分佈(圓餅圖)",
           ),
           SumOfConsumptionPieChart(
-            dataSource: PieChartProportion.fromSumOfConsumption(viewModel.sumOfElectricityConsumptionDataList),
+            dataSource: PieChartProportion.fromSumOfConsumption((dataSource as DeviceGroupModel).dataSource),
           ),
           Expanded(
             flex: 1,
@@ -242,23 +247,25 @@ class _ConsumptionReportViewState extends State<ConsumptionReportView> with Sing
                           elevation: 3,
                           child: viewModel.loadingState == LoadingState.loading
                           ? loadingView()
-                          : !viewModel.isDashboardView
-                              ? tableViewFrame(viewModel)
-                              : Row( children: [
-                                  Expanded(flex: 1, child: overViewFrame(viewModel)),
-                                  Expanded(flex: 1, child: groupDetailDataFrame(viewModel)),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      children: [
-                                        Expanded(child: consumptionTimelineChartFrame(viewModel)),
-                                        Expanded(child: errorReportTableView(viewModel)),
-                                      ],
-                                    ),
-                                  )],
-                                )
-                          ))
+                          : viewModel.sumOfElectricityConsumptionDataList.isEmpty
+                            ? Center(child: Text("無資料紀錄", style: DashboardText.labelLarge(context),),)
+                            : !viewModel.isDashboardView
+                                ? tableViewFrame(viewModel)
+                                : Row( children: [
+                                    Expanded(flex: 1, child: overViewFrame(viewModel)),
+                                    Expanded(flex: 1, child: groupDetailDataFrame(viewModel)),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                                        children: [
+                                          Expanded(flex: 3, child: consumptionTimelineChartFrame(viewModel)),
+                                          Expanded(flex: 2, child: errorReportTableView(viewModel)),
+                                        ],
+                                      ),
+                                    )],
+                                  )
+                            ))
                     ],
                   ),
                 )),

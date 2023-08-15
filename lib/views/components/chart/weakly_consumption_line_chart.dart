@@ -18,7 +18,7 @@ class WeeklyConsumptionLineChart extends StatelessWidget{
           shouldAlwaysShowScrollbar: false,
           overflowMode: LegendItemOverflowMode.wrap,
           position: LegendPosition.bottom, 
-          isVisible: false,
+          isVisible: true,
         ),
         tooltipBehavior: TooltipBehavior(enable: true),
         primaryXAxis: CategoryAxis(
@@ -38,9 +38,9 @@ class WeeklyConsumptionLineChart extends StatelessWidget{
         series: <XyDataSeries<SumOfElectricityConsumptionDataModel, String>>[
           SplineSeries<SumOfElectricityConsumptionDataModel, String>(
             dataSource: data,
-            xValueMapper: (SumOfElectricityConsumptionDataModel data, index) => DashBoardFormat.time(data.dateTime!),
+            xValueMapper: (SumOfElectricityConsumptionDataModel data, index) => data.groupLabel,
             yValueMapper: (SumOfElectricityConsumptionDataModel data, _) => data.dayConsumption,
-            name: '即時用電量',
+            name: '近7天用電量趨勢',
             xAxisName: '時間軸',
             yAxisName: '用電量',
             splineType: SplineType.monotonic,
@@ -48,23 +48,22 @@ class WeeklyConsumptionLineChart extends StatelessWidget{
             // Enable data label
             // dataLabelSettings: const DataLabelSettings(isVisible: true)
           ),
-          // if(cmpLine != null) 
-          //   SplineSeries<ElectricityTimeData, String>(
-          //     dataSource: cmpLine!,
-          //     xValueMapper: (ElectricityTimeData data, index)
-          //       => DashBoardFormat.dayTimeChartLabel(data.time.add(const Duration(days: 7))),
-          //     yValueMapper: (ElectricityTimeData data, _) =>
-          //         data.power.toInt(),
-          //     name: '上週用電紀錄',
-          //     xAxisName: '時間軸',
-          //     yAxisName: '用電量',
-          //     splineType: SplineType.monotonic,
-          //     enableTooltip: true,
-          //     width: 2,
-          //     color: Theme.of(context).colorScheme.primary,
-          //     // Enable data label
-          //     // dataLabelSettings: const DataLabelSettings(isVisible: true)
-          //   )
+          if(cmpLine != null) 
+            SplineSeries<SumOfElectricityConsumptionDataModel, String>(
+              dataSource: cmpLine!,
+              xValueMapper: (SumOfElectricityConsumptionDataModel d, index)
+                => data[index].groupLabel, // [index]
+              yValueMapper: (SumOfElectricityConsumptionDataModel data, _) => data.dayConsumption,
+              name: '上7天用電量趨勢',
+              xAxisName: '時間軸',
+              yAxisName: '用電量',
+              splineType: SplineType.monotonic,
+              enableTooltip: true,
+              width: 2,
+              // color: Theme.of(context).colorScheme.primary,
+              // Enable data label
+              // dataLabelSettings: const DataLabelSettings(isVisible: true)
+            )
         ],
       );
   }

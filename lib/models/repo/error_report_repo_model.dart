@@ -3,6 +3,7 @@
 // Path: lib/models/repo/error_report.dart
 // 每分鐘更新資料
 import 'package:flutter/material.dart';
+import 'package:web_dashboard/models/repo/bound_data_class.dart';
 import 'package:web_dashboard/models/repo/base_repo.dart';
 import 'package:web_dashboard/db/db_config.dart';
 
@@ -21,12 +22,9 @@ class DeviceErrorReportModel implements RepoModel {
   final String? building;
   final String? tagId;
   final int? ampere;
-  final int? volt;
+  final int? voltage;
   final int? power;
-  final int? lb;  // lower bound
-  final int? ub;  // upper bound
-  final int? wub; // warning upper bound
-  final int? wlb; // warning lower bound
+  final BoundDataClass? boundData;
   // constructor
   DeviceErrorReportModel({
     this.errorType,
@@ -36,12 +34,9 @@ class DeviceErrorReportModel implements RepoModel {
     this.building,
     this.tagId,
     this.ampere,
-    this.volt,
+    this.voltage,
     this.power,
-    this.lb,
-    this.ub,
-    this.wub,
-    this.wlb,
+    this.boundData,
     this.repoId,
   });
   // from json
@@ -50,21 +45,18 @@ class DeviceErrorReportModel implements RepoModel {
   }
   @override
   DeviceErrorReportModel fromJson(Map<String, dynamic> json){
-    debugPrint(json.toString());
+    var s = json['_source'] as Map<String, dynamic>;
     return DeviceErrorReportModel(
-      errorType: ElectricityConsumptionErrorType.fromDBField(json['_source']['e_typ'] as String),
-      // errorDescription: json['_source']['errorDescription'] as String,
-      startTime: DateTime.parse(json['_source']['datetime'] as String),
-      loc: json['_source']['loc'] as String ,
-      building: json['_source']['building'] as String,
-      tagId: json['_source']['tagid'] as String,
-      ampere: json['_source']['ampere'],
-      volt: json['_source']['voltage'],
-      power: json['_source']['kw'],
-      lb: json['_source']['lb'],
-      ub: json['_source']['ub'],
-      wub: json['_source']['wub'],
-      wlb: json['_source']['wlb'],
+      errorType: ElectricityConsumptionErrorType.fromDBField(s[DBConfig.errorTypeId]),
+      errorDescription: "",
+      startTime: DateTime.parse(s[DBConfig.dateTimeId] as String),
+      loc: s[DBConfig.locId] as String,
+      building: s[DBConfig.buildingId] as String,
+      tagId: s[DBConfig.tagIdId] as String,
+      ampere: s[DBConfig.ampereId] as int,
+      voltage: s[DBConfig.voltageId] as int,
+      power: s[DBConfig.powerId] as int,
+      boundData: BoundDataClass.fromJson(s),
       repoId: json['_id'] as String,
     );
   }
@@ -72,21 +64,16 @@ class DeviceErrorReportModel implements RepoModel {
   // to Json
   @override
   Map<String, dynamic> toJson() => {
-    'e_typ': errorType,
-    // 'errorDescription': errorDescription,
-    'datetime': startTime,
-    'loc': loc,
-    'building': building,
-    'tagid': tagId,
-    'A': ampere,
-    'V': volt,
-    'KW': power
-  };
+    DBConfig.errorTypeId : errorType.toString(),
+    DBConfig.dateTimeId : startTime.toString(),
+    DBConfig.locId : loc,
+    DBConfig.buildingId : building,
+    DBConfig.tagIdId : tagId,
+    DBConfig.ampereId : ampere,
+    DBConfig.voltageId : voltage,
+    DBConfig.powerId : power,
+  }..addEntries(boundData!.toJson().entries ?? []);
 
-  @override
-  String toString() {
-    return "errorType: $errorType, errorDescription: $errorDescription, startTime: $startTime, loc: $loc, building: $building, tagId: $tagId, ampere: $ampere, volt: $volt, power: $power, repoId: $repoId";
-  }
 }
 
 enum ElectricityConsumptionErrorType{

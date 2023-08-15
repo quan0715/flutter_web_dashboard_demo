@@ -2,30 +2,32 @@
 // Usage: Represent the data model for group of consumption data
 import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
 
-class GroupConsumptionDataModel {
+class DeviceGroupModel extends SumOfElectricityConsumptionDataModel{ 
   final List<SumOfElectricityConsumptionDataModel> dataSource;
-  // SumOfElectricityConsumptionDataModel? data;
-  int totalConsumptionOfMonth = 0;
-  int totalConsumptionOfToday = 0;
-  double totalConsumptionOfMonthPerHour = 0;
-  List<String> factoryList = ["全"];
-  List<String> buildingList = ["全"];
-  List<String> assetTypeList = ["全"];
-  List<DateTime> dateTimeList = [];
-  GroupConsumptionDataModel({required this.dataSource}){
+  
+  DeviceGroupModel({required this.dataSource, required groupLabel}){
+    super.groupLabel = groupLabel;
     initData();
   }
-  factory GroupConsumptionDataModel.fromDataSource(List<SumOfElectricityConsumptionDataModel> dataSource) => GroupConsumptionDataModel(dataSource: dataSource);
+  // factory DeviceGroupModel.fromDataSource(List<SumOfElectricityConsumptionDataModel> dataSource) 
+  // => DeviceGroupModel(dataSource: dataSource);
+  
   void initData(){
     if(dataSource.isNotEmpty){
-      totalConsumptionOfMonth = dataSource.fold<int>(0, (previousValue, element) => previousValue + element.monthConsumption!);
-      totalConsumptionOfToday = dataSource.fold<int>(0, (previousValue, element) => previousValue + element.dayConsumption!);
-      totalConsumptionOfMonthPerHour = dataSource.fold<double>(0, (previousValue, element) => previousValue + element.averageMonthConsumptionPerMonth!);
-      
-      factoryList.addAll(dataSource.map<String>((e) => e.deviceData!.loc!).toSet().toList());
-      buildingList.addAll(dataSource.map<String>((e) => e.deviceData!.building!).toSet().toList());
-      assetTypeList.addAll(dataSource.map<String>((e) => e.deviceData!.assetType!).toSet().toList());
-      dateTimeList.addAll(dataSource.map<DateTime>((e) => e.dateTime!).toSet().toList());
+      dayConsumption = dataSource.fold<int>(0, (previousValue, element) => previousValue + element.dayConsumption!);
+      monthConsumption = dataSource.fold<int>(0, (previousValue, element) => previousValue + element.monthConsumption!);
+      yearConsumption = dataSource.fold<int>(0, (previousValue, element) => previousValue + element.yearConsumption!);
+      quarterConsumption = dataSource.fold<int>(0, (previousValue, element) => previousValue + element.quarterConsumption!);
+      averageMonthConsumptionPerMonth = dataSource.fold<double>(0, (previousValue, element) => previousValue + element.averageMonthConsumptionPerMonth!);
+      // factoryList.addAll(dataSource.map<String>((e) => e.deviceData!.loc!).toSet().toList());
+      // buildingList.addAll(dataSource.map<String>((e) => e.deviceData!.building!).toSet().toList());
+      // assetTypeList.addAll(dataSource.map<String>((e) => e.deviceData!.assetType!).toSet().toList());
+      // dateTimeList.addAll(dataSource.map<DateTime>((e) => e.dateTime!).toSet().toList());
     }
+  }
+
+  @override
+  String toString() {
+    return 'DeviceGroupModel{dataSource: $dataSource}\n groupLabel: $groupLabel';
   }
 }

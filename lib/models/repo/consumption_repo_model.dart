@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
-import 'package:web_dashboard/models/bound.dart';
+import 'package:web_dashboard/models/repo/bound_data_class.dart';
 import 'package:web_dashboard/models/repo/base_repo.dart';
 import 'package:web_dashboard/db/db_config.dart';
-import 'package:web_dashboard/models/repo/monitoring_device_repo_model.dart';
+import 'package:web_dashboard/models/repo/device_data_class.dart';
 
 class ElectricityConsumptionDataModel implements RepoModel{
   // Device electricity consumption data model 
@@ -14,7 +14,7 @@ class ElectricityConsumptionDataModel implements RepoModel{
   String? repoId; // db: _id
 
   final DateTime? recordTime; // db: datetime
-  final MonitoringDeviceModel? deviceData;
+  final DeviceDataClass? deviceData;
   final BoundDataClass? boundData;
 
   final int? power; // db: kw
@@ -38,42 +38,22 @@ class ElectricityConsumptionDataModel implements RepoModel{
   factory ElectricityConsumptionDataModel.getInstance() => ElectricityConsumptionDataModel();
 
   @override
-  String toString() {
-    return toJson().entries.map((e) => '${e.key}: ${e.value}').join('\n');
-  }
-
-  @override
   ElectricityConsumptionDataModel fromJson(Map<String, dynamic> json) {
-    // debugPrint(json.toString());
     try{
-      debugPrint(json.toString());
       final source = json['_source'];
       return ElectricityConsumptionDataModel(
-        recordTime: DateTime.parse(source['datetime'] as String),
-        power: source['kw'],
-        energyConsumed: source['kwh'],
-        sumOfEnergyConsumed: source['sum_kwh'],
-        ampere: source['ampere'],
-        volt: source['voltage'],
-        deviceData: MonitoringDeviceModel(
-          tagId: source['tagid'] as String,
-          loc: source['loc'] as String,
-          building: source['building'] as String,
-          assetType: source['assettype'] as String,
-          lineType: source['linetype'] as String,
-          department: source['department'] as String,
-        ),
-        boundData: BoundDataClass(
-          lowerBound: source['lb'] as int,
-          upperBound: source['ub'] as int,
-          warningLowerBound: source['wlb'] as int,
-          warningUpperBound: source['wub'] as int,
-        ),
+        recordTime: DateTime.parse(source[DBConfig.dateTimeId] as String),
+        power: source[DBConfig.powerId],
+        energyConsumed: source[DBConfig.powerConsumptionId],
+        sumOfEnergyConsumed: source[DBConfig.sumOfEnergyConsumedId],
+        ampere: source[DBConfig.ampereId],
+        volt: source[DBConfig.voltageId],
+        deviceData: DeviceDataClass.fromJson(source),
+        boundData: BoundDataClass.fromJson(source),
         repoId: json['_id'] as String,
       );
     } catch(e){
-      debugPrint(json.toString());
-      debugPrint(e.toString());
+      debugPrint(DBConfig.jsonSerializerMessage(index, '$e\n$json'));
       rethrow ;
     }
   }
@@ -81,19 +61,14 @@ class ElectricityConsumptionDataModel implements RepoModel{
   @override
   Map<String, dynamic> toJson() {
     return {
-      'datetime': recordTime?.toIso8601String(),
-      'kw': power,
-      'kwh': energyConsumed,
-      'sum_kwh': sumOfEnergyConsumed,
-      'ampere': ampere,
-      'voltage': volt,
-      'tagid': deviceData?.tagId,
-      'loc': deviceData?.loc,
-      'building': deviceData?.building,
-      'assettype': deviceData?.assetType,
-      'linetype': deviceData?.lineType,
-      'department': deviceData?.department,
-    };
+      DBConfig.dateTimeId : recordTime?.toIso8601String(),
+      DBConfig.powerId : power ?? 0,
+      DBConfig.powerConsumptionId : energyConsumed ?? 0,
+      DBConfig.sumOfEnergyConsumedId : sumOfEnergyConsumed ?? 0,
+      DBConfig.ampereId : ampere ?? 0,
+      DBConfig.voltageId : volt ?? 0,
+    }..addEntries(deviceData?.toJson().entries ?? [])
+     ..addEntries(boundData?.toJson().entries ?? []);
   }
 
 }

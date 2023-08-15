@@ -12,6 +12,9 @@ class DashboardSearchBar extends StatefulWidget {
 }
 
 class _DashboardSearchBarState extends State<DashboardSearchBar> {
+
+  GlobalKey _buttonKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ElectricityConsumptionDashboardViewModel>(
@@ -23,80 +26,119 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
           child: Row(
             children: [
               DropdownButton<String>(
-                // drop sown menu for factory G1, G2, G3
-                padding: EdgeInsets.zero,
-                elevation: 0,
-                // icon: Icon(Icons.),
-                style: DashboardText.titleMedium(context),
-                underline: Container(),
-                items : viewModel.factoryList.map<DropdownMenuItem<String>>(
-                  (label) => DropdownMenuItem(
-                    value: label,
-                    child: RawChip(
-                      side: BorderSide.none,
-                      avatar: Icon(Icons.factory_rounded, color: DashboardColor.primary(context)),
-                      label: Text("工廠: $label")
-                    )
-                  ),
-                ).toList(),
-                onChanged: (value) => viewModel.setTargetFactoryId = value!,
-                value: viewModel.targetFactoryId
-            ),
-              VerticalDivider(width: 15, color: DashboardColor.surfaceVariant(context), thickness: 3, indent: 5,endIndent: 5,),
-              DropdownButton<String>(
-                // drop down menu for building M1, M2, M3
+                // drop sown menu for group type
                 padding: EdgeInsets.zero,
                 elevation: 0,
                 style: DashboardText.titleMedium(context),
                 underline: Container(),
-                items: viewModel.buildingList.map<DropdownMenuItem<String>>(
+                items : viewModel.groupType.map<DropdownMenuItem<String>>(
                   (label) => DropdownMenuItem(
                     value: label,
                     child: RawChip(
                       side: BorderSide.none,
-                      avatar: Icon(Icons.home_rounded, color: DashboardColor.primary(context)),
-                      label: Text("建築: $label")
+                      avatar: Icon(Icons.filter_list, color: DashboardColor.primary(context)),
+                      label: Text("GROUP: $label")
                     )
                   ),
                 ).toList(),
-                onChanged: (value) => viewModel.setTargetBuildingId = value!,
-                value: viewModel.targetBuildingId),
+                onChanged: (value) => viewModel.setGroupType = value!,
+                value: viewModel.targetGroupType
+              ),
               VerticalDivider(width: 15, color: DashboardColor.surfaceVariant(context), thickness: 3, indent: 5,endIndent: 5,),
-              // DropdownButton<DateTime>(
+              MaterialButton(
+                key: _buttonKey,
+                onPressed: ()async{
+                  final buttonPosition = _buttonKey.currentContext!.findRenderObject() as RenderBox;
+                  final result = await showDatePicker(context: context, 
+                    initialDate: viewModel.targetDateTime,
+                    firstDate: viewModel.targetDateTime.subtract(const Duration(days: 365)), 
+                    lastDate: DateTime.now(),
+                    initialEntryMode: DatePickerEntryMode.calendarOnly,
+                    helpText: "選擇觀測區間",
+                    cancelText: "取消",
+                    confirmText: "確認",
+                    builder: (context, child) {
+                      return Stack(
+                        children: [
+                          // Positioned.fill(child: Container(color: Colors.amber.withOpacity(0.01),)),
+                          Positioned(
+                            top: buttonPosition.size.height + buttonPosition.localToGlobal(Offset.zero).dy + 10,
+                            left: buttonPosition.localToGlobal(Offset.zero).dx,
+                            child: child!,
+                          )
+                        ],
+                      );
+                    },
+                  );
+                  // 
+                  if(result != null){
+                    viewModel.setTargetDateTime = result;
+                    debugPrint(viewModel.targetDateTime.toString());
+                    // debugPrint(viewModel.targetDateTime.day == DateTime.now().day ? "今天" : DashBoardFormat.time(viewModel.targetDateTime));
+                  }
+                },
+                child:RawChip(
+                  side: BorderSide.none,
+                  avatar: Icon(Icons.filter_list, color: DashboardColor.primary(context)),
+                  label: Text("時間: ${DashBoardFormat.timePickerLabel(viewModel.targetDateTime)}")
+                )
+              ),
+              
+              // VerticalDivider(width: 15, color: DashboardColor.surfaceVariant(context), thickness: 3, indent: 5,endIndent: 5,),
+              // DropdownButton<String>(
               //   // drop down menu for building M1, M2, M3
               //   padding: EdgeInsets.zero,
               //   elevation: 0,
               //   style: DashboardText.titleMedium(context),
               //   underline: Container(),
-              //   items: viewModel.dateTimeList.map<DropdownMenuItem<DateTime>>(
+              //   items: viewModel.buildingList.map<DropdownMenuItem<String>>(
               //     (label) => DropdownMenuItem(
               //       value: label,
               //       child: RawChip(
-              //         avatar: Icon(Icons.timer, color: DashboardColor.primary(context)),
-              //         label: Text("日期: ${DashBoardFormat.time(label)}")
+              //         side: BorderSide.none,
+              //         avatar: Icon(Icons.home_rounded, color: DashboardColor.primary(context)),
+              //         label: Text("建築: $label")
               //       )
               //     ),
               //   ).toList(),
-              //   onChanged: (value) => viewModel.setTargetDateTime = value!,
-              //   value: viewModel.targetDateTime),
-              DropdownButton<String>(
-                // drop down menu for assetType
-                padding: EdgeInsets.zero,
-                elevation: 0,
-                style: DashboardText.titleMedium(context),
-                underline: Container(),
-                items: viewModel.assetTypeList.map<DropdownMenuItem<String>>(
-                  (label) => DropdownMenuItem(
-                    value: label,
-                    child: RawChip(
-                      side: BorderSide.none,
-                      avatar: Icon(Icons.factory , color: DashboardColor.primary(context)),
-                      label: Text("設備類型: $label")
-                    )
-                  ),
-                ).toList(),
-                onChanged: (value) => viewModel.setTargetAssetType = value!,
-                value: viewModel.targetAssetType),
+              //   onChanged: (value) => viewModel.setTargetBuildingId = value!,
+              //   value: viewModel.targetBuildingId),
+              // VerticalDivider(width: 15, color: DashboardColor.surfaceVariant(context), thickness: 3, indent: 5,endIndent: 5,),
+              // // DropdownButton<DateTime>(
+              // //   // drop down menu for building M1, M2, M3
+              // //   padding: EdgeInsets.zero,
+              // //   elevation: 0,
+              // //   style: DashboardText.titleMedium(context),
+              // //   underline: Container(),
+              // //   items: viewModel.dateTimeList.map<DropdownMenuItem<DateTime>>(
+              // //     (label) => DropdownMenuItem(
+              // //       value: label,
+              // //       child: RawChip(
+              // //         avatar: Icon(Icons.timer, color: DashboardColor.primary(context)),
+              // //         label: Text("日期: ${DashBoardFormat.time(label)}")
+              // //       )
+              // //     ),
+              // //   ).toList(),
+              // //   onChanged: (value) => viewModel.setTargetDateTime = value!,
+              // //   value: viewModel.targetDateTime),
+              // DropdownButton<String>(
+              //   // drop down menu for assetType
+              //   padding: EdgeInsets.zero,
+              //   elevation: 0,
+              //   style: DashboardText.titleMedium(context),
+              //   underline: Container(),
+              //   items: viewModel.assetTypeList.map<DropdownMenuItem<String>>(
+              //     (label) => DropdownMenuItem(
+              //       value: label,
+              //       child: RawChip(
+              //         side: BorderSide.none,
+              //         avatar: Icon(Icons.factory , color: DashboardColor.primary(context)),
+              //         label: Text("設備類型: $label")
+              //       )
+              //     ),
+              //   ).toList(),
+              //   onChanged: (value) => viewModel.setTargetAssetType = value!,
+              //   value: viewModel.targetAssetType),
               const Spacer(),
               Expanded(
                 flex: 3,
@@ -108,6 +150,7 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
                 ),
               ),
               const Spacer(),
+              
               ChoiceChip(
                 iconTheme: IconThemeData(color: DashboardColor.onError(context), size: 32),
                 backgroundColor: DashboardColor.surface(context),

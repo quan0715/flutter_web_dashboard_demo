@@ -59,7 +59,7 @@ class LoginPageView extends StatelessWidget {
                 content: Text("登入成功")
               )
             );
-            Navigator.pushNamed(context, "/dashboard/main");
+            Navigator.pushNamed(context, "/dashboard/device_consumption_report");
           }else{
             debugPrint("login fail");
           }
@@ -130,7 +130,7 @@ class LoginPageView extends StatelessWidget {
                                     )
                                   ),
                                 ),
-                                // Text("IBM 能源管理平台", style: DashboardText.headLineLarge(context),),
+                                Text("IBM 能源管理平台", style: DashboardText.headLineSmall(context),),
                                 // Text("歡迎使用 IBM電力能源追蹤數據儀表板", style: DashboardText.labelLarge(context),),
                               ],
                             ),

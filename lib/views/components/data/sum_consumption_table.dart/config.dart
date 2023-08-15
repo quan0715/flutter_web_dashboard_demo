@@ -13,7 +13,7 @@ class SumConsumptionTableConfig{
       DataGridCell<String>(columnName: '月累累積電量', value: data.monthConsumption.toString()),
       DataGridCell<String>(columnName: '季累積電量', value: data.quarterConsumption.toString()),
       DataGridCell<String>(columnName: '年累積電量', value: data.yearConsumption.toString()),
-      DataGridCell<String>(columnName: '月平均小時耗電量', value: data.averageMonthConsumptionPerMonth.toString()),
+      DataGridCell<String>(columnName: '月平均小時耗電量', value: (data.averageMonthConsumptionPerMonth)?.round().toString() ?? "-1"),
       DataGridCell<String>(columnName: '監測時間', value: DashBoardFormat.timeWithSecond(data.dateTime!)),
     ]);
   }

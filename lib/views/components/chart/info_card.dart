@@ -39,10 +39,10 @@ class InfoCard extends StatelessWidget {
       elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(5),
-        side: BorderSide(
-          color: (error ? DashboardColor.incorrect : DashboardColor.correct).withOpacity(0.7),
-          // width: 1,
-        )
+        // side: BorderSide(
+        //   color: (error ? DashboardColor.incorrect : DashboardColor.correct).withOpacity(0.7),
+        //   // width: 1,
+        // )
       ), 
       child: DashboardPadding.medium(
         child: Row(
