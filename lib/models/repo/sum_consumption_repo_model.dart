@@ -68,6 +68,16 @@ class SumOfElectricityConsumptionDataModel implements RepoModel{
     }..addEntries(deviceData?.toJson().entries ?? []);
   }
 
+  String getDataByKey(String key){
+    var map = toJson();
+    // debugPrint(map.toString());
+    if(map.containsKey(key)){
+      return map[key].toString();
+    }else{
+      return deviceData!.getDataByKey(key);
+    }
+  }
+
 }
 
 class PieChartProportion<M>{

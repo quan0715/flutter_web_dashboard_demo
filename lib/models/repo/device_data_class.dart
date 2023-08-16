@@ -46,4 +46,9 @@ class DeviceDataClass {
     DBConfig.descriptionId: description ?? "",
   };
 
+  dynamic getDataByKey(String key){
+    var data = toJson();
+    return data[key] ?? Null;
+  }
+
 }

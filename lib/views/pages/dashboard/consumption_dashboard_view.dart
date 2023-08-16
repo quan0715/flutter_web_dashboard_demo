@@ -69,8 +69,8 @@ class _ConsumptionReportViewState extends State<ConsumptionReportView> with Sing
           const FrameQuote(quoteText: "用電量時間軸圖", notes: "單位 KWH",),
           Expanded( child: 
             WeeklyConsumptionLineChart(
-              data: viewModel.weaklySumOfElectricityConsumptionDataList,
-              cmpLine: viewModel.lastWeakSumOfElectricityConsumptionDataList,
+              data: viewModel.weeklySumOfElectricityConsumptionDataList,
+              cmpLine: viewModel.lastWeekSumOfElectricityConsumptionDataList,
             )
           ),
         ],
@@ -79,10 +79,11 @@ class _ConsumptionReportViewState extends State<ConsumptionReportView> with Sing
   }
 
   Widget groupDetailDataFrame(ElectricityConsumptionDashboardViewModel viewModel){
-    List source = viewModel.getGroupDataSource;
+    List source = (viewModel.getOverAllData as DeviceGroupModel).dataSource;
     return DashboardFrameCard(
       elevation: 0,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const FrameQuote(quoteText: "各監測點數據圖", notes: "單位 KWH",),
           Expanded(
@@ -111,7 +112,7 @@ class _ConsumptionReportViewState extends State<ConsumptionReportView> with Sing
 
   Widget overViewFrame(ElectricityConsumptionDashboardViewModel viewModel){
     SumOfElectricityConsumptionDataModel dataSource = viewModel.getOverAllData;
-    debugPrint(dataSource.toString());
+    // debugPrint(dataSource.toString());
     final data = [{
         "title" : "總用電量",
         "value" : dataSource.dayConsumption,
@@ -129,6 +130,7 @@ class _ConsumptionReportViewState extends State<ConsumptionReportView> with Sing
     return DashboardFrameCard(
       elevation: 0,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const FrameQuote(
             quoteText: "總用電量分佈(圓餅圖)",

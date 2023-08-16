@@ -10,7 +10,9 @@ class ElasticSearchClient<M extends RepoModel>{
   static int searchMaxSize = DBConfig.searchMaxSize;
   static Map<String, String> headers = {
     'Content-Type': 'application/json; charset=UTF-8',
-    'Authorization': apiKey
+    'Access-Control-Allow-Origin': '*',
+    'Authorization': apiKey,
+    'Access-Control-Allow-Credentials': "true"
   };
   ElasticSearchClient({
     required this.index,

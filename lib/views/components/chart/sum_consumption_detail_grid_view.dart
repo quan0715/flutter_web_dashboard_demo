@@ -30,11 +30,9 @@ class SumOfConsumptionDetailGridView extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              FittedBox(
-                child: Text(value, style: DashboardText.titleLarge(context).copyWith(
-                  color: isError? DashboardColor.incorrect : DashboardColor.correct
-                )),
-              ),
+              Text(value, style: DashboardText.titleLarge(context).copyWith(
+                color: DashboardColor.secondary(context),
+              )),
                Text(title, style: DashboardText.labelMedium(context).copyWith(
                 color: DashboardColor.onSurface(context).withOpacity(0.5)
                ),),
@@ -52,7 +50,7 @@ class SumOfConsumptionDetailGridView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Chip(
-              avatar: Icon(Icons.circle, color: DashboardColor.correct, size: 12,),
+              avatar: Icon(Icons.circle, color: DashboardColor.primary(context), size: 12,),
               label: Text(dataSource.groupLabel),
               side: BorderSide.none,
             ),

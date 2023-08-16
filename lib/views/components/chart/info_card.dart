@@ -18,14 +18,12 @@ class InfoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     var error = errorReport != null && errorReport!(value);
     final TextStyle titleStyle = TextStyle(
-      color: DashboardColor.secondary(context),
+      color: DashboardColor.secondary(context).withOpacity(0.7),
       fontSize: 14,
       fontWeight: FontWeight.bold,
     );
     final TextStyle valueStyle = TextStyle(
-      color: error
-          ? DashboardColor.incorrect
-          : DashboardColor.correct,
+      color: DashboardColor.secondary(context),
       fontSize: 16,
       fontWeight: FontWeight.bold,
     );
@@ -52,7 +50,7 @@ class InfoCard extends StatelessWidget {
             Text(title, style: titleStyle,),
             const Spacer(), 
             DashboardSizedBox.medium(),
-            Text(DashBoardFormat.number(value), style: valueStyle),
+            Text(DashBoardFormat.number(value), style: valueStyle,),
             DashboardSizedBox.small(),
             Text(unit, style: unitStyle),
           ],

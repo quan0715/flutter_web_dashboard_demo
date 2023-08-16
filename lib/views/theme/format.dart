@@ -18,4 +18,6 @@ class DashBoardFormat{
   }
   static String dateTime(DateTime time) => DateFormat('MM/dd').format(time);
   static String number(int value) => NumberFormat('#,###').format(value);
+  // iso8601 format to DateTime
+  static String iO8dateTime(String time) => dateTime(DateTime.parse(time));
 }

@@ -47,4 +47,12 @@ class MonitoringDeviceModel implements RepoModel{
     ..addEntries(device?.toJson().entries ?? []);
 	}
   
+  String getDataByKey(String key){
+    var map = toJson();
+    if(map.containsKey(key)){
+      return map[key].toString();
+    }else{
+      return device!.getDataByKey(key);
+    }
+  }
 }

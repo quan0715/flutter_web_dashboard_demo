@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
+import 'package:web_dashboard/views/theme/color.dart';
 import 'package:web_dashboard/views/theme/format.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -36,30 +37,38 @@ class WeeklyConsumptionLineChart extends StatelessWidget{
             labelFormat: '{value} KW',
             majorTickLines: const MajorTickLines(size: 1)),
         series: <XyDataSeries<SumOfElectricityConsumptionDataModel, String>>[
+          
           SplineSeries<SumOfElectricityConsumptionDataModel, String>(
             dataSource: data,
-            xValueMapper: (SumOfElectricityConsumptionDataModel data, index) => data.groupLabel,
+            xValueMapper: (SumOfElectricityConsumptionDataModel data, index) => DashBoardFormat.iO8dateTime(data.groupLabel),
             yValueMapper: (SumOfElectricityConsumptionDataModel data, _) => data.dayConsumption,
             name: '近7天用電量趨勢',
             xAxisName: '時間軸',
             yAxisName: '用電量',
-            splineType: SplineType.monotonic,
+            width: 2,
+            dashArray: <double>[5, 5],
+            // borderDrawMode: BorderDrawMode.top,
+            color: DashboardColor.primary(context),
+            
+            
+            // splineType: SplineType.monotonic,
             enableTooltip: true,
             // Enable data label
             // dataLabelSettings: const DataLabelSettings(isVisible: true)
           ),
           if(cmpLine != null) 
-            SplineSeries<SumOfElectricityConsumptionDataModel, String>(
+            AreaSeries<SumOfElectricityConsumptionDataModel, String>(
               dataSource: cmpLine!,
               xValueMapper: (SumOfElectricityConsumptionDataModel d, index)
-                => data[index].groupLabel, // [index]
+                => DashBoardFormat.iO8dateTime(data[index].groupLabel), // [index]
               yValueMapper: (SumOfElectricityConsumptionDataModel data, _) => data.dayConsumption,
               name: '上7天用電量趨勢',
               xAxisName: '時間軸',
               yAxisName: '用電量',
-              splineType: SplineType.monotonic,
+              // splineType: SplineType.monotonic,
               enableTooltip: true,
-              width: 2,
+              // width: 2,
+              color: Colors.grey.withOpacity(0.3),
               // color: Theme.of(context).colorScheme.primary,
               // Enable data label
               // dataLabelSettings: const DataLabelSettings(isVisible: true)
