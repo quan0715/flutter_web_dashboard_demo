@@ -1,112 +1,62 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/db/db_config.dart';
 import 'package:web_dashboard/models/group_consumption_data_model.dart';
 import 'package:web_dashboard/models/repo/consumption_repo_model.dart';
 import 'package:web_dashboard/db/elastic_search.dart';
 import 'package:web_dashboard/models/repo/error_report_repo_model.dart';
-import 'package:web_dashboard/models/repo/monitoring_device_repo_model.dart';
 import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
 import 'package:web_dashboard/models/search_tree.dart';
 import 'package:web_dashboard/models/state.dart';
 import 'package:web_dashboard/view_model/base_view_model.dart';
+import 'package:web_dashboard/views/components/widget/tree_search_card.dart';
 class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
   // elastic search client for ElectricityConsumptionDataModel
-  ElasticSearchClient<ElectricityConsumptionDataModel> consumptionClient = 
-    ElasticSearchClient.fromModel(ElectricityConsumptionDataModel.getInstance());
-
+  final consumptionClient = ElasticSearchClient.consumptionClient();
   // elastic search client for SumOfElectricityConsumptionDataModel
-  ElasticSearchClient<SumOfElectricityConsumptionDataModel> sumOfConsumptionClient = 
-    ElasticSearchClient.fromModel(SumOfElectricityConsumptionDataModel.getInstance());
-
+  final sumOfConsumptionClient = ElasticSearchClient.sumOfConsumptionClient();
   // elastic search client for DeviceErrorReportModel
-  ElasticSearchClient<DeviceErrorReportModel> errorReportClient = 
-    ElasticSearchClient.fromModel(DeviceErrorReportModel.getInstance());
-
+  final errorReportClient = ElasticSearchClient.errorReportClient();
   // elastic search device data client
-  ElasticSearchClient<MonitoringDeviceModel> deviceClient = 
-    ElasticSearchClient.fromModel(MonitoringDeviceModel.getInstance());
-
-  bool isShowErrorOnly = true; 
+  final deviceClient = ElasticSearchClient.deviceClient();
+  // bool isShowErrorOnly = true; 
+  ConsumptionSearchTree? consumptionDataSearchTree; 
   bool isDashboardView = true;
   DateTime targetDateTime = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-  String targetGroupType = "工廠";
-  final groupTypeMap = {
-      "工廠" : DBConfig.locId,
-      "樓層" : DBConfig.buildingId,
-      "用電屬性 L2" : DBConfig.lineTypeId,
-      "用電部門 L3" : DBConfig.departmentId,
-      "設備類型 L4" : DBConfig.assetTypeId,
-  };
-  final eachLevelFilter ={
-    DBConfig.locId : DBConfig.locId,
-    DBConfig.buildingId : DBConfig.buildingId,
-    DBConfig.lineTypeId : DBConfig.lineTypeId, 
-    DBConfig.departmentId : DBConfig.departmentId,
-    DBConfig.assetTypeId : DBConfig.assetTypeId,
-  };
-
-  final Map<String, dynamic>colorFilter ={
-    DBConfig.locId : Colors.amber,
-    DBConfig.buildingId : Colors.red,
-    DBConfig.lineTypeId : Colors.blue, 
-    DBConfig.departmentId : Colors.green,
-    DBConfig.assetTypeId : Colors.grey,
-  };
-
-  int get currentLevel{
-    int level = 0;
-    for(level=0;level<eachLevelFilter.length;level++){
-      if(eachLevelFilter[eachLevelFilter.keys.elementAt(level)] == eachLevelFilter.keys.elementAt(level)){
-        break;
-      }
-    }
-    return level +1 < eachLevelFilter.length ? level +1 : level;
-  }
-
-  List<String> orderFilterList({level = 1}){
-    // debugPrint("level: $level");
-    List<String> filterList = [];
-    for(int i=0;i<level;i++){
-      String key = eachLevelFilter.keys.elementAt(i);
-      filterList.add(key);
-      if(eachLevelFilter[key] != key && i != level-1){
-        filterList.add(eachLevelFilter[key]!);
-      }
-    }
-    // debugPrint(filterList.toString());
-    return filterList;
-  }
-    
-  // List<String> get groupType => groupTypeMap.keys.toList();
-
-  ConsumptionSearchTree? consumptionDataSearchTree; 
-
+  
+  List<String> get getSearchList =>
+    treeSearchData.root.levelList() as List<String>;
+  
+  TreeSearchData treeSearchData = TreeSearchData<String>(
+    root: TreeLayer(
+      layerLabel: "L1 廠區",
+      layerIndex: DBConfig.locId,
+      childLayer: TreeLayer(
+        layerLabel: "L2 建築",
+        layerIndex: DBConfig.buildingId,
+        childLayer: TreeLayer(
+          layerLabel: "L3 產線類別",
+          layerIndex: DBConfig.lineTypeId,
+          childLayer: TreeLayer(
+            layerLabel: "L4 用電部門",
+            layerIndex: DBConfig.departmentId,
+            childLayer: TreeLayer(
+              layerLabel: "L5 設備部門",
+              layerIndex: DBConfig.assetTypeId,
+            )
+          )
+        )
+      )
+    )
+  );  
+      
   List<SumOfElectricityConsumptionDataModel> _sumOfConsumptionDataList = [];
   List<DeviceErrorReportModel> _deviceErrorReportList = [];
   List<ElectricityConsumptionDataModel> _electricityConsumptionDataList = [];
-
-  void setEachLevelFilter(String key, String value){
-    eachLevelFilter[key] = eachLevelFilter[key] == value ? key : value;
-    int index = eachLevelFilter.keys.toList().indexOf(key);
-    for(int i=index+1;i<eachLevelFilter.length;i++){
-      eachLevelFilter[eachLevelFilter.keys.elementAt(i)] = eachLevelFilter.keys.elementAt(i);
-    }
-    notifyListeners();
-  }
 
   set setTargetDateTime(DateTime dateTime){
     targetDateTime = dateTime;
     init();
     // notifyListeners();
-  }
-
-  set setIsShowAll(bool value){
-    // if isShowAll is true, then show all the data
-    // otherwise, show the device data which is not normal or with error report 
-    isShowErrorOnly = value;
-    notifyListeners();
   }
 
   set setIsDashboard(bool value){
@@ -116,11 +66,6 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
     notifyListeners();
   }
   
-  set setGroupType(String value){
-    targetGroupType = value;
-    notifyListeners();
-  }
- 
   List<DeviceErrorReportModel> get deviceErrorReportList => _deviceErrorReportList;
 
   List<ElectricityConsumptionDataModel> get electricityConsumptionDataList => _electricityConsumptionDataList;
@@ -130,17 +75,17 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
   ConsumptionSearchTree? get getTodayConsumptionDataSearchTree => consumptionDataSearchTree?.searchByIndex([targetDateTime.toIso8601String()]);
 
   SumOfElectricityConsumptionDataModel get getOverAllData{
-    ConsumptionSearchTree? tree = getTodayConsumptionDataSearchTree!.searchByIndex(
-      orderFilterList(level: currentLevel)
-    );
-    tree!.print(depth: 0);
-    return tree.root as SumOfElectricityConsumptionDataModel;
+    // debugPrint(getSearchList.toString());
+    ConsumptionSearchTree? tree = getTodayConsumptionDataSearchTree!.searchByIndex(getSearchList);
+    // debugPrint(tree.runtimeType.toString());
+    // tree!.print(depth: 0);
+    return tree!.root as SumOfElectricityConsumptionDataModel;
   }  
 
   List<SumOfElectricityConsumptionDataModel> getTimeGroupDataSource(ConsumptionSearchTree? tree, DateTime startTime, int days){
     List<SumOfElectricityConsumptionDataModel> timeGroupDataSource = [];
     for(int i=0;i<days;i++){
-      List<String> filterList = orderFilterList(level: currentLevel)
+      List<String> filterList = getSearchList
         ..insert(0, startTime.subtract(Duration(days: i)).toIso8601String());
       timeGroupDataSource.add(
         DeviceGroupModel(
@@ -165,7 +110,7 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
         "bool": {
           "must": [
             {
-              "match": {"tagid" : tagId},
+              "match": {"tagid" : tagId}
             },
             {
               "range": {
@@ -188,12 +133,10 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
   @override
   Future<void> init() async{
     _deviceErrorReportList = [];
-    // setGroupType = groupType.first;
     setLoadingState(LoadingState.loading);
     try{
       // get device list and index 
-      var deviceList = await deviceClient.search();
-      var deviceIndexList = deviceList.map((e) => e.device?.tagId ?? "").toSet().toList();
+      var deviceIndexList = (await deviceClient.search()).map((e) => e.device?.tagId ?? "").toSet().toList();
       // _electricityConsumptionDataList = await consumptionClient.search(query: {"sort": [{" ": {"order": "desc"}}]});
       _electricityConsumptionDataList = await consumptionClient.search();
       _sumOfConsumptionDataList = [];
@@ -210,18 +153,20 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
           debugPrint("no device data for $tagId");
         }
       }
+      debugPrint(treeSearchData.getSearchIndexOrderList.toString());
       consumptionDataSearchTree = ConsumptionSearchTree.buildTree(
         _sumOfConsumptionDataList, 
-        [DBConfig.dateTimeId, ...groupTypeMap.values.toList()]
+        [DBConfig.dateTimeId, ...treeSearchData.getSearchIndexOrderList]
       );
       consumptionDataSearchTree!.print(depth: 0);
-
       _deviceErrorReportList = await errorReportClient.search();
-      debugPrint("deviceErrorReport Number: ${_deviceErrorReportList.length}");
+      // debugPrint("deviceErrorReport Number: ${_deviceErrorReportList.length}");
     }catch(e){
       debugPrint(e.toString());
       setLoadingState(LoadingState.error);
     }
+    // debugPrint(treeSearchData.root.levelList.toString());
+    // getTodayConsumptionDataSearchTree!.searchByIndex(treeSearchData.root.levelList as List<String>)!.print(depth: 0);
     setLoadingState(LoadingState.free);
   }
 }

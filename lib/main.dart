@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/view_model/auth_manager.dart';
 import 'package:web_dashboard/view_model/theme_manager.dart';
+import 'package:web_dashboard/views/pages/dashboard/consumption_report_dashboard_view.dart';
 import 'package:web_dashboard/views/pages/data_table/device_error_report_view.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:web_dashboard/views/pages/auth/login_view.dart';
 import 'package:web_dashboard/views/pages/data_table/monitoring_device_manage_view.dart';
 import 'views/config/firebase_options.dart';
-import 'views/pages/dashboard/consumption_dashboard_view.dart';
+import 'views/pages/dashboard/consumption_monitor_dashboard_view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,8 +35,9 @@ class MyApp extends StatelessWidget {
             title: 'web dashboard project',
             theme: themeManager.theme,
             routes: {
-              "/dashboard/device_consumption_report": (context) => const ConsumptionReportView(),
+              "/dashboard/device_consumption_report": (context) => const ConsumptionMonitorDashboardView(),
               "/dashboard/monitoring_device_manage": (context) => const MonitoringDeviceManageView(),
+              "/dashboard/report":(context) => const ConsumptionReportDashboardView(),
               "/dashboard/device_error_report": (context) => const DeviceErrorReportView(),
               "/login": (context) => LoginPageView(),
               '/': (context) => LoginPageView(),

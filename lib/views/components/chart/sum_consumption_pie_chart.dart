@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_brand_palettes/flutter_brand_palettes.dart';
 import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
 import 'package:web_dashboard/views/theme/format.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -28,7 +29,7 @@ class SumOfConsumptionPieChart extends StatelessWidget {
         format: 'point.x : point.y kWH',
       ),
       
-      // palette: const InstagramGrad().colors,
+      palette: const GoogleGrad().colors,
       annotations: [
         CircularChartAnnotation(
           widget: Column(
@@ -64,6 +65,7 @@ class SumOfConsumptionPieChart extends StatelessWidget {
             yValueMapper: (PieChartProportion<SumOfElectricityConsumptionDataModel> data, _) => data.amount,
             dataLabelMapper: (PieChartProportion data, _)
               => "${data.model!.groupLabel}\n${data.proportion.toStringAsFixed(1)}%",
+            
             animationDuration: 500,
             dataLabelSettings: const DataLabelSettings(
               alignment: ChartAlignment.near,

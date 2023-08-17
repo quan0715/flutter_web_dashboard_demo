@@ -77,28 +77,16 @@ class DashboardDrawer extends StatelessWidget{
                         ),
                         DashboardSizedBox.large(),
                         const FrameQuote(quoteText: "儀表板",),
-                        // ListTile(
-                        //   leading: const Icon(Icons.dashboard),
-                        //   // isThreeLine: true,
-                        //   title: const Text('用電紀錄儀表板(Ｌ)'),
-                        //   onTap: () => Navigator.pushNamed(context, "/dashboard/main")
-                        // ),
                         ListTile(
                           leading: const Icon(Icons.dashboard),
-                          // isThreeLine: true,
-                          title: const Text('用電紀錄儀表板'),
+                          title: const Text('用電紀錄監測報告'),
                           onTap: () => Navigator.pushNamed(context, "/dashboard/device_consumption_report"),
                         ),
                         ListTile(
                           // isThreeLine: true,
                           leading: const Icon(Icons.analytics),
-                          title: const Text('未來電力預測分析'),
-                          // trailing: premiumLabelChip(),
-                          // subtitle: const Text('Secondary Text'),
-                          onTap: () {
-                            // Update the state of the app.
-                            // ...
-                          },
+                          title: const Text('電力紀錄使用報告'),
+                          onTap: () => Navigator.pushNamed(context, "/dashboard/report"),
                         ),
                         const FrameQuote(quoteText: "工廠資料設定"), 
                         ListTile(

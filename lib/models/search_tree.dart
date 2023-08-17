@@ -51,6 +51,9 @@ class ConsumptionSearchTree{
   }
 
   static SumOfElectricityConsumptionDataModel? searchTree(SumOfElectricityConsumptionDataModel root, List<String> labels){
+    if(labels.isEmpty){
+      return null;
+    }
     String label = labels.first;
     for(SumOfElectricityConsumptionDataModel l in (root as DeviceGroupModel).dataSource){
       if(l.groupLabel == label){

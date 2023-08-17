@@ -46,7 +46,7 @@ class WeeklyConsumptionLineChart extends StatelessWidget{
             xAxisName: '時間軸',
             yAxisName: '用電量',
             width: 2,
-            dashArray: <double>[5, 5],
+            // dashArray: <double>[5, 5],
             // borderDrawMode: BorderDrawMode.top,
             color: DashboardColor.primary(context),
             

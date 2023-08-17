@@ -14,5 +14,9 @@ class BaseViewModel extends ChangeNotifier{
     loadingState = state;
     notifyListeners();
   }
+
+  void refreshPage(){
+    notifyListeners();
+  }
   
 }

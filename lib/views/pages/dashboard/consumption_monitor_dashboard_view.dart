@@ -19,14 +19,14 @@ import 'package:web_dashboard/views/components/widget/drawer.dart';
 import 'package:web_dashboard/views/components/widget/quote.dart';
 import 'package:web_dashboard/views/theme/theme.dart';
 
-class ConsumptionReportView extends StatefulWidget {
-  const ConsumptionReportView({Key? key}) : super(key: key);
+class ConsumptionMonitorDashboardView extends StatefulWidget {
+  const ConsumptionMonitorDashboardView({Key? key}) : super(key: key);
 
   @override
-  State<ConsumptionReportView> createState() => _ConsumptionReportViewState();
+  State<ConsumptionMonitorDashboardView> createState() => _ConsumptionMonitorDashboardViewState();
 }
 
-class _ConsumptionReportViewState extends State<ConsumptionReportView> with SingleTickerProviderStateMixin{
+class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDashboardView> with SingleTickerProviderStateMixin{
   late final TabController tabController;
 
   @override

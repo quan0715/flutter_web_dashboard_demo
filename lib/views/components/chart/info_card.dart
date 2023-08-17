@@ -16,7 +16,7 @@ class InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var error = errorReport != null && errorReport!(value);
+    // var error = errorReport != null && errorReport!(value);
     final TextStyle titleStyle = TextStyle(
       color: DashboardColor.secondary(context).withOpacity(0.7),
       fontSize: 14,

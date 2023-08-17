@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_dashboard/models/repo/base_repo.dart';
 import 'package:web_dashboard/db/db_config.dart';
+import 'package:web_dashboard/models/repo/consumption_repo_model.dart';
+import 'package:web_dashboard/models/repo/error_report_repo_model.dart';
+import 'package:web_dashboard/models/repo/monitoring_device_repo_model.dart';
+import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
 
 class ElasticSearchClient<M extends RepoModel>{
   static String baseURI = DBConfig.baseURI;
@@ -134,4 +138,21 @@ class ElasticSearchClient<M extends RepoModel>{
         yield {"missionCount": missionCount, "missionCompleteCount": ++missionCompleteCount, "missionDescription" : "上傳中"};
       }
   }
+
+  static ElasticSearchClient<ElectricityConsumptionDataModel> consumptionClient(){
+    return ElasticSearchClient<ElectricityConsumptionDataModel>.fromModel(ElectricityConsumptionDataModel.getInstance());
+  }
+
+  static ElasticSearchClient<SumOfElectricityConsumptionDataModel> sumOfConsumptionClient(){
+    return ElasticSearchClient<SumOfElectricityConsumptionDataModel>.fromModel(SumOfElectricityConsumptionDataModel.getInstance());
+  }
+
+  static ElasticSearchClient<DeviceErrorReportModel> errorReportClient(){
+    return ElasticSearchClient<DeviceErrorReportModel>.fromModel(DeviceErrorReportModel.getInstance());
+  }
+
+  static ElasticSearchClient<MonitoringDeviceModel> deviceClient(){
+    return ElasticSearchClient<MonitoringDeviceModel>.fromModel(MonitoringDeviceModel.getInstance());
+  }
+
 }
