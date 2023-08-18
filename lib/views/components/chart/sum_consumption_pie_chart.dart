@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_brand_palettes/flutter_brand_palettes.dart';
 import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
+import 'package:web_dashboard/models/search_node.dart';
 import 'package:web_dashboard/views/theme/format.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class SumOfConsumptionPieChart extends StatelessWidget {
-  const SumOfConsumptionPieChart({
+class ConsumptionPieChart<ModelType extends SearchTreeNode> extends StatelessWidget {
+  const ConsumptionPieChart({
     super.key,
     required this.dataSource,
   });
-  final List<PieChartProportion<SumOfElectricityConsumptionDataModel>> dataSource;
+  final List<PieChartProportion> dataSource;
 
 
   @override
@@ -54,17 +55,17 @@ class SumOfConsumptionPieChart extends StatelessWidget {
           )
         )
       ],
-      series: <DoughnutSeries<PieChartProportion<SumOfElectricityConsumptionDataModel>, String>>[
-        DoughnutSeries<PieChartProportion<SumOfElectricityConsumptionDataModel>, String>(
+      series: <DoughnutSeries<PieChartProportion<ModelType>, String>>[
+        DoughnutSeries<PieChartProportion<ModelType>, String>(
             radius: '80%',
             innerRadius: '70%',
             explode: true,
             explodeOffset: '10%',
-            dataSource: dataSource,
-            xValueMapper: (PieChartProportion<SumOfElectricityConsumptionDataModel> data, _) => data.model.groupLabel,
-            yValueMapper: (PieChartProportion<SumOfElectricityConsumptionDataModel> data, _) => data.amount,
+            dataSource: dataSource as List<PieChartProportion<ModelType>>,
+            xValueMapper: (PieChartProportion<ModelType> data, _) => data.model.index,
+            yValueMapper: (PieChartProportion<ModelType> data, _) => data.amount,
             dataLabelMapper: (PieChartProportion data, _)
-              => "${data.model!.groupLabel}\n${data.proportion.toStringAsFixed(1)}%",
+              => "${data.model!.index}\n${data.proportion.toStringAsFixed(1)}%",
             
             animationDuration: 500,
             dataLabelSettings: const DataLabelSettings(

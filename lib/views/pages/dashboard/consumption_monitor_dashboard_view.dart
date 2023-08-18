@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:web_dashboard/models/group_consumption_data_model.dart';
-import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
+import 'package:web_dashboard/models/search_node.dart';
 import 'package:web_dashboard/models/state.dart';
 import 'package:web_dashboard/views/components/chart/info_card.dart';
 import 'package:web_dashboard/views/components/chart/sum_consumption_detail_grid_view.dart';
 import 'package:web_dashboard/views/components/chart/sum_consumption_pie_chart.dart';
 import 'package:web_dashboard/views/components/chart/weakly_consumption_line_chart.dart';
 import 'package:web_dashboard/views/components/data/device_error_report_table/data_grid.dart';
-import 'package:web_dashboard/views/theme/padding.dart';
 import 'package:web_dashboard/view_model/dashboard/electricity_consumption_view_model.dart';
 import 'package:web_dashboard/views/components/data/electricity_consumption_table/data_grid.dart';
 import 'package:web_dashboard/views/components/data/sum_consumption_table.dart/data_grid.dart';
@@ -79,7 +77,7 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
   }
 
   Widget groupDetailDataFrame(ElectricityConsumptionDashboardViewModel viewModel){
-    List source = (viewModel.getOverAllData as DeviceGroupModel).dataSource;
+    List<SearchTreeNode> source = viewModel.getOverAllData!.children;
     return DashboardFrameCard(
       elevation: 0,
       child: Column(
@@ -99,8 +97,11 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
               ),
               itemCount: source.length,
               itemBuilder: (context, index) {
-                return SumOfConsumptionDetailGridView(
-                  dataSource: source[index],
+                return ConsumptionDetailGridView(
+                  label: source[index].index,
+                  dayConsumption: (source[index] as ConsumptionSearchNode).dayConsumption,
+                  monthConsumption: (source[index] as ConsumptionSearchNode).monthConsumption,
+                  averageMonthConsumptionPerMonth: (source[index] as ConsumptionSearchNode).averageMonthConsumptionPerMonth,
                 );
               },
             ),
@@ -111,7 +112,7 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
   }
 
   Widget overViewFrame(ElectricityConsumptionDashboardViewModel viewModel){
-    SumOfElectricityConsumptionDataModel dataSource = viewModel.getOverAllData;
+    ConsumptionSearchNode dataSource = viewModel.getOverAllData!;
     // debugPrint(dataSource.toString());
     final data = [{
         "title" : "總用電量",
@@ -123,7 +124,7 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
         "unit" : "kWh", 
       },{
         "title" : "每小時平均用電量",
-        "value" : dataSource.averageMonthConsumptionPerMonth!.toInt(),
+        "value" : dataSource.averageMonthConsumptionPerMonth.toInt(),
         "unit" : "kWh", 
       },
     ];
@@ -135,8 +136,8 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
           const FrameQuote(
             quoteText: "總用電量分佈(圓餅圖)",
           ),
-          SumOfConsumptionPieChart(
-            dataSource: PieChartProportion.fromSumOfConsumption((dataSource as DeviceGroupModel).dataSource),
+          ConsumptionPieChart(
+            dataSource: dataSource.toProportionList(),
           ),
           Expanded(
             flex: 1,

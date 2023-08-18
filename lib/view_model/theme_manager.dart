@@ -27,7 +27,6 @@ class DashboardThemeManager extends ChangeNotifier{
     )
     : ThemeData(
       colorScheme: ColorScheme.fromSeed(
-        // seedColor: Colors.purple,
         seedColor: const Ibm.black().color, 
         brightness: Brightness.dark
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:web_dashboard/views/theme/theme.dart';
 
 class InfoCard extends StatelessWidget {
@@ -56,6 +57,6 @@ class InfoCard extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ).animate().fadeIn().scale();
   }
 }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
+import 'package:web_dashboard/models/search_node.dart';
 import 'package:web_dashboard/views/theme/color.dart';
 import 'package:web_dashboard/views/theme/format.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class WeeklyConsumptionLineChart extends StatelessWidget{
-  final List<SumOfElectricityConsumptionDataModel> data;
-  final List<SumOfElectricityConsumptionDataModel>? cmpLine;
+class WeeklyConsumptionLineChart<ModelType extends SearchTreeNode> extends StatelessWidget{
+  final List<ModelType> data;
+  final List<ModelType>? cmpLine;
   const WeeklyConsumptionLineChart({super.key, required this.data, this.cmpLine});
 
   @override
@@ -36,12 +36,12 @@ class WeeklyConsumptionLineChart extends StatelessWidget{
             edgeLabelPlacement: EdgeLabelPlacement.shift,
             labelFormat: '{value} KW',
             majorTickLines: const MajorTickLines(size: 1)),
-        series: <XyDataSeries<SumOfElectricityConsumptionDataModel, String>>[
-          
-          SplineSeries<SumOfElectricityConsumptionDataModel, String>(
+        series: <XyDataSeries<ModelType, String>>[
+          SplineSeries<ModelType, String>(
             dataSource: data,
-            xValueMapper: (SumOfElectricityConsumptionDataModel data, index) => DashBoardFormat.iO8dateTime(data.groupLabel),
-            yValueMapper: (SumOfElectricityConsumptionDataModel data, _) => data.dayConsumption,
+            xValueMapper: (ModelType data, index) => DashBoardFormat.iO8dateTime((data as ConsumptionSearchNode).dateTime.toIso8601String()),
+            // TODO: Fix bed coding design
+            yValueMapper: (ModelType data, _) => (data as ConsumptionSearchNode).dayConsumption,
             name: '近7天用電量趨勢',
             xAxisName: '時間軸',
             yAxisName: '用電量',
@@ -57,11 +57,10 @@ class WeeklyConsumptionLineChart extends StatelessWidget{
             // dataLabelSettings: const DataLabelSettings(isVisible: true)
           ),
           if(cmpLine != null) 
-            AreaSeries<SumOfElectricityConsumptionDataModel, String>(
+            AreaSeries<ModelType, String>(
               dataSource: cmpLine!,
-              xValueMapper: (SumOfElectricityConsumptionDataModel d, index)
-                => DashBoardFormat.iO8dateTime(data[index].groupLabel), // [index]
-              yValueMapper: (SumOfElectricityConsumptionDataModel data, _) => data.dayConsumption,
+              xValueMapper: (ModelType d, index) => DashBoardFormat.iO8dateTime((data[index] as ConsumptionSearchNode).dateTime.toIso8601String()),
+              yValueMapper: (ModelType data, _) => (data as ConsumptionSearchNode).dayConsumption,
               name: '上7天用電量趨勢',
               xAxisName: '時間軸',
               yAxisName: '用電量',

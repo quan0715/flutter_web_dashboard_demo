@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
 import 'package:web_dashboard/views/theme/theme.dart';
 
-class SumOfConsumptionDetailGridView extends StatelessWidget {
-  const SumOfConsumptionDetailGridView({
+class ConsumptionDetailGridView extends StatelessWidget {
+  final String label;
+  final int dayConsumption;
+  final int monthConsumption;
+  final double averageMonthConsumptionPerMonth;
+
+  const ConsumptionDetailGridView({
     super.key, 
-    required this.dataSource, 
+    this.label = "",
+    this.dayConsumption = 0,
+    this.monthConsumption = 0,
+    this.averageMonthConsumptionPerMonth = 0,
   });
-  final SumOfElectricityConsumptionDataModel dataSource;
+  // final SumOfElectricityConsumptionDataModel dataSource;
 
   Widget getTitleWithContent(BuildContext context, String title, String value, {bool isError = false}){
     return Column(
@@ -52,7 +59,7 @@ class SumOfConsumptionDetailGridView extends StatelessWidget {
           children: [
             Chip(
               avatar: Icon(Icons.circle, color: DashboardColor.primary(context), size: 12,),
-              label: Text(dataSource.groupLabel),
+              label: Text(label),
               side: BorderSide.none,
             ),
             // Spacer(),
@@ -60,9 +67,9 @@ class SumOfConsumptionDetailGridView extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(child: valueBlock(context, "日累積用電", DashBoardFormat.number(dataSource.dayConsumption!), isError: dataSource.dayConsumption == 0)),
-                  Expanded(child: valueBlock(context, "月累積用電", DashBoardFormat.number(dataSource.monthConsumption!.toInt()), isError: dataSource.monthConsumption == 0)),
-                  Expanded(child: valueBlock(context, "月平均小時用電", DashBoardFormat.number(dataSource.averageMonthConsumptionPerMonth!.toInt()), isError: dataSource.averageMonthConsumptionPerMonth == 0)),
+                  Expanded(child: valueBlock(context, "日累積用電", DashBoardFormat.number(dayConsumption), )),
+                  Expanded(child: valueBlock(context, "月累積用電", DashBoardFormat.number(monthConsumption.toInt()))),
+                  Expanded(child: valueBlock(context, "月平均小時用電", DashBoardFormat.number(averageMonthConsumptionPerMonth.toInt()))),
                 ],
               ),
             ),

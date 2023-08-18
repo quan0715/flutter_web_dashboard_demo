@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:web_dashboard/models/group_consumption_data_model.dart';
-import 'package:web_dashboard/models/search_tree.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:web_dashboard/models/search_node.dart';
 import 'package:web_dashboard/views/components/widget/quote.dart';
 import 'package:web_dashboard/views/theme/theme.dart';
 
@@ -38,7 +38,7 @@ class TreeSearchLegend extends StatelessWidget{
             ),
             Icon(Icons.arrow_right_rounded, color: getColor(level),)
           ],
-        ),
+        ).animate().fade(),
         
         if(root.childLayer!=null)
           ...getLabelList(root.childLayer!, level+1)
@@ -67,10 +67,10 @@ class TreeSearchCard extends StatelessWidget{
   final Color backgroundColor;
   final double width;
   // final List<FilterEntries> entries;
-  final ConsumptionSearchTree? searchTree; 
+  final SearchTreeNode? searchTree; 
   // final Widget Function(int index) labelMapper;
 
-  TreeSearchCard({
+  const TreeSearchCard({
     super.key, 
     required this.treeSearchData,
     // required this.entries,
@@ -90,17 +90,9 @@ class TreeSearchCard extends StatelessWidget{
     this.onReset,
     this.onConfirm, 
     this.onValueChange,
-    // required List<SumOfElectricityConsumptionDataModel> dataSource,
-    // required Padding Function(dynamic data) labelMapper,
-  }){
-    // assert(entries.isNotEmpty, "levelFilterList can't be empty");
-  } 
+  });
 
-  // int get totalLevel => widget.entries.length;
-  Color getColor(int index){
-    return plate[(index) % plate.length];
-  }
-
+  Color getColor(int index) => plate[(index) % plate.length];
   // recursive generate filter entries
   List<Widget> getAllEntries(TreeLayer layer, int level) {
     var filterList = treeSearchData.root.levelList(until: layer) as List<String>;
@@ -110,21 +102,21 @@ class TreeSearchCard extends StatelessWidget{
         label: layer.layerLabel,
         color: getColor(level),  
         isVisible: true,
-        dataSource: (searchTree!.searchByIndex(filterList)!.root as DeviceGroupModel).dataSource,
+        dataSource: (searchTree!.searchTree(filterList)!).children,
         labelMapper: (data) => Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
           child: SearchTreeLabel(
-            label: Text(data.groupLabel),
+            label: Text(data.index),
             color: getColor(level),
-            selected: layer.selectedIndex == data.groupLabel,
+            selected: layer.selectedIndex == data.index,
             onSelected: (bool value) {
-              // debugPrint(value.toString());
-              layer.toggleLevel(data.groupLabel);
+              layer.toggleLevel(data.index);
               onValueChange!();
-              // setState(() {});
             },
           ),
         ),
+      ).animate().slideY(
+        curve: Curves.bounceInOut,
       ),
       if(layer.isLayerSelected && layer.childLayer != null)
         ...getAllEntries(layer.childLayer!, level+1),
@@ -149,7 +141,7 @@ class TreeSearchCard extends StatelessWidget{
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: ElevatedButton(
                         onPressed: (){
                           onReset!();
@@ -159,7 +151,7 @@ class TreeSearchCard extends StatelessWidget{
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: ElevatedButton(
                         onPressed: onConfirm,
                         child: Text(confirmLabel),
@@ -172,7 +164,7 @@ class TreeSearchCard extends StatelessWidget{
           ),
         ),
       ),
-    );
+    ).animate().slideY();
   }
 }
 

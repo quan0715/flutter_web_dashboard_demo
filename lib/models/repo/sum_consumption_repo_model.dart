@@ -70,14 +70,12 @@ class SumOfElectricityConsumptionDataModel implements RepoModel{
 
   String getDataByKey(String key){
     var map = toJson();
-    // debugPrint(map.toString());
     if(map.containsKey(key)){
       return map[key].toString();
     }else{
       return deviceData!.getDataByKey(key);
     }
   }
-
 }
 
 class PieChartProportion<M>{
@@ -90,21 +88,4 @@ class PieChartProportion<M>{
     required this.amount,
     required this.proportion,
   });
-
-  static List<PieChartProportion<SumOfElectricityConsumptionDataModel>> fromSumOfConsumption(List<SumOfElectricityConsumptionDataModel> dataSource){
-    List<PieChartProportion<SumOfElectricityConsumptionDataModel>> result = [];
-    // debugPrint(dataSource.toString());
-    int total = 0;
-    for(int i = 0; i < dataSource.length; i++){
-      total += dataSource[i].dayConsumption ?? 0;
-    }
-    for(int i = 0; i < dataSource.length; i++){
-      result.add(PieChartProportion(
-        model: dataSource[i],
-        amount: dataSource[i].dayConsumption ?? 0,
-        proportion: (dataSource[i].dayConsumption ?? 0) / total * 100,
-      ));
-    }
-    return result;
-  }
 }
