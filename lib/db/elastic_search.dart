@@ -13,10 +13,13 @@ class ElasticSearchClient<M extends RepoModel>{
   static String apiKey = DBConfig.apiKey;
   static int searchMaxSize = DBConfig.searchMaxSize;
   static Map<String, String> headers = {
+    'Accept': '*/*',
     'Content-Type': 'application/json; charset=UTF-8',
-    'Access-Control-Allow-Origin': '*',
+    // 'Access-Control-Allow-Origin': '*',
     'Authorization': apiKey,
-    'Access-Control-Allow-Credentials': "true"
+    // 'Access-Control-Allow-Methods': 'GET, POST',
+    // "Access-Control-Allow-Headers": 'X-Requested-With',
+    // 'Access-Control-Allow-Credentials': "true"
   };
   ElasticSearchClient({
     required this.index,
@@ -40,7 +43,7 @@ class ElasticSearchClient<M extends RepoModel>{
     debugPrint("load data from repo ($index)");
     try{
       final response = await http.post(
-        Uri.parse("$baseURI/$index/_search?&size=$searchMaxSize",),
+        Uri.parse("$baseURI/$index/_search",),
         headers: headers,
         body: jsonEncode(query ?? {"query": {"match_all": {}}}),
       );
@@ -68,7 +71,11 @@ class ElasticSearchClient<M extends RepoModel>{
         return [];
       }
     } catch(e){
-      debugPrint(e.toString());
+      if(e is http.ClientException){
+        debugPrint("requests error ${e.uri} ${e.message}");
+      }else{
+        debugPrint("requests error ${e.toString()}");
+      }
     }
     return [];
   }

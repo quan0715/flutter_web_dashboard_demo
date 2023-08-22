@@ -13,7 +13,7 @@ abstract class SearchTreeNode<T>{
   factory SearchTreeNode.buildTree(List<T> data, List<String> indexList) => throw UnimplementedError();
 
   void printTree({int depth=0}){
-    debugPrint("${'|--' * depth} ${toString()}");
+    debugPrint("${'|--' * depth}${toString()}");
     if(children.isNotEmpty){
       for(var node in children){
         node.printTree(depth: depth+1);
@@ -45,14 +45,21 @@ abstract class SearchTreeNode<T>{
 
   List<T> toList(){
     List<T> result = [];
+    if(data!=null){
+       result.add(data as T);
+    }
     for(SearchTreeNode node in children){
-        result.addAll(node.toList() as List<T>);
-      }
+      result.addAll(node.toList() as List<T>)  ;
+    }
     return result;
   } 
 
   List<PieChartProportion> toProportionList();
-
+  @override
+  String toString() {
+    // TODO: implement toString
+    return "[$index]";
+  }
 }
 
 class ConsumptionSearchNode extends SearchTreeNode<SumOfElectricityConsumptionDataModel>{

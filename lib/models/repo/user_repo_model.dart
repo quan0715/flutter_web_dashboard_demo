@@ -36,9 +36,18 @@ class User{
 }
 
 enum AccountType{
-  admin,
-  normal,
-  premium ;
+  admin(name: "s", displayName: "s"),
+  normal(name: "s", displayName: "s"),
+  premium(name: "s", displayName: "s");
+
+  final String name;
+  final String displayName;
+
+  const AccountType({
+    required this.name,
+    required this.displayName
+  });
+
   static AccountType getTypeFromName(String name){
     switch(name){
       case "admin":
@@ -49,6 +58,31 @@ enum AccountType{
         return AccountType.premium;
       default:
         return AccountType.normal;
+    }
+  }
+
+  String get getName => name;
+}
+
+enum MissionStage { 
+  progress(label: 'progress'), 
+  pending(label: 'pending'), 
+  close(label: 'close');
+  final String label;
+  const MissionStage({
+    required this.label
+  });
+
+  factory MissionStage.fromLabel(String label){
+    switch(label){
+      case 'progress':
+        return MissionStage.progress;
+      case 'pending':
+        return MissionStage.pending;
+      case 'close':
+        return MissionStage.close;
+      default:
+        return MissionStage.progress;
     }
   }
 }

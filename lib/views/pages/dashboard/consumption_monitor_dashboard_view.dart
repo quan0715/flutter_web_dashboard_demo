@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import 'package:web_dashboard/models/search_node.dart';
 import 'package:web_dashboard/models/state.dart';
@@ -226,7 +227,7 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
   Widget loadingView(){
     return const Center(
       child: CircularProgressIndicator(),
-    );
+    ).animate();
   }
 
   @override
@@ -266,7 +267,7 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
                                           Expanded(flex: 2, child: errorReportTableView(viewModel)),
                                         ],
                                       ),
-                                    )],
+                                    )].animate().fade(),
                                   )
                             ))
                     ],

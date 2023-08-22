@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_brand_palettes/flutter_brand_palettes.dart';
 import 'package:provider/provider.dart';
+import 'package:web_dashboard/models/state.dart';
 import 'package:web_dashboard/views/components/widget/tree_search_card.dart';
 import 'package:web_dashboard/views/theme/theme.dart';
 import 'package:web_dashboard/view_model/dashboard/electricity_consumption_view_model.dart';
@@ -188,9 +190,13 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
               //   value: viewModel.targetGroupType
               // ),
               // verticalDivider(),
-              dateTimeFilter(viewModel),
+              viewModel.loadingState != LoadingState.loading
+                ? dateTimeFilter(viewModel)
+                : dateTimeFilter(viewModel).animate().fade(),
               verticalDivider(),
-              levelFilter(),
+              viewModel.loadingState != LoadingState.loading
+                ? levelFilter()
+                : levelFilter().animate().fade(),
               verticalDivider(),
               const Spacer(),
               verticalDivider(),

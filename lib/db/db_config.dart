@@ -9,12 +9,11 @@ class DBConfig{
 
   static String baseURI = "https://es.lab.nick983.app";
   static String apiKey = "ApiKey YWdxZGpZa0JJUV90ZlhMR3AwMlc6Z1RGdW1DR1dTLTZGMWN1dDZkWEJsdw==";
-  static int searchMaxSize = 10000;
+  static int searchMaxSize = 9999;
   static String meterRepoIndex = "metermsd";
   static String errorReportRepoIndex = "event_202307";
   static String deviceConsumptionRepoIndex = "consumption_202308"; // FIX: correct spelling
   static String deviceConsumptionSumRepoIndex = "sumconsumption_202308";
-
   static String lineTypeId= "linetype";
   static String assetTypeId= "assettype";
   static String buildingId= "building";

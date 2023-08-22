@@ -51,7 +51,8 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
     notifyListeners();
   }
   
-  List<String> get getSearchList => treeSearchData.root.levelList() as List<String>;
+  List<String> get getSearchList => 
+    treeSearchData.root.levelList() as List<String>;
 
   List<DeviceErrorReportModel> get deviceErrorReportList => _deviceErrorReportList;
 
@@ -68,11 +69,15 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
 
   List<SearchTreeNode> getTimeGroupDataSource(SearchTreeNode? tree, DateTime startTime, int days){
     List<SearchTreeNode> timeGroupDataSource = [];
+    tree!.printTree(depth: 0);
+    debugPrint(startTime.toIso8601String());
+    debugPrint("days: $days");
     for(int i=0;i<days;i++){
       List<String> filterList = getSearchList
         ..insert(0, startTime.subtract(Duration(days: i)).toIso8601String());
+      debugPrint(filterList.toString());
       timeGroupDataSource.add(
-        tree!.searchTree(filterList)!
+        tree!.searchTree(filterList)!..printTree(depth: 0)
       );
     }
     return timeGroupDataSource.reversed.toList();
@@ -136,12 +141,52 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
       consumptionDataGroupSearchTree = ConsumptionSearchNode.buildTree(
         data: _sumOfConsumptionDataList,
         indexes: [DBConfig.dateTimeId, ...treeSearchData.getSearchIndexOrderList]
-      )..printTree();
+      );
+      // consumptionDataGroupSearchTree!.printTree(depth: 0);
       _deviceErrorReportList = await ElasticSearchClient.errorReportClient().search();
     }catch(e){
       debugPrint(e.toString());
       setLoadingState(LoadingState.error);
     }
+    var test = [
+      LayerFilterData(
+        layerLabel: "L1 廠區",
+        layerSelectedIndex: DBConfig.locId,
+        layerIndex: DBConfig.locId,
+      ),
+      LayerFilterData(
+        layerLabel: "L2 建築",
+        layerSelectedIndex: DBConfig.buildingId,
+        layerIndex: DBConfig.buildingId,
+      ),
+      LayerFilterData(
+        layerLabel: "L3 產線類別",
+        layerSelectedIndex: DBConfig.lineTypeId,
+        layerIndex: DBConfig.lineTypeId,
+      ),
+      LayerFilterData(
+        layerLabel: "L4 用電部門",
+        layerSelectedIndex: DBConfig.departmentId,
+        layerIndex: DBConfig.departmentId,
+      ),
+      LayerFilterData(
+        layerLabel: "L5 設備部門",
+        layerSelectedIndex: DBConfig.assetTypeId,
+        layerIndex: DBConfig.assetTypeId,
+      ),
+    ];
+    SearchTreeLayer s = SearchTreeLayer.buildTree(data: test);
+    // SearchTreeLayer q = SearchTreeLayer.buildTree(data: test);
+    s.printTree();
+    // q.children.add(s.children.first); 
+    // q.printTree();
+    // debugPrint(s.levelList().toString());
+    // debugPrint(getTodayConsumptionDataSearchTree!.toList().toString());
+    // debugPrint(s.toList().toString());
+    // for (var s in s.toList()){
+    //   debugPrint(s.layerIndex);
+    // }
+    // s.searchTree(['loc', 'building', 'assettype'])!.printTree();
     setLoadingState(LoadingState.free);
   }
 }

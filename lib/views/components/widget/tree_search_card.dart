@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
 import 'package:web_dashboard/models/search_node.dart';
 import 'package:web_dashboard/views/components/widget/quote.dart';
 import 'package:web_dashboard/views/theme/theme.dart';
@@ -101,7 +102,6 @@ class TreeSearchCard extends StatelessWidget{
         index: layer.layerIndex,
         label: layer.layerLabel,
         color: getColor(level),  
-        isVisible: true,
         dataSource: (searchTree!.searchTree(filterList)!).children,
         labelMapper: (data) => Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
@@ -194,12 +194,12 @@ class FilterEntries<DataSourceType> extends StatelessWidget{
   // final int level;
   final List<DataSourceType> dataSource;
   final Widget Function(DataSourceType) labelMapper;
-  final bool isVisible; 
+  // final bool isVisible; 
 
   const FilterEntries({
     super.key,
     required this.label,
-    required this.isVisible, 
+    // required this.isVisible, 
     this.color = Colors.grey, 
     required this.index,
     // required this.level,
@@ -209,27 +209,95 @@ class FilterEntries<DataSourceType> extends StatelessWidget{
   
   @override
   Widget build(BuildContext context) {
-    return Visibility(
-      visible: isVisible,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            FrameQuote(quoteText: label, color: color,),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Wrap(
-                children: dataSource.map<Widget>(labelMapper).toList(),
-              ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          FrameQuote(quoteText: label, color: color,),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Wrap(
+              children: dataSource.map<Widget>(labelMapper).toList(),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
 
+
+class LayerFilterData<T>{
+  T layerLabel;
+  T layerSelectedIndex;
+  T layerIndex;
+  List<T> indexes;
+  // Function<bool>(dynamic,dynamic) layerSelectedValidator;
+  LayerFilterData({
+    required this.layerLabel,
+    required this.layerSelectedIndex,
+    required this.layerIndex,
+    this.indexes = const [],
+    // required this.layerSelectedValidator,
+  });
+}
+
+class SearchTreeLayer extends SearchTreeNode<LayerFilterData<String>>{
+  SearchTreeLayer({
+    required super.index, 
+    required super.data,
+    required super.children
+  });
+
+  @override
+  String toString() =>  "[$index] : $isLayerSelected";
+  
+  @override
+  factory SearchTreeLayer.buildTree({required List<LayerFilterData<String>> data}){
+   return build(data: data.map(
+    (d) => SearchTreeLayer(
+      index: d.layerIndex,
+      data: d,
+      children: []
+    )
+   ).toList());
+  }
+
+  static SearchTreeLayer build({required List<SearchTreeLayer> data}){
+    SearchTreeLayer d = data.removeAt(0);
+    if(data.isEmpty){
+      return d;
+    }else{
+      return SearchTreeLayer(
+        index: d.index,
+        data: d.data,
+        children: [build(data: data)]
+      );
+    }
+  }
+
+  bool get isLayerSelected => data!.layerSelectedIndex != data!.layerIndex;
+
+  List<String> levelList(){
+    // 往上面找東西
+    // if(until!=null && until == this){
+    //   return [layerIndex];
+    // }
+    if(!isLayerSelected || children.isEmpty){
+      return [index];
+    }
+
+    return [index, ...(children.first as SearchTreeLayer).levelList()];
+  }
+
+  @override
+  List<PieChartProportion> toProportionList() {
+    // TODO: implement toProportionList
+    throw UnimplementedError();
+  }
+  
+}
 
 class TreeLayer<T>{
   T layerLabel;
@@ -301,6 +369,5 @@ class TreeSearchData<T>{
   List<T> get getSearchList => root.levelList();
 
   List<T> get getSearchIndexOrderList => root.indexOrderList();
-
 
 }
