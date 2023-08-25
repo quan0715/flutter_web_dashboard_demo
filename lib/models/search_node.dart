@@ -4,7 +4,7 @@ import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
 abstract class SearchTreeNode<T>{
   String index;
   T? data;
-  List<SearchTreeNode> children = [];
+  List<SearchTreeNode<T>> children = [];
   SearchTreeNode({
     required this.index,
     required this.children,
@@ -24,17 +24,21 @@ abstract class SearchTreeNode<T>{
   SearchTreeNode? searchTree(List<String> indexes){
     if(indexes.isEmpty) return null;
     String target = indexes.first;
-    if(index == target){
+    SearchTreeNode node = _searchTree(target)!;
+    if(indexes.length == 1){
+      return node;
+    }else{
       indexes.removeAt(0);
-      if(indexes.isEmpty){
-        // debugPrint("Found [$index] : ${toString()}");
-        return this;
-      }else{
-        return searchTree(indexes);
-      } 
+      return node.searchTree(indexes);
+    }
+  }
+
+  SearchTreeNode? _searchTree(String index){
+    if(this.index == index){
+      return this;
     }else{
       for(SearchTreeNode node in children){
-        var r = node.searchTree(indexes);
+        var r = node._searchTree(index);
         if(r != null){
           return r;
         }

@@ -6,12 +6,12 @@ import 'package:web_dashboard/views/components/widget/quote.dart';
 import 'package:web_dashboard/views/theme/theme.dart';
 
 class TreeSearchLegend extends StatelessWidget{
-  final TreeSearchData treeSearchData;
+  final FilterSearchTreeNode? filterTree;
   final List<Color> plate;
 
   const TreeSearchLegend({
     super.key,
-    required this.treeSearchData,
+    required this.filterTree,
     this.plate = const <Color>[
       Colors.amber,
       Colors.red,
@@ -26,23 +26,24 @@ class TreeSearchLegend extends StatelessWidget{
   }
 
   
-  List<Widget> getLabelList(TreeLayer root, int level){
+  List<Widget> getLabelList(SearchTreeNode root, int level){
     return [
-      if(root.isLayerSelected)
+      if((root as FilterSearchTreeNode).isLayerSelected)
         Row(
           children: [
             SearchTreeLabel(
-              label: Text(root.selectedIndex),
+              label: Text(root.data!.layerSelectedIndex),
               color: getColor(level),
               selected: false,
               onSelected: (value){},
             ),
             Icon(Icons.arrow_right_rounded, color: getColor(level),)
           ],
-        ).animate().fade(),
+        ),
+        // .animate().fade(),
         
-        if(root.childLayer!=null)
-          ...getLabelList(root.childLayer!, level+1)
+        if(root.children.isNotEmpty)
+          ...getLabelList(root.children.first, level+1)
     ];
   }
 
@@ -50,32 +51,30 @@ class TreeSearchLegend extends StatelessWidget{
   Widget build(BuildContext context) {
     // TODO: implement build
     return Row(
-      children: getLabelList(treeSearchData.root, 0),
+      children: getLabelList(filterTree as FilterSearchTreeNode, 0),
     );
   }
 
 }
 
-class TreeSearchCard extends StatelessWidget{
-  final TreeSearchData treeSearchData;
+class TreeSearchCard extends StatefulWidget{
   final List<Color> plate;
   final VoidCallback? onReset;
   final VoidCallback? onConfirm;
   final VoidCallback? onValueChange;
+  final Function(List<LayerFilterData<String>>)? onOrderChange;
   final String confirmLabel;
   final String resetLabel;
   final double elevation;
   final Color backgroundColor;
   final double width;
-  // final List<FilterEntries> entries;
   final SearchTreeNode? searchTree; 
-  // final Widget Function(int index) labelMapper;
-
-  const TreeSearchCard({
+  FilterSearchTreeNode? filterTree;
+  // final List<LayerFilterData<String>> filterDataList; // pass by order
+  TreeSearchCard({
     super.key, 
-    required this.treeSearchData,
-    // required this.entries,
     required this.searchTree,
+    required this.filterTree,
     this.plate = const <Color>[
       Colors.amber,
       Colors.red,
@@ -91,71 +90,115 @@ class TreeSearchCard extends StatelessWidget{
     this.onReset,
     this.onConfirm, 
     this.onValueChange,
+    this.onOrderChange,
   });
 
-  Color getColor(int index) => plate[(index) % plate.length];
+  @override
+  State<TreeSearchCard> createState() => _TreeSearchCardState();
+}
+
+class _TreeSearchCardState extends State<TreeSearchCard> {
+  Color getColor(int index) => widget.plate[(index) % widget.plate.length];
+
   // recursive generate filter entries
-  List<Widget> getAllEntries(TreeLayer layer, int level) {
-    var filterList = treeSearchData.root.levelList(until: layer) as List<String>;
+  List<Widget> getAllEntries(SearchTreeNode layerData, int level) {
+    var filterList = widget.filterTree!.levelList(until: (layerData as FilterSearchTreeNode).data!.layerIndex);
+    // debugPrint("${layerData.data!.layerLabel}: $layerData (level: $level, filterList: $filterList)");
     return [
       FilterEntries(
-        index: layer.layerIndex,
-        label: layer.layerLabel,
+        index: layerData.data!.layerIndex,
+        label: layerData.data!.layerLabel,
         color: getColor(level),  
-        dataSource: (searchTree!.searchTree(filterList)!).children,
+        dataSource: (widget.searchTree!.searchTree(filterList)!).children, //..forEach((element) {element.printTree(depth: 0);}),
         labelMapper: (data) => Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
           child: SearchTreeLabel(
             label: Text(data.index),
             color: getColor(level),
-            selected: layer.selectedIndex == data.index,
+            selected: data.index == layerData.data!.layerSelectedIndex,
             onSelected: (bool value) {
-              layer.toggleLevel(data.index);
-              onValueChange!();
+              (layerData).toggleLevel(data.index);
+              widget.onValueChange!();
             },
           ),
         ),
       ).animate().slideY(
         curve: Curves.bounceInOut,
       ),
-      if(layer.isLayerSelected && layer.childLayer != null)
-        ...getAllEntries(layer.childLayer!, level+1),
+      if((layerData).isLayerSelected && layerData.children.isNotEmpty)
+        ...getAllEntries(layerData.children.first, level+1),
     ];
   }
 
+  bool isReordering = false;
+
   @override
   Widget build(BuildContext context) {
+    var allEntries = getAllEntries(widget.filterTree!, 1);
     return Card(
       color: DashboardColor.surface(context),
-      elevation: elevation,
+      elevation: widget.elevation,
       child: SizedBox(
-        width: width,
+        width: widget.width,
         child: DashboardPadding.object(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              ...getAllEntries(treeSearchData.root, 0),
+              isReordering 
+              ? ReorderableListView(
+                shrinkWrap: true,
+                padding: EdgeInsets.zero,
+                onReorder: (oldIndex, newIndex){
+                  // debugPrint("oldIndex: $oldIndex, newIndex: $newIndex");
+                  setState(() {
+                    var list = widget.filterTree!.toList();
+                    // debugPrint("list: ${list.map((e) => e.layerIndex)}");
+                    if (oldIndex < newIndex) {
+                      newIndex -= 1;
+                    }
+                    final item = list.removeAt(oldIndex);
+                    list.insert(newIndex, item);
+
+                    // debugPrint("list: ${list.map((e) => e.layerIndex)}");
+                    widget.onOrderChange!(list);
+                    widget.filterTree!.reset();
+                  });
+                },
+                children: List.generate(
+                  widget.filterTree!.toList().length, (index) => 
+                    ListTile(
+                      key: ValueKey(index),
+                      title: FrameQuote(quoteText: "L ${index+1} ${widget.filterTree!.toList()[index].layerLabel}", color: getColor(index))
+                    )
+              ))
+              : const SizedBox.shrink(),
+              if(!isReordering)
+                ...allEntries, 
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: ElevatedButton(
-                        onPressed: (){
-                          onReset!();
-                          onValueChange!();
-                        },
-                        child: Text(resetLabel),
-                      ),
+                    IconButton(
+                      onPressed: (){
+                        // onReset!();
+                        widget.filterTree!.reset();
+                        widget.onValueChange!();
+                      },
+                      icon: Icon(Icons.rebase_edit, color: DashboardColor.error(context),),
+                      // label: Text('清除', style:TextStyle(color: DashboardColor.error(context))),
+                      
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: ElevatedButton(
-                        onPressed: onConfirm,
-                        child: Text(confirmLabel),
-                      ),
+                    const SizedBox(width: 10,),
+                    IconButton(
+                      onPressed: (){
+                        setState(() {
+                          isReordering = !isReordering;
+                        });
+                      },
+                      // label: Text('排序', style:TextStyle(color: DashboardColor.primary(context))),
+                      icon: Icon(Icons.settings, color: DashboardColor.primary(context))
                     ),
                   ],
                 ),
@@ -164,7 +207,7 @@ class TreeSearchCard extends StatelessWidget{
           ),
         ),
       ),
-    ).animate().slideY();
+    );
   }
 }
 
@@ -210,20 +253,46 @@ class FilterEntries<DataSourceType> extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          FrameQuote(quoteText: label, color: color,),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Wrap(
-              children: dataSource.map<Widget>(labelMapper).toList(),
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            FrameQuote(quoteText: label, color: color,),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Wrap(
+                children: dataSource.map<Widget>(labelMapper).toList(),
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    // return Draggable(
+    //   feedback: Material(
+    //     elevation: 2,
+    //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    //     type: MaterialType.card,
+    //     child: Opacity(
+    //       opacity: 0.8,
+    //       child: body
+    //     ),
+    //   ),
+    //   childWhenDragging:  Opacity(
+    //       opacity: 0.1,
+    //       child: body
+    //     ),
+    //   child: Row(
+    //     children: [
+    //       Expanded(child: body),
+    //       // IconButton(
+    //       //   onPressed: () {
+              
+    //       //   },
+    //       //   icon: Icon(Icons.drag_indicator, color: color,)
+    //       // ),
+    //     ],
+    //   ),
+    // );
   }
 }
 
@@ -243,20 +312,20 @@ class LayerFilterData<T>{
   });
 }
 
-class SearchTreeLayer extends SearchTreeNode<LayerFilterData<String>>{
-  SearchTreeLayer({
+class FilterSearchTreeNode extends SearchTreeNode<LayerFilterData<String>>{
+  FilterSearchTreeNode({
     required super.index, 
     required super.data,
     required super.children
   });
 
   @override
-  String toString() =>  "[$index] : $isLayerSelected";
+  String toString() =>  "[$index] : $isLayerSelected ${data!.layerIndex} ${data!.layerSelectedIndex}";
   
   @override
-  factory SearchTreeLayer.buildTree({required List<LayerFilterData<String>> data}){
+  factory FilterSearchTreeNode.buildTree({required List<LayerFilterData<String>> data}){
    return build(data: data.map(
-    (d) => SearchTreeLayer(
+    (d) => FilterSearchTreeNode(
       index: d.layerIndex,
       data: d,
       children: []
@@ -264,12 +333,12 @@ class SearchTreeLayer extends SearchTreeNode<LayerFilterData<String>>{
    ).toList());
   }
 
-  static SearchTreeLayer build({required List<SearchTreeLayer> data}){
-    SearchTreeLayer d = data.removeAt(0);
+  static FilterSearchTreeNode build({required List<FilterSearchTreeNode> data}){
+    FilterSearchTreeNode d = data.removeAt(0);
     if(data.isEmpty){
       return d;
     }else{
-      return SearchTreeLayer(
+      return FilterSearchTreeNode(
         index: d.index,
         data: d.data,
         children: [build(data: data)]
@@ -279,16 +348,31 @@ class SearchTreeLayer extends SearchTreeNode<LayerFilterData<String>>{
 
   bool get isLayerSelected => data!.layerSelectedIndex != data!.layerIndex;
 
-  List<String> levelList(){
-    // 往上面找東西
-    // if(until!=null && until == this){
-    //   return [layerIndex];
-    // }
-    if(!isLayerSelected || children.isEmpty){
-      return [index];
+  List<String> levelList({String until = ""}){
+    if(until == data!.layerIndex || children.isEmpty){
+      return [data!.layerIndex];
     }
+    else if(isLayerSelected){
+      return [data!.layerIndex, data!.layerSelectedIndex, ...(children.first as FilterSearchTreeNode).levelList(until: until)];
+    }
+    return [data!.layerIndex];
+  }
 
-    return [index, ...(children.first as SearchTreeLayer).levelList()];
+  void toggleLevel(String value){
+    if(value == data!.layerSelectedIndex){
+      reset();
+    }
+    else{
+      reset();
+      data!.layerSelectedIndex = value;
+    }
+  }
+
+  void reset(){
+    data!.layerSelectedIndex = data!.layerIndex;
+    for(var c in children){
+      (c as FilterSearchTreeNode).reset();
+    }
   }
 
   @override
@@ -299,75 +383,3 @@ class SearchTreeLayer extends SearchTreeNode<LayerFilterData<String>>{
   
 }
 
-class TreeLayer<T>{
-  T layerLabel;
-  T layerIndex;
-  late T selectedIndex;
-  TreeLayer<T>? childLayer;
-  TreeLayer({
-    required this.layerLabel,
-    required this.layerIndex,
-    this.childLayer,
-  }){
-    selectedIndex = layerIndex;
-  }
-  bool get isLayerSelected => 
-    selectedIndex != layerIndex;
-  
-  void toggleLevel(T value){
-    if(value == selectedIndex){
-      reset();
-    }
-    else{
-      reset();
-      selectedIndex = value;
-    }
-  }
-
-  void reset(){
-    selectedIndex = layerIndex;
-    childLayer?.reset();
-  }
-
-  List<T> levelList({TreeLayer? until}){
-    // 往上面找東西
-    if(until!=null && until == this){
-      return [layerIndex];
-    }
-    if(!isLayerSelected || childLayer == null){
-      return [selectedIndex];
-    }
-
-    return [selectedIndex, ...childLayer!.levelList(until: until)];
-  }
-  
-  TreeLayer<T>? search(T index){
-    if(layerIndex == index){
-      return this;
-    }
-    if(childLayer == null){
-      return null;
-    }
-    return childLayer!.search(index);
-  }
-
-  List<T> indexOrderList(){
-    if(childLayer == null){
-      return [layerIndex];
-    }
-    return [layerIndex,  ...childLayer!.indexOrderList()];
-  }
-}
-
-class TreeSearchData<T>{
-  final TreeLayer<T> root;
-
-  TreeSearchData({
-    required this.root,
-  });
-
-  List<T> get getSearchList => root.levelList();
-
-  List<T> get getSearchIndexOrderList => root.indexOrderList();
-
-}

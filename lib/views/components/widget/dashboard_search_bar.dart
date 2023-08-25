@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_brand_palettes/flutter_brand_palettes.dart';
 import 'package:provider/provider.dart';
@@ -44,24 +45,35 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
                   value: viewModel,
                   child: Consumer<ElectricityConsumptionDashboardViewModel>(
                     builder: (context, viewModel, child) => 
-                      Stack(
-                        children: [
-                          Positioned(
-                            top: buttonPosition.size.height + buttonPosition.localToGlobal(Offset.zero).dy + 1,
-                            left: buttonPosition.localToGlobal(Offset.zero).dx,
-                            child: TreeSearchCard(
-                              searchTree: viewModel.getTodayConsumptionDataSearchTree!,
-                              treeSearchData: viewModel.treeSearchData,
-                              plate: const InstagramGrad().colors,
-                              onConfirm: () => Navigator.pop(context, true), 
-                              onReset: () => viewModel.treeSearchData.root.reset(),
-                              onValueChange: viewModel.refreshPage,
-                            ),
-                          )
-                        ],
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          Widget card = TreeSearchCard(
+                            searchTree: viewModel.getTodayConsumptionDataSearchTree!,
+                            filterTree: viewModel.filterSearchTreeNode!,
+                            plate: const InstagramGrad().colors,
+                            onConfirm: () => Navigator.pop(context, true), 
+                            onOrderChange: (value) => viewModel.setFilterOrder = value,
+                            onValueChange: viewModel.refreshPage,
+                          );
+                          if(constraints.maxWidth > 600){
+                            return Stack(
+                              children: [
+                                Positioned(
+                                  top: buttonPosition.size.height + buttonPosition.localToGlobal(Offset.zero).dy + 1,
+                                  left: buttonPosition.localToGlobal(Offset.zero).dx,
+                                  child: card 
+                                )
+                              ],
+                            );
+                          }else{
+                            return Center(
+                              child: card
+                            );
+                          }
+                        }
                       ),
                   ),
-                                )
+                  )
                 );
             }, 
             child: RawChip(
@@ -69,9 +81,12 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
               avatar: Icon(Icons.filter_list, color: DashboardColor.primary(context)),
               label: const Text("LEVEL: 階層篩選")),
           ),
-          TreeSearchLegend(
-            treeSearchData: viewModel.treeSearchData,
-            plate: const InstagramGrad().colors,
+          Visibility(
+            visible: MediaQuery.of(context).size.width > 950,
+            child: TreeSearchLegend(
+              filterTree: viewModel.filterSearchTreeNode!,
+              plate: const InstagramGrad().colors,
+            ),
           )
         ],
       );
@@ -117,14 +132,10 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
           },
           transitionBuilder: (BuildContext context, a1,a2, widget) {
             return SlideTransition(
-              position: a1.drive(Tween(begin: Offset(0, -0.05), end: Offset(0, 0))),
-              child: Stack(
-                children: [
-                  // Positioned.fill(child: Container(color: Colors.amber.withOpacity(0.01),)),
-                  Positioned(
-                    top: buttonPosition.size.height + buttonPosition.localToGlobal(Offset.zero).dy - 15,
-                    left: buttonPosition.localToGlobal(Offset.zero).dx - 20,
-                    child: DatePickerDialog(
+              position: a1.drive(Tween(begin: const Offset(0, -0.05), end: const Offset(0, 0))),
+              child: LayoutBuilder(
+                builder: (context, constrain) {
+                  Widget datePicker = DatePickerDialog(
                       initialDate: viewModel.targetDateTime,
                       firstDate: viewModel.targetDateTime.subtract(const Duration(days: 365)), 
                       lastDate: DateTime.now(),
@@ -132,9 +143,21 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
                       helpText: "選擇觀測區間",
                       cancelText: "取消",
                       confirmText: "確認",
-                    ),
-                  )
-                ],
+                  );
+                  if(constrain.maxWidth > 600){
+                    return Stack(
+                      children: [
+                        Positioned(
+                          top: buttonPosition.size.height + buttonPosition.localToGlobal(Offset.zero).dy - 15,
+                          left: buttonPosition.localToGlobal(Offset.zero).dx - 20,
+                          child: datePicker,
+                        ),
+                      ],
+                    );
+                  }else{
+                    return datePicker;
+                  }
+                }
               ),
             );
           },
@@ -190,14 +213,10 @@ class _DashboardSearchBarState extends State<DashboardSearchBar> {
               //   value: viewModel.targetGroupType
               // ),
               // verticalDivider(),
-              viewModel.loadingState != LoadingState.loading
-                ? dateTimeFilter(viewModel)
-                : dateTimeFilter(viewModel).animate().fade(),
-              verticalDivider(),
-              viewModel.loadingState != LoadingState.loading
-                ? levelFilter()
-                : levelFilter().animate().fade(),
-              verticalDivider(),
+              dateTimeFilter(viewModel),
+              // verticalDivider(),
+              levelFilter(),
+              // verticalDivider(),
               const Spacer(),
               verticalDivider(),
               

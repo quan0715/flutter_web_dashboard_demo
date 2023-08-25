@@ -85,42 +85,42 @@ class LoginPageView extends StatelessWidget {
       builder: (context, authManager, child) => 
         Consumer<DashboardThemeManager>(
         builder: (context, themeManager, child) => Scaffold(
-          body: Stack(
-            children: [ 
-              Align(
-                alignment: Alignment.center,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 500),
-                  decoration: BoxDecoration(
-                    color: DashboardColor.surface(context),
-                    boxShadow: [
-                      BoxShadow(
-                        color: getShadowColor(authManager, context),
-                        blurRadius: 5,
-                        spreadRadius: 6,
-                        // blurStyle: BlurStyle.solid,
-                        offset: const Offset(0, 0)
-                      ),
-                    ],
-                    borderRadius: BorderRadius.circular(10),
+          body: Center(
+            //alignment: Alignment.center,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 500),
+              decoration: BoxDecoration(
+                color: DashboardColor.surface(context),
+                boxShadow: [
+                  BoxShadow(
+                    color: getShadowColor(authManager, context),
+                    blurRadius: 5,
+                    spreadRadius: 6,
+                    // blurStyle: BlurStyle.solid,
+                    offset: const Offset(0, 0)
                   ),
-                  height: MediaQuery.of(context).size.height* 0.5,
-                  width: MediaQuery.of(context).size.height* 0.6,
-                  child: DashboardPadding.object(
-                    child: AspectRatio(
-                      aspectRatio: 1.5,
-                      child: authManager.isLoading
-                      ? const Center(
-                        child: SizedBox.square(dimension: 50, child: CircularProgressIndicator(),),
-                      )
-                      : Column(
+                ],
+                borderRadius: BorderRadius.circular(10),
+              ),
+             height: 500,
+              width: 500,
+              child: DashboardPadding.object(
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: authManager.isLoading
+                  ? const Center(
+                    child: SizedBox.square(dimension: 50, child: CircularProgressIndicator(),),
+                  )
+                  : Center(
+                    child: SingleChildScrollView(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           DashboardPadding.small(
                             child: Column(
                               children: [
                                 Container(
-                                  width: 300,
+                                  width: 350,
                                   height: 90,
                                   decoration: BoxDecoration(
                                     // color: const DashboardColor.error(context),
@@ -161,7 +161,8 @@ class LoginPageView extends StatelessWidget {
                   ),
                 ),
               ),
-          ]),
+            ),
+          ),
         ),
       ),
     );

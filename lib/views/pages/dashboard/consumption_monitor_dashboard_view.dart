@@ -27,10 +27,16 @@ class ConsumptionMonitorDashboardView extends StatefulWidget {
 
 class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDashboardView> with SingleTickerProviderStateMixin{
   late final TabController tabController;
+  late final viewModel = ElectricityConsumptionDashboardViewModel();
+
+  Future<void> init() async {
+    await viewModel.init();
+  }
 
   @override
   initState(){
     super.initState();
+    init();
     tabController = TabController(length: 2, vsync: this);
   }
 
@@ -131,30 +137,27 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
     ];
     return DashboardFrameCard(
       elevation: 0,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const FrameQuote(
-            quoteText: "總用電量分佈(圓餅圖)",
-          ),
-          ConsumptionPieChart(
-            dataSource: dataSource.toProportionList(),
-          ),
-          Expanded(
-            flex: 1,
-            child: SingleChildScrollView(
-              child: Column(
-                children: data.map<Widget>(
-                  (d) => InfoCard(
-                    title: d["title"] as String,
-                    value: d["value"] as int,
-                    unit: d["unit"] as String,
-                  )
-                ).toList()
-              ),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const FrameQuote(
+              quoteText: "總用電量分佈(圓餅圖)",
             ),
-          ),
-        ],
+            ConsumptionPieChart(
+              dataSource: dataSource.toProportionList(),
+            ),
+            Column(
+              children: data.map<Widget>(
+                (d) => InfoCard(
+                  title: d["title"] as String,
+                  value: d["value"] as int,
+                  unit: d["unit"] as String,
+                )
+              ).toList()
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -227,18 +230,112 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
   Widget loadingView(){
     return const Center(
       child: CircularProgressIndicator(),
-    ).animate();
+    );
   }
+
+  Widget normalScreenSizeView(ElectricityConsumptionDashboardViewModel viewModel, BoxConstraints constraints){
+    return !viewModel.isDashboardView
+      ? tableViewFrame(viewModel)
+      : Row( 
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(flex: 1, child: overViewFrame(viewModel)),
+          Expanded(flex: 1, child: groupDetailDataFrame(viewModel)),
+          Expanded(
+            flex: 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(flex: 3, child: consumptionTimelineChartFrame(viewModel)),
+                Expanded(flex: 2, child: errorReportTableView(viewModel)),
+              ],
+            ),
+          )]
+        );
+  }
+
+  Widget mediumScreenSizeView(ElectricityConsumptionDashboardViewModel viewModel, BoxConstraints constraints){
+    return !viewModel.isDashboardView
+      ? tableViewFrame(viewModel)
+      : SingleChildScrollView(
+          child: SizedBox(
+            height: constraints.maxHeight,
+            child: Column(
+              children: [
+                Expanded(
+                  flex: 7,
+                  child: Row( children: [
+                      Expanded(flex: 1, child: overViewFrame(viewModel)),
+                      Expanded(flex: 1, child: groupDetailDataFrame(viewModel)),
+                      ]
+                    ),
+                ),
+                Expanded(
+                  flex: 6,
+                  child: PageView(
+                    children: [
+                      consumptionTimelineChartFrame(viewModel),
+                      errorReportTableView(viewModel)
+                    ]
+                    ),
+                ),
+              ],
+            ),
+          ),
+        );
+
+  }
+
+  Widget smallScreenSizeView(ElectricityConsumptionDashboardViewModel viewModel, BoxConstraints constraints){
+    return !viewModel.isDashboardView
+      ? tableViewFrame(viewModel)
+      : Column(
+        children: [
+          // overViewFrame(viewModel),
+          Expanded(
+            flex: 6,
+            child: PageView(
+              children: [
+                overViewFrame(viewModel),
+                groupDetailDataFrame(viewModel)
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 7,
+            child: PageView(
+              children: [
+                consumptionTimelineChartFrame(viewModel),
+                errorReportTableView(viewModel),
+              ],
+            ),
+          ),
+        ],
+      );
+  }
+
+  Widget noneSupportScreenSizeView(){
+    return Center(
+      child: Text("layout not support", style: DashboardText.labelLarge(context)),
+    );
+  }
+
+  Widget noneDataDialogView(){
+    return Center(
+      child: Text("無資料紀錄 確認伺服器連線狀態", style: DashboardText.labelLarge(context)),
+    );
+  }
+
+  
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ElectricityConsumptionDashboardViewModel>(
-      create: (context) => ElectricityConsumptionDashboardViewModel()..init(),
+    return ChangeNotifierProvider<ElectricityConsumptionDashboardViewModel>.value(
+      value: viewModel,
+      // create: (context) => ElectricityConsumptionDashboardViewModel(),
       child: Consumer<ElectricityConsumptionDashboardViewModel>(
         builder: (context, viewModel, child) => Scaffold(
-          appBar: const DashboardAppBar(
-            title: "用電量總覽",
-          ),
+          appBar: const DashboardAppBar(title: "用電量總覽"),
           drawer: const DashboardDrawer(),
           body: DashboardPadding.small(
             child: SizedBox.expand(
@@ -252,24 +349,17 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
                           child: viewModel.loadingState == LoadingState.loading
                           ? loadingView()
                           : viewModel.sumOfElectricityConsumptionDataList.isEmpty
-                            ? Center(child: Text("無資料紀錄", style: DashboardText.labelLarge(context),),)
-                            : !viewModel.isDashboardView
-                                ? tableViewFrame(viewModel)
-                                : Row( children: [
-                                    Expanded(flex: 1, child: overViewFrame(viewModel)),
-                                    Expanded(flex: 1, child: groupDetailDataFrame(viewModel)),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                                        children: [
-                                          Expanded(flex: 3, child: consumptionTimelineChartFrame(viewModel)),
-                                          Expanded(flex: 2, child: errorReportTableView(viewModel)),
-                                        ],
-                                      ),
-                                    )].animate().fade(),
-                                  )
-                            ))
+                            ? noneDataDialogView()
+                            : LayoutBuilder(
+                              builder: (context, constraints) => switch (constraints.maxWidth) {
+                                  > 1200 => normalScreenSizeView(viewModel, constraints),
+                                  > 600 => mediumScreenSizeView(viewModel, constraints),
+                                  > 400 => smallScreenSizeView(viewModel, constraints),
+                                  _ => noneSupportScreenSizeView()
+                              }
+                            )
+                        )
+                      )
                     ],
                   ),
                 )),

@@ -27,6 +27,5 @@ class DashboardColor{
   static Color onTertiaryContainer(BuildContext context) => Theme.of(context).colorScheme.onTertiaryContainer;
   static Color brightness(BuildContext context) => Theme.of(context).colorScheme.brightness == Brightness.dark ? Colors.white : Colors.black;
   static ColorScheme colorScheme(BuildContext context) => Theme.of(context).colorScheme;
-
   
 }
