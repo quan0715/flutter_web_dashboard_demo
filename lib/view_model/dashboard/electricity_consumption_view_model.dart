@@ -54,7 +54,6 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
       indexes: [DBConfig.dateTimeId, ...filterOrder.map((e) => e.layerIndex).toList()]
     );
     notifyListeners(); 
-    // init();
   }
 
   set setTargetDateTime(DateTime dateTime){

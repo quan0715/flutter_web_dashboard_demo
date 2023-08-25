@@ -69,9 +69,9 @@ class TreeSearchCard extends StatefulWidget{
   final Color backgroundColor;
   final double width;
   final SearchTreeNode? searchTree; 
-  FilterSearchTreeNode? filterTree;
+  final FilterSearchTreeNode? filterTree;
   // final List<LayerFilterData<String>> filterDataList; // pass by order
-  TreeSearchCard({
+  const TreeSearchCard({
     super.key, 
     required this.searchTree,
     required this.filterTree,
@@ -132,6 +132,28 @@ class _TreeSearchCardState extends State<TreeSearchCard> {
 
   bool isReordering = false;
 
+  void onReorder(int oldIndex, int newIndex){
+    setState(() {
+      var list = widget.filterTree!.toList();
+      if (oldIndex < newIndex) {
+        newIndex -= 1;
+      }
+      final item = list.removeAt(oldIndex);
+      list.insert(newIndex, item);
+      widget.onOrderChange!(list);
+      widget.filterTree!.reset();
+    });
+  }
+  void onRest(){
+    widget.filterTree!.reset();
+    widget.onValueChange!();
+  }
+  void onClickReorderMode(){
+    setState(() {
+      isReordering = !isReordering;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var allEntries = getAllEntries(widget.filterTree!, 1);
@@ -145,34 +167,33 @@ class _TreeSearchCardState extends State<TreeSearchCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              isReordering 
-              ? ReorderableListView(
-                shrinkWrap: true,
-                padding: EdgeInsets.zero,
-                onReorder: (oldIndex, newIndex){
-                  // debugPrint("oldIndex: $oldIndex, newIndex: $newIndex");
-                  setState(() {
-                    var list = widget.filterTree!.toList();
-                    // debugPrint("list: ${list.map((e) => e.layerIndex)}");
-                    if (oldIndex < newIndex) {
-                      newIndex -= 1;
-                    }
-                    final item = list.removeAt(oldIndex);
-                    list.insert(newIndex, item);
-
-                    // debugPrint("list: ${list.map((e) => e.layerIndex)}");
-                    widget.onOrderChange!(list);
-                    widget.filterTree!.reset();
-                  });
-                },
-                children: List.generate(
-                  widget.filterTree!.toList().length, (index) => 
-                    ListTile(
-                      key: ValueKey(index),
-                      title: FrameQuote(quoteText: "L ${index+1} ${widget.filterTree!.toList()[index].layerLabel}", color: getColor(index))
-                    )
-              ))
-              : const SizedBox.shrink(),
+              Visibility(
+                visible: isReordering,
+                child: ReorderableListView.builder(
+                  shrinkWrap: true,
+                  buildDefaultDragHandles: false,
+                  padding: EdgeInsets.zero,
+                  onReorder: onReorder,
+                  itemCount: widget.filterTree!.toList().length,
+                  itemBuilder: (context, index){
+                    // bool enabled = false;
+                    return ReorderableDragStartListener(
+                    key: ValueKey(index),
+                    index: index,
+                    // enabled: enabled,
+                    child: ListTile(
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("L ${index+1} ${widget.filterTree!.toList()[index].layerLabel}", style: DashboardText.titleMedium(context)),
+                          Icon(Icons.drag_indicator_rounded, color:getColor(index)), 
+                        ],
+                      )
+                    ),
+                  );
+                  },
+                ),
+              ),
               if(!isReordering)
                 ...allEntries, 
               Padding(
@@ -181,24 +202,13 @@ class _TreeSearchCardState extends State<TreeSearchCard> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     IconButton(
-                      onPressed: (){
-                        // onReset!();
-                        widget.filterTree!.reset();
-                        widget.onValueChange!();
-                      },
-                      icon: Icon(Icons.rebase_edit, color: DashboardColor.error(context),),
-                      // label: Text('清除', style:TextStyle(color: DashboardColor.error(context))),
-                      
+                      onPressed: onRest,
+                      icon: Icon(Icons.rebase_edit, color: DashboardColor.error(context),), 
                     ),
                     const SizedBox(width: 10,),
                     IconButton(
-                      onPressed: (){
-                        setState(() {
-                          isReordering = !isReordering;
-                        });
-                      },
-                      // label: Text('排序', style:TextStyle(color: DashboardColor.primary(context))),
-                      icon: Icon(Icons.settings, color: DashboardColor.primary(context))
+                      onPressed: onClickReorderMode,
+                      icon: Icon(Icons.reorder_rounded, color: DashboardColor.primary(context))
                     ),
                   ],
                 ),
