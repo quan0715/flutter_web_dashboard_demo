@@ -1,0 +1,44 @@
+dependencies: \
+  /Users/quan/web_dashboard_demo/build/macos/Build/Intermediates.noindex/Pods.build/Debug/FirebaseCore.build/module.modulemap \
+  /Users/quan/web_dashboard_demo/macos/Pods/FirebaseCore/FirebaseCore/Sources/FIRApp.m \
+  /Users/quan/web_dashboard_demo/macos/Pods/FirebaseCore/FirebaseCore/Sources/Public/FirebaseCore/FIRApp.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/FirebaseCore/FirebaseCore/Sources/FIRAnalyticsConfiguration.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/FirebaseCore/FirebaseCore/Sources/FIRBundleUtil.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/FirebaseCore/FirebaseCore/Sources/FIRComponentContainerInternal.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/FirebaseCore/FirebaseCore/Extension/FIRComponentContainer.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/FirebaseCore/FirebaseCore/Extension/FIRLibrary.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/FirebaseCore/FirebaseCore/Sources/FIRConfigurationInternal.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/FirebaseCore/FirebaseCore/Sources/Public/FirebaseCore/FIRConfiguration.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/FirebaseCore/FirebaseCore/Sources/Public/FirebaseCore/FIRLoggerLevel.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/FirebaseCore/FirebaseCore/Sources/FIRFirebaseUserAgent.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/FirebaseCore/FirebaseCore/Extension/FIRAppInternal.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/FirebaseCore/FirebaseCore/Extension/FIRHeartbeatLogger.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/FirebaseCore/FirebaseCore/Extension/FIRLogger.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/FirebaseCore/FirebaseCore/Extension/FIROptionsInternal.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/FirebaseCore/FirebaseCore/Sources/Public/FirebaseCore/FIROptions.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/FirebaseCore/FirebaseCore/Sources/Public/FirebaseCore/FIRVersion.h \
+  /Users/quan/web_dashboard_demo/build/macos/Build/Intermediates.noindex/Pods.build/Debug/GoogleUtilities.build/module.modulemap \
+  /Users/quan/web_dashboard_demo/macos/Pods/Target\ Support\ Files/GoogleUtilities/GoogleUtilities-umbrella.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/AppDelegateSwizzler/Public/GoogleUtilities/GULAppDelegateSwizzler.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/AppDelegateSwizzler/Public/GoogleUtilities/GULApplication.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/AppDelegateSwizzler/Public/GoogleUtilities/GULSceneDelegateSwizzler.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/Environment/Public/GoogleUtilities/GULAppEnvironmentUtil.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/Environment/Public/GoogleUtilities/GULHeartbeatDateStorable.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/Environment/Public/GoogleUtilities/GULHeartbeatDateStorage.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/Environment/Public/GoogleUtilities/GULHeartbeatDateStorageUserDefaults.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/Environment/Public/GoogleUtilities/GULKeychainStorage.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/Environment/Public/GoogleUtilities/GULKeychainUtils.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/Environment/Public/GoogleUtilities/GULNetworkInfo.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/Environment/Public/GoogleUtilities/GULSecureCoding.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/Environment/Public/GoogleUtilities/GULURLSessionDataResponse.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/Environment/Public/GoogleUtilities/NSURLSession+GULPromises.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/Logger/Public/GoogleUtilities/GULLogger.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/Logger/Public/GoogleUtilities/GULLoggerLevel.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/NSData+zlib/Public/GoogleUtilities/GULNSData+zlib.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/Network/Public/GoogleUtilities/GULMutableDictionary.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/Network/Public/GoogleUtilities/GULNetwork.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/Network/Public/GoogleUtilities/GULNetworkConstants.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/Network/Public/GoogleUtilities/GULNetworkLoggerProtocol.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/Network/Public/GoogleUtilities/GULNetworkMessageCode.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/Network/Public/GoogleUtilities/GULNetworkURLSession.h \
+  /Users/quan/web_dashboard_demo/macos/Pods/GoogleUtilities/GoogleUtilities/Reachability/Public/GoogleUtilities/GULReachabilityChecker.h

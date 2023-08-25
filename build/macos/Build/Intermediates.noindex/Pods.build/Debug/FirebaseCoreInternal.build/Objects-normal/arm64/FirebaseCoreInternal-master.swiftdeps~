@@ -1,0 +1,26 @@
+version: "Apple Swift version 5.8.1 (swiftlang-5.8.0.124.5 clang-1403.0.22.11.100)"
+options: "b9f72c0b166fab8cd4a2a10c5312a3e9c1c4d5c4ecc2f8dee1eadd5e4dbd9087"
+build_start_time: [1690357238, 741929000]
+build_end_time: [1690357238, 785531000]
+inputs:
+  "/Users/quan/web_dashboard_demo/macos/Pods/FirebaseCoreInternal/FirebaseCore/Internal/Sources/HeartbeatLogging/Heartbeat.swift": !private [1690357224, 578765604]
+  ? "/Users/quan/web_dashboard_demo/macos/Pods/FirebaseCoreInternal/FirebaseCore/Internal/Sources/HeartbeatLogging/HeartbeatController.swift"
+  : !private [1690357224, 579097230]
+  ? "/Users/quan/web_dashboard_demo/macos/Pods/FirebaseCoreInternal/FirebaseCore/Internal/Sources/HeartbeatLogging/HeartbeatLoggingTestUtils.swift"
+  : !private [1690357224, 579335064]
+  ? "/Users/quan/web_dashboard_demo/macos/Pods/FirebaseCoreInternal/FirebaseCore/Internal/Sources/HeartbeatLogging/HeartbeatStorage.swift"
+  : !private [1690357224, 579458815]
+  ? "/Users/quan/web_dashboard_demo/macos/Pods/FirebaseCoreInternal/FirebaseCore/Internal/Sources/HeartbeatLogging/HeartbeatsBundle.swift"
+  : !private [1690357224, 579582482]
+  ? "/Users/quan/web_dashboard_demo/macos/Pods/FirebaseCoreInternal/FirebaseCore/Internal/Sources/HeartbeatLogging/HeartbeatsPayload.swift"
+  : !private [1690357224, 579815524]
+  "/Users/quan/web_dashboard_demo/macos/Pods/FirebaseCoreInternal/FirebaseCore/Internal/Sources/HeartbeatLogging/RingBuffer.swift": !private [1690357224, 578864021]
+  "/Users/quan/web_dashboard_demo/macos/Pods/FirebaseCoreInternal/FirebaseCore/Internal/Sources/HeartbeatLogging/Storage.swift": !private [1690357224, 578656145]
+  ? "/Users/quan/web_dashboard_demo/macos/Pods/FirebaseCoreInternal/FirebaseCore/Internal/Sources/HeartbeatLogging/StorageFactory.swift"
+  : !private [1690357224, 579931441]
+  ? "/Users/quan/web_dashboard_demo/macos/Pods/FirebaseCoreInternal/FirebaseCore/Internal/Sources/HeartbeatLogging/WeakContainer.swift"
+  : !private [1690357224, 579705316]
+  ? "/Users/quan/web_dashboard_demo/macos/Pods/FirebaseCoreInternal/FirebaseCore/Internal/Sources/HeartbeatLogging/_ObjC_HeartbeatController.swift"
+  : !private [1690357224, 578969355]
+  ? "/Users/quan/web_dashboard_demo/macos/Pods/FirebaseCoreInternal/FirebaseCore/Internal/Sources/HeartbeatLogging/_ObjC_HeartbeatsPayload.swift"
+  : !private [1690357224, 579211231]

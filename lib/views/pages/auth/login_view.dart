@@ -102,7 +102,6 @@ class LoginPageView extends StatelessWidget {
                 ],
                 borderRadius: BorderRadius.circular(10),
               ),
-             height: 500,
               width: 500,
               child: DashboardPadding.object(
                 child: AspectRatio(
