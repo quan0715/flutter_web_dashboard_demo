@@ -11,7 +11,7 @@ import 'package:web_dashboard/views/components/widget/tree_search_card.dart';
 class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
   ConsumptionSearchNode? consumptionDataGroupSearchTree;
   FilterSearchTreeNode? filterSearchTreeNode;
-  // SearchTree? consumptionDataSearchTree; 
+
   bool isDashboardView = true;
   DateTime targetDateTime = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   List<LayerFilterData<String>> filterOrder = [
@@ -49,7 +49,12 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
   set setFilterOrder(List<LayerFilterData<String>> value){
     filterOrder = value;
     filterSearchTreeNode = FilterSearchTreeNode.buildTree(data: filterOrder);
-    init();
+    consumptionDataGroupSearchTree = ConsumptionSearchNode.buildTree(
+      data: _sumOfConsumptionDataList,
+      indexes: [DBConfig.dateTimeId, ...filterOrder.map((e) => e.layerIndex).toList()]
+    );
+    notifyListeners(); 
+    // init();
   }
 
   set setTargetDateTime(DateTime dateTime){
