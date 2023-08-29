@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:web_dashboard/models/search_node.dart';
+import 'package:web_dashboard/models/search/consumption_search_node.dart';
+import 'package:web_dashboard/models/search/search_node.dart';
 import 'package:web_dashboard/views/theme/color.dart';
 import 'package:web_dashboard/views/theme/format.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:web_dashboard/models/state.dart';
+import 'package:web_dashboard/models/data/state.dart';
 import 'package:web_dashboard/views/theme/theme.dart';
 import 'package:web_dashboard/view_model/dashboard/monitoring_device_manage_view_model.dart';
 import 'package:web_dashboard/views/components/widget/app_bar.dart';

@@ -6,7 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/db/elastic_search.dart';
 import 'package:web_dashboard/models/repo/monitoring_device_repo_model.dart';
-import 'package:web_dashboard/models/state.dart';
+import 'package:web_dashboard/models/data/state.dart';
 import 'package:web_dashboard/view_model/base_view_model.dart';
 
 class MonitoringDeviceManageViewModel extends BaseViewModel {

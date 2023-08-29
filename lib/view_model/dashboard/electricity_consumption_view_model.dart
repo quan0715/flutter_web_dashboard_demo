@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/db/db_config.dart';
+import 'package:web_dashboard/models/data/filter_data_class.dart';
 import 'package:web_dashboard/models/repo/consumption_repo_model.dart';
 import 'package:web_dashboard/db/elastic_search.dart';
 import 'package:web_dashboard/models/repo/error_report_repo_model.dart';
 import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
-import 'package:web_dashboard/models/search_node.dart';
-import 'package:web_dashboard/models/state.dart';
+import 'package:web_dashboard/models/search/consumption_search_node.dart';
+import 'package:web_dashboard/models/search/filter_search_node.dart';
+import 'package:web_dashboard/models/search/search_node.dart';
+import 'package:web_dashboard/models/data/state.dart';
 import 'package:web_dashboard/view_model/base_view_model.dart';
-import 'package:web_dashboard/views/components/widget/tree_search_card.dart';
+
 class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
   ConsumptionSearchNode? consumptionDataGroupSearchTree;
   FilterSearchTreeNode? filterSearchTreeNode;
@@ -16,27 +19,27 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
   DateTime targetDateTime = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   List<LayerFilterData<String>> filterOrder = [
       LayerFilterData(
-        layerLabel: "廠區",
+        layerLabel: "L1 廠區",
         layerSelectedIndex: DBConfig.locId,
         layerIndex: DBConfig.locId,
       ),
       LayerFilterData(
-        layerLabel: "建築",
+        layerLabel: "L2 建築",
         layerSelectedIndex: DBConfig.buildingId,
         layerIndex: DBConfig.buildingId,
       ),
       LayerFilterData(
-        layerLabel: "產線類別",
+        layerLabel: "L3 產線類別",
         layerSelectedIndex: DBConfig.lineTypeId,
         layerIndex: DBConfig.lineTypeId,
       ),
       LayerFilterData(
-        layerLabel: "用電部門",
+        layerLabel: "L4 用電部門",
         layerSelectedIndex: DBConfig.departmentId,
         layerIndex: DBConfig.departmentId,
       ),
       LayerFilterData(
-        layerLabel: "設備部門",
+        layerLabel: "L5 設備部門",
         layerSelectedIndex: DBConfig.assetTypeId,
         layerIndex: DBConfig.assetTypeId,
       ),

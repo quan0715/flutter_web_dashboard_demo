@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
-import 'package:web_dashboard/models/repo/base_repo.dart';
+import 'package:web_dashboard/models/base_repo.dart';
 import 'package:web_dashboard/db/db_config.dart';
-import 'package:web_dashboard/models/repo/device_data_class.dart';
+import 'package:web_dashboard/models/data/device_data_class.dart';
 
 class SumOfElectricityConsumptionDataModel implements RepoModel{
   // Device electricity consumption data model 

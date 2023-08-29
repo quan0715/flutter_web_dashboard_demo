@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_brand_palettes/gradients.dart';
 import 'package:provider/provider.dart';
-import 'package:web_dashboard/models/search_node.dart';
-import 'package:web_dashboard/models/state.dart';
+import 'package:web_dashboard/models/search/consumption_search_node.dart';
+import 'package:web_dashboard/models/search/search_node.dart';
+import 'package:web_dashboard/models/data/state.dart';
 import 'package:web_dashboard/views/components/chart/info_card.dart';
 import 'package:web_dashboard/views/components/chart/sum_consumption_detail_grid_view.dart';
 import 'package:web_dashboard/views/components/chart/sum_consumption_pie_chart.dart';
@@ -11,11 +12,7 @@ import 'package:web_dashboard/views/components/data/device_error_report_table/da
 import 'package:web_dashboard/view_model/dashboard/electricity_consumption_view_model.dart';
 import 'package:web_dashboard/views/components/data/electricity_consumption_table/data_grid.dart';
 import 'package:web_dashboard/views/components/data/sum_consumption_table.dart/data_grid.dart';
-import 'package:web_dashboard/views/components/widget/app_bar.dart';
-import 'package:web_dashboard/views/components/widget/dashboard_frame_card.dart';
-import 'package:web_dashboard/views/components/widget/dashboard_search_bar.dart';
-import 'package:web_dashboard/views/components/widget/drawer.dart';
-import 'package:web_dashboard/views/components/widget/quote.dart';
+import 'package:web_dashboard/views/components/widget/dashboard_widget.dart';
 import 'package:web_dashboard/views/theme/theme.dart';
 
 class ConsumptionMonitorDashboardView extends StatefulWidget {
@@ -46,7 +43,21 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
     super.dispose();
   }
   
-  Widget errorReportTableView(ElectricityConsumptionDashboardViewModel viewModel){
+  Widget tableSwitcher(){
+    return Switch(
+      thumbIcon: MaterialStateProperty.all(
+        viewModel.isDashboardView
+          ? Icon(Icons.dashboard, color: DashboardColor.primary(context))
+          : const Icon(Icons.table_chart, color: Colors.white)
+      ),
+      activeColor: DashboardColor.primary(context).withOpacity(0.1),
+      inactiveThumbColor: Colors.amber,
+      value: viewModel.isDashboardView, 
+      onChanged: (value) => viewModel.setIsDashboard = value,
+    );
+  }
+  
+  Widget errorReportTableView(){
     return DashboardFrameCard(
       elevation: 0,
       child: Column(
@@ -65,7 +76,7 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
     );
   }
 
-  Widget consumptionTimelineChartFrame(ElectricityConsumptionDashboardViewModel viewModel){
+  Widget consumptionTimelineChartFrame(){
     return DashboardFrameCard(
       elevation: 0,
       child: Column(
@@ -83,7 +94,7 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
     );
   }
 
-  Widget groupDetailDataFrame(ElectricityConsumptionDashboardViewModel viewModel){
+  Widget groupDetailDataFrame(){
     List<SearchTreeNode> source = viewModel.getOverAllData!.children;
     return DashboardFrameCard(
       elevation: 0,
@@ -118,7 +129,7 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
     );
   }
 
-  Widget overViewFrame(ElectricityConsumptionDashboardViewModel viewModel){
+  Widget overViewFrame(){
     ConsumptionSearchNode dataSource = viewModel.getOverAllData!;
     // debugPrint(dataSource.toString());
     final data = [{
@@ -162,7 +173,7 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
     );
   }
 
-  Widget tableViewFrame(ElectricityConsumptionDashboardViewModel viewModel){
+  Widget tableViewFrame(){
     return DashboardFrameCard(                            // table view
       elevation: 0,
       child: Column(
@@ -233,30 +244,30 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
     );
   }
 
-  Widget normalScreenSizeView(ElectricityConsumptionDashboardViewModel viewModel, BoxConstraints constraints){
+  Widget normalScreenSizeView(BoxConstraints constraints){
     return !viewModel.isDashboardView
-      ? tableViewFrame(viewModel)
+      ? tableViewFrame()
       : Row( 
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Expanded(flex: 1, child: overViewFrame(viewModel)),
-          Expanded(flex: 1, child: groupDetailDataFrame(viewModel)),
+          Expanded(flex: 1, child: overViewFrame()),
+          Expanded(flex: 1, child: groupDetailDataFrame()),
           Expanded(
             flex: 2,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(flex: 3, child: consumptionTimelineChartFrame(viewModel)),
-                Expanded(flex: 2, child: errorReportTableView(viewModel)),
+                Expanded(flex: 3, child: consumptionTimelineChartFrame()),
+                Expanded(flex: 2, child: errorReportTableView()),
               ],
             ),
           )]
         );
   }
 
-  Widget mediumScreenSizeView(ElectricityConsumptionDashboardViewModel viewModel, BoxConstraints constraints){
+  Widget mediumScreenSizeView(BoxConstraints constraints){
     return !viewModel.isDashboardView
-      ? tableViewFrame(viewModel)
+      ? tableViewFrame()
       : SingleChildScrollView(
           child: SizedBox(
             height: constraints.maxHeight,
@@ -265,8 +276,8 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
                 Expanded(
                   flex: 7,
                   child: Row( children: [
-                      Expanded(flex: 1, child: overViewFrame(viewModel)),
-                      Expanded(flex: 1, child: groupDetailDataFrame(viewModel)),
+                      Expanded(flex: 1, child: overViewFrame()),
+                      Expanded(flex: 1, child: groupDetailDataFrame()),
                       ]
                     ),
                 ),
@@ -274,8 +285,8 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
                   flex: 6,
                   child: PageView(
                     children: [
-                      consumptionTimelineChartFrame(viewModel),
-                      errorReportTableView(viewModel)
+                      consumptionTimelineChartFrame(),
+                      errorReportTableView()
                     ]
                     ),
                 ),
@@ -286,9 +297,9 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
 
   }
 
-  Widget smallScreenSizeView(ElectricityConsumptionDashboardViewModel viewModel, BoxConstraints constraints){
+  Widget smallScreenSizeView(BoxConstraints constraints){
     return !viewModel.isDashboardView
-      ? tableViewFrame(viewModel)
+      ? tableViewFrame()
       : Column(
         children: [
           // overViewFrame(viewModel),
@@ -296,8 +307,8 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
             flex: 6,
             child: PageView(
               children: [
-                overViewFrame(viewModel),
-                groupDetailDataFrame(viewModel)
+                overViewFrame(),
+                groupDetailDataFrame()
               ],
             ),
           ),
@@ -305,8 +316,8 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
             flex: 7,
             child: PageView(
               children: [
-                consumptionTimelineChartFrame(viewModel),
-                errorReportTableView(viewModel),
+                consumptionTimelineChartFrame(),
+                errorReportTableView(),
               ],
             ),
           ),
@@ -326,8 +337,6 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
     );
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ElectricityConsumptionDashboardViewModel>.value(
@@ -342,7 +351,11 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
                 child: DashboardPadding.small(
                   child: Column(
                     children: [
-                      const DashboardSearchBar(),
+                      DashboardSearchBar(
+                        children: [
+                          const DateFilterList(), const LevelFilterList(), const Spacer(), tableSwitcher(),            
+                        ]              
+                      ),
                       Expanded(
                         child: DashboardFrameCard(
                           elevation: 3,
@@ -351,11 +364,14 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
                           : viewModel.sumOfElectricityConsumptionDataList.isEmpty
                             ? noneDataDialogView()
                             : LayoutBuilder(
-                              builder: (context, constraints) => switch (constraints.maxWidth) {
-                                  > 1200 => normalScreenSizeView(viewModel, constraints),
-                                  > 600 => mediumScreenSizeView(viewModel, constraints),
-                                  > 400 => smallScreenSizeView(viewModel, constraints),
-                                  _ => noneSupportScreenSizeView()
+                              builder: (context, constraints){
+                                ResponsiveLayoutType layoutType = DashboardLayout.getLayout(constraints); 
+                                return switch (layoutType) {
+                                  ResponsiveLayoutType.big => normalScreenSizeView(constraints),
+                                  ResponsiveLayoutType.medium => mediumScreenSizeView(constraints),
+                                  ResponsiveLayoutType.small => smallScreenSizeView(constraints),
+                                  ResponsiveLayoutType.none => noneSupportScreenSizeView()
+                                };
                               }
                             )
                         )
@@ -365,6 +381,165 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
                 )),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class LevelFilterList extends StatefulWidget{
+  const LevelFilterList({super.key});
+
+  @override
+  State<LevelFilterList> createState() => _LevelFilterListState();
+}
+
+class _LevelFilterListState extends State<LevelFilterList> {
+  final GlobalKey buttonKey = GlobalKey();
+
+  final String title = "Level: 階層篩選";
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ElectricityConsumptionDashboardViewModel>(
+      builder: (context, viewModel, child) {
+      return Row(
+        children: [
+          MaterialButton(
+            key: buttonKey,
+            onPressed: ()async {
+              final buttonPosition = buttonKey.currentContext!.findRenderObject() as RenderBox;
+              await showGeneralDialog(
+                context: context,
+                barrierDismissible: true,
+                barrierLabel: title,
+                transitionDuration: const Duration(milliseconds: 200),
+                pageBuilder: (BuildContext context, Animation<double> a1, Animation<double> a2) => const SizedBox(),
+                transitionBuilder: (BuildContext context, a1,a2, widget) => 
+                  ChangeNotifierProvider<ElectricityConsumptionDashboardViewModel>.value(
+                  value: viewModel,
+                  child: Consumer<ElectricityConsumptionDashboardViewModel>(
+                    builder: (context, viewModel, child) => 
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          Widget card = TreeSearchCard(
+                            searchTree: viewModel.getTodayConsumptionDataSearchTree!,
+                            filterTree: viewModel.filterSearchTreeNode!,
+                            plate: const InstagramGrad().colors,
+                            onConfirm: () => Navigator.pop(context, true), 
+                            onOrderChange: (value) => viewModel.setFilterOrder = value,
+                            onValueChange: viewModel.refreshPage,
+                          );
+                          if(constraints.maxWidth > 600){
+                            return Stack(
+                              children: [
+                                Positioned(
+                                  top: buttonPosition.size.height + buttonPosition.localToGlobal(Offset.zero).dy + 1,
+                                  left: buttonPosition.localToGlobal(Offset.zero).dx,
+                                  child: card 
+                                )
+                              ],
+                            );
+                          }else{
+                            return Center(child: card);
+                          }
+                        }
+                      ),
+                  ),
+                  )
+                );
+            }, 
+            child: RawChip(
+              side: BorderSide.none,
+              avatar: Icon(Icons.filter_list, color: DashboardColor.primary(context)),
+              label: Text(title)),
+          ),
+          Visibility(
+            visible: MediaQuery.of(context).size.width > 950,
+            child: TreeSearchLegend(
+              filterTree: viewModel.filterSearchTreeNode!,
+              plate: const InstagramGrad().colors,
+            ),
+          )
+        ],
+      );
+      }
+    );
+  }
+}
+
+
+class DateFilterList extends StatefulWidget{
+  const DateFilterList({super.key});
+
+  @override
+  State<DateFilterList> createState() => _DateFilterListState();
+}
+
+class _DateFilterListState extends State<DateFilterList> {
+  final GlobalKey buttonKey = GlobalKey();
+
+  final String title = "Level: 階層篩選";
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ElectricityConsumptionDashboardViewModel>(
+      builder: (context, viewModel, child) => MaterialButton(
+        key: buttonKey,
+        onPressed: ()async{
+          final buttonPosition = buttonKey.currentContext!.findRenderObject() as RenderBox;
+          final DateTime? result = await showGeneralDialog(
+            context: context, 
+            barrierDismissible: true,
+            barrierLabel: "時間篩選",
+            // barrierColor: Colors.transparent,
+            transitionDuration: const Duration(milliseconds: 250),
+            pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+              return const SizedBox();
+            },
+            transitionBuilder: (BuildContext context, a1,a2, widget) {
+              return SlideTransition(
+                position: a1.drive(Tween(begin: const Offset(0, -0.05), end: const Offset(0, 0))),
+                child: LayoutBuilder(
+                  builder: (context, constrain) {
+                    Widget datePicker = DatePickerDialog(
+                        initialDate: viewModel.targetDateTime,
+                        firstDate: viewModel.targetDateTime.subtract(const Duration(days: 365)), 
+                        lastDate: DateTime.now(),
+                        initialEntryMode: DatePickerEntryMode.calendarOnly,
+                        helpText: "選擇觀測區間",
+                        cancelText: "取消",
+                        confirmText: "確認",
+                    );
+                    if(constrain.maxWidth > 600){
+                      return Stack(
+                        children: [
+                          Positioned(
+                            top: buttonPosition.size.height + buttonPosition.localToGlobal(Offset.zero).dy - 15,
+                            left: buttonPosition.localToGlobal(Offset.zero).dx - 20,
+                            child: datePicker,
+                          ),
+                        ],
+                      );
+                    }else{
+                      return datePicker;
+                    }
+                  }
+                ),
+              );
+            },
+          );
+          // 
+          if(result != null){
+            viewModel.setTargetDateTime = result;
+            debugPrint(viewModel.targetDateTime.toString());
+            // debugPrint(viewModel.targetDateTime.day == DateTime.now().day ? "今天" : DashBoardFormat.time(viewModel.targetDateTime));
+          }
+        },
+        child:RawChip(
+          side: BorderSide.none,
+          avatar: Icon(Icons.filter_list, color: DashboardColor.primary(context)),
+          label: Text("時間: ${DashBoardFormat.timePickerLabel(viewModel.targetDateTime)}")
+        )
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_brand_palettes/flutter_brand_palettes.dart';
 import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
-import 'package:web_dashboard/models/search_node.dart';
+import 'package:web_dashboard/models/search/search_node.dart';
 import 'package:web_dashboard/views/theme/format.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 

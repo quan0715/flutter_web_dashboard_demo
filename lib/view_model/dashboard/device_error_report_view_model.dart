@@ -1,6 +1,6 @@
 import 'package:web_dashboard/db/elastic_search.dart';
 import 'package:web_dashboard/models/repo/error_report_repo_model.dart';
-import 'package:web_dashboard/models/state.dart';
+import 'package:web_dashboard/models/data/state.dart';
 import 'package:web_dashboard/view_model/base_view_model.dart';
 
 class DeviceErrorReportViewModel extends BaseViewModel{

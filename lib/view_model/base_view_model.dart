@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:web_dashboard/models/state.dart';
+import 'package:web_dashboard/models/data/state.dart';
 
 class BaseViewModel extends ChangeNotifier{
   

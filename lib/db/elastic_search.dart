@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:web_dashboard/models/repo/base_repo.dart';
+import 'package:web_dashboard/models/base_repo.dart';
 import 'package:web_dashboard/db/db_config.dart';
 import 'package:web_dashboard/models/repo/consumption_repo_model.dart';
 import 'package:web_dashboard/models/repo/error_report_repo_model.dart';
@@ -162,6 +162,31 @@ class ElasticSearchClient<M extends RepoModel>{
 
   static ElasticSearchClient<MonitoringDeviceModel> deviceClient(){
     return ElasticSearchClient<MonitoringDeviceModel>.fromModel(MonitoringDeviceModel.getInstance());
+  }
+
+  static Future<List<SumOfElectricityConsumptionDataModel>> getSumConsumptionDataByTime({
+    required DateTime startTime, 
+    required DateTime endTime,
+    required String? tagId}) async{
+    Map<String, dynamic> query = {};
+    int maxResult = 9999;
+    Map<String, Map<String,String>> targetDateTime = {
+      DBConfig.dateTimeId: {
+        "time_zone": "+08:00",
+        "gte": startTime.toIso8601String(),
+        "lte": endTime.toIso8601String()
+      }
+    };
+    List queryConditionList = [
+      {"match": {DBConfig.tagIdId : tagId}},
+      {"range": targetDateTime}
+    ];
+    List sortList = [{DBConfig.dateTimeId: {"order": "asc"}}];
+    query
+      ..['size'] = maxResult
+      ..['query'] = {'bool': {"must" : queryConditionList}}
+      ..['sort'] = sortList;
+    return await ElasticSearchClient.sumOfConsumptionClient().search(query: query);
   }
 
 }

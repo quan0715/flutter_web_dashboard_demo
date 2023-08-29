@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
-import 'package:web_dashboard/models/search_node.dart';
+import 'package:web_dashboard/models/data/filter_data_class.dart';
+import 'package:web_dashboard/models/search/filter_search_node.dart';
+import 'package:web_dashboard/models/search/search_node.dart';
 import 'package:web_dashboard/views/components/widget/quote.dart';
 import 'package:web_dashboard/views/theme/theme.dart';
 
 class TreeSearchLegend extends StatelessWidget{
   final FilterSearchTreeNode? filterTree;
   final List<Color> plate;
+  final bool visible;
 
   const TreeSearchLegend({
     super.key,
     required this.filterTree,
+    this.visible = true,
     this.plate = const <Color>[
       Colors.amber,
       Colors.red,
       Colors.blue, 
       Colors.green,
       Colors.grey,
-    ], 
+    ],
   });
 
-  Color getColor(int index){
-    return plate[(index) % plate.length];
-  }
-
+  Color getColor(int index) => plate[(index) % plate.length];
   
   List<Widget> getLabelList(SearchTreeNode root, int level){
     return [
@@ -47,14 +47,16 @@ class TreeSearchLegend extends StatelessWidget{
     ];
   }
 
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return Row(
-      children: getLabelList(filterTree as FilterSearchTreeNode, 0),
-    );
+    return Visibility(
+      visible: MediaQuery.of(context).size.width > 950 || visible,
+      child: Row(
+        children: getLabelList(filterTree as FilterSearchTreeNode, 1),
+      )
+    ); 
   }
-
 }
 
 class TreeSearchCard extends StatefulWidget{
@@ -62,6 +64,7 @@ class TreeSearchCard extends StatefulWidget{
   final VoidCallback? onReset;
   final VoidCallback? onConfirm;
   final VoidCallback? onValueChange;
+  final bool enableReordering;
   final Function(List<LayerFilterData<String>>)? onOrderChange;
   final String confirmLabel;
   final String resetLabel;
@@ -70,7 +73,6 @@ class TreeSearchCard extends StatefulWidget{
   final double width;
   final SearchTreeNode? searchTree; 
   final FilterSearchTreeNode? filterTree;
-  // final List<LayerFilterData<String>> filterDataList; // pass by order
   const TreeSearchCard({
     super.key, 
     required this.searchTree,
@@ -87,6 +89,7 @@ class TreeSearchCard extends StatefulWidget{
     this.elevation = 5,
     this.backgroundColor = Colors.white,
     this.width = 400,
+    this.enableReordering = true,
     this.onReset,
     this.onConfirm, 
     this.onValueChange,
@@ -98,9 +101,9 @@ class TreeSearchCard extends StatefulWidget{
 }
 
 class _TreeSearchCardState extends State<TreeSearchCard> {
-  Color getColor(int index) => widget.plate[(index) % widget.plate.length];
 
-  // recursive generate filter entries
+  bool isReordering = false;
+  Color getColor(int index) => widget.plate[(index) % widget.plate.length];
   List<Widget> getAllEntries(SearchTreeNode layerData, int level) {
     var filterList = widget.filterTree!.levelList(until: (layerData as FilterSearchTreeNode).data!.layerIndex);
     // debugPrint("${layerData.data!.layerLabel}: $layerData (level: $level, filterList: $filterList)");
@@ -112,14 +115,17 @@ class _TreeSearchCardState extends State<TreeSearchCard> {
         dataSource: (widget.searchTree!.searchTree(filterList)!).children, //..forEach((element) {element.printTree(depth: 0);}),
         labelMapper: (data) => Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
-          child: SearchTreeLabel(
-            label: Text(data.index),
+          // child: SearchTreeLabel(
+          //   label: Text(data.index),
+          //   color: getColor(level),
+          //   selected: data.index == layerData.data!.layerSelectedIndex,
+          //   onSelected: (bool value) => onSelected(layerData, data.index, value),
+          // ),
+          child: SearchTreeLabelWidget(
+            label: data.index,
             color: getColor(level),
             selected: data.index == layerData.data!.layerSelectedIndex,
-            onSelected: (bool value) {
-              (layerData).toggleLevel(data.index);
-              widget.onValueChange!();
-            },
+            onSelected: (bool value) => onSelected(layerData, data.index, value),
           ),
         ),
       ).animate().slideY(
@@ -130,8 +136,14 @@ class _TreeSearchCardState extends State<TreeSearchCard> {
     ];
   }
 
-  bool isReordering = false;
+  
 
+  void onSelected(SearchTreeNode layerData, String index, bool value){
+    setState(() {
+      (layerData as FilterSearchTreeNode).toggleLevel(index);
+      widget.onValueChange!();
+    });
+  }
   void onReorder(int oldIndex, int newIndex){
     setState(() {
       var list = widget.filterTree!.toList();
@@ -145,8 +157,10 @@ class _TreeSearchCardState extends State<TreeSearchCard> {
     });
   }
   void onRest(){
-    widget.filterTree!.reset();
-    widget.onValueChange!();
+    setState(() {
+      widget.filterTree!.reset();
+      widget.onValueChange!();
+    });
   }
   void onClickReorderMode(){
     setState(() {
@@ -156,7 +170,6 @@ class _TreeSearchCardState extends State<TreeSearchCard> {
 
   @override
   Widget build(BuildContext context) {
-    var allEntries = getAllEntries(widget.filterTree!, 1);
     return Card(
       color: DashboardColor.surface(context),
       elevation: widget.elevation,
@@ -185,7 +198,7 @@ class _TreeSearchCardState extends State<TreeSearchCard> {
                       title: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("L ${index+1} ${widget.filterTree!.toList()[index].layerLabel}", style: DashboardText.titleMedium(context)),
+                          Text(widget.filterTree!.toList()[index].layerLabel, style: DashboardText.titleMedium(context)),
                           Icon(Icons.drag_indicator_rounded, color:getColor(index)), 
                         ],
                       )
@@ -195,7 +208,7 @@ class _TreeSearchCardState extends State<TreeSearchCard> {
                 ),
               ),
               if(!isReordering)
-                ...allEntries, 
+                ...getAllEntries(widget.filterTree!, 1), 
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: Row(
@@ -206,9 +219,12 @@ class _TreeSearchCardState extends State<TreeSearchCard> {
                       icon: Icon(Icons.rebase_edit, color: DashboardColor.error(context),), 
                     ),
                     const SizedBox(width: 10,),
-                    IconButton(
-                      onPressed: onClickReorderMode,
-                      icon: Icon(Icons.reorder_rounded, color: DashboardColor.primary(context))
+                    Visibility(
+                      visible: !widget.enableReordering,
+                      child: IconButton(
+                        onPressed: onClickReorderMode,
+                        icon: Icon(Icons.reorder_rounded, color: DashboardColor.primary(context))
+                      ),
                     ),
                   ],
                 ),
@@ -240,6 +256,59 @@ class SearchTreeLabel extends ChoiceChip{
   );
 }
 
+class SearchTreeLabelWidget extends StatelessWidget{
+  final Color color;
+  final String label;
+  final bool selected;
+  final ValueChanged<bool>? onSelected;
+  const SearchTreeLabelWidget({
+    super.key,
+    required this.label,
+    required this.color,
+    required this.selected,
+    this.onSelected,
+  });
+  @override 
+  Widget build(BuildContext context) {
+    // Alternative way of choice chip
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 2.0),
+      child: TextButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(color.withOpacity(0.1)),
+          side: MaterialStateProperty.all<BorderSide>(BorderSide(color: color.withOpacity(0.5),width: 1)),
+          shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+          padding: MaterialStateProperty.all<EdgeInsets>(const EdgeInsets.symmetric(horizontal: 6,vertical: 3)),
+        ), 
+        onPressed: onSelected == null ? null : () => onSelected!(true),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Visibility(visible: selected,child: Icon(Icons.check, color: DashboardColor.onSurface(context) , size: 16,),),
+            const SizedBox(width: 4,),
+            Text(label, style: TextStyle(color: DashboardColor.onSurface(context)),),
+          ],
+        ),
+      ),
+    );
+  }
+  // SearchTreeLabel({
+  //   super.key,
+  //   required super.label,
+  //   required this.color,
+  //   required super.selected,
+  //   super.onSelected,
+  // }) : super(
+  //   backgroundColor: color.withOpacity(0.1),
+  //   selectedColor: color.withOpacity(0.1),
+  //   elevation: 2,
+  //   iconTheme: IconThemeData(color: color.withOpacity(0.5), size: 16),
+  //   padding: const EdgeInsets.symmetric(horizontal: 6,vertical: 2),
+  //   side: BorderSide(color: color.withOpacity(0.5),width: 1),
+  //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),  
+  // );
+}
+
 class FilterEntries<DataSourceType> extends StatelessWidget{
   final String label;
   final Color color;
@@ -262,6 +331,7 @@ class FilterEntries<DataSourceType> extends StatelessWidget{
   
   @override
   Widget build(BuildContext context) {
+
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
         child: Column(
@@ -271,125 +341,24 @@ class FilterEntries<DataSourceType> extends StatelessWidget{
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Wrap(
-                children: dataSource.map<Widget>(labelMapper).toList(),
+                children: List.generate(
+                  dataSource.length, (index) => labelMapper(dataSource[index])
+                ) 
               ),
+              // child: Row(
+              //   children: List.generate(
+              //     dataSource.length, (index) => labelMapper(dataSource[index])
+              //   ) 
+              // )
             ),
           ],
         ),
       );
-    // return Draggable(
-    //   feedback: Material(
-    //     elevation: 2,
-    //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-    //     type: MaterialType.card,
-    //     child: Opacity(
-    //       opacity: 0.8,
-    //       child: body
-    //     ),
-    //   ),
-    //   childWhenDragging:  Opacity(
-    //       opacity: 0.1,
-    //       child: body
-    //     ),
-    //   child: Row(
-    //     children: [
-    //       Expanded(child: body),
-    //       // IconButton(
-    //       //   onPressed: () {
-              
-    //       //   },
-    //       //   icon: Icon(Icons.drag_indicator, color: color,)
-    //       // ),
-    //     ],
-    //   ),
-    // );
   }
 }
 
 
-class LayerFilterData<T>{
-  T layerLabel;
-  T layerSelectedIndex;
-  T layerIndex;
-  List<T> indexes;
-  // Function<bool>(dynamic,dynamic) layerSelectedValidator;
-  LayerFilterData({
-    required this.layerLabel,
-    required this.layerSelectedIndex,
-    required this.layerIndex,
-    this.indexes = const [],
-    // required this.layerSelectedValidator,
-  });
-}
 
-class FilterSearchTreeNode extends SearchTreeNode<LayerFilterData<String>>{
-  FilterSearchTreeNode({
-    required super.index, 
-    required super.data,
-    required super.children
-  });
 
-  @override
-  String toString() =>  "[$index] : $isLayerSelected ${data!.layerIndex} ${data!.layerSelectedIndex}";
-  
-  @override
-  factory FilterSearchTreeNode.buildTree({required List<LayerFilterData<String>> data}){
-   return build(data: data.map(
-    (d) => FilterSearchTreeNode(
-      index: d.layerIndex,
-      data: d,
-      children: []
-    )
-   ).toList());
-  }
 
-  static FilterSearchTreeNode build({required List<FilterSearchTreeNode> data}){
-    FilterSearchTreeNode d = data.removeAt(0);
-    if(data.isEmpty){
-      return d;
-    }else{
-      return FilterSearchTreeNode(
-        index: d.index,
-        data: d.data,
-        children: [build(data: data)]
-      );
-    }
-  }
-
-  bool get isLayerSelected => data!.layerSelectedIndex != data!.layerIndex;
-
-  List<String> levelList({String until = ""}){
-    if(until == data!.layerIndex || children.isEmpty){
-      return [data!.layerIndex];
-    }
-    else if(isLayerSelected){
-      return [data!.layerIndex, data!.layerSelectedIndex, ...(children.first as FilterSearchTreeNode).levelList(until: until)];
-    }
-    return [data!.layerIndex];
-  }
-
-  void toggleLevel(String value){
-    if(value == data!.layerSelectedIndex){
-      reset();
-    }
-    else{
-      reset();
-      data!.layerSelectedIndex = value;
-    }
-  }
-
-  void reset(){
-    data!.layerSelectedIndex = data!.layerIndex;
-    for(var c in children){
-      (c as FilterSearchTreeNode).reset();
-    }
-  }
-
-  @override
-  List<PieChartProportion> toProportionList() {
-    // TODO: implement toProportionList
-    throw UnimplementedError();
-  }
-  
-}
 
