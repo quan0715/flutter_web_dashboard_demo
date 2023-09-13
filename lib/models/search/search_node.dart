@@ -28,7 +28,7 @@ class SearchTreeNode<T>{
 
   String index;
   T? data;
-  List<SearchTreeNode<T>> children = [];
+  List<SearchTreeNode> children = [];
   SearchTreeNode({
     required this.index,
     required this.children,
@@ -48,13 +48,14 @@ class SearchTreeNode<T>{
   SearchTreeNode? searchTree(List<String> indexes){
     if(indexes.isEmpty) return null;
     String target = indexes.first;
-    SearchTreeNode node = _searchTree(target)!;
+    SearchTreeNode? node = _searchTree(target);
     if(indexes.length == 1){
       return node;
-    }else{
+    }else if(node != null){
       indexes.removeAt(0);
       return node.searchTree(indexes);
     }
+    return null;
   }
 
   SearchTreeNode? _searchTree(String index){
@@ -87,5 +88,34 @@ class SearchTreeNode<T>{
   @override
   String toString() => "[$index]";
 
+  void addNewGroup({
+    required String index, 
+    required String Function(SearchTreeNode node) indexBuilder,
+  }){
+    if (children.isEmpty) return;
+    if (children.first.data==null){
+      for(SearchTreeNode node in children){
+        node.addNewGroup(index: index, indexBuilder: indexBuilder);
+      }
+      return;
+    }
+    else{
+      final candidateList = children.map<String>((node) => indexBuilder(node)).toSet().toList();
+      List<SearchTreeNode<T>> tempGroup = [];
+      for (String candidate in candidateList){
+        var tempData = children.where((node) => indexBuilder(node) == candidate).toList();
+        tempGroup.add(
+          SearchTreeNode(
+            index: candidate, 
+            children: tempData
+          )
+        );
+      }
+      children = [SearchTreeNode(
+        index: index, 
+        children: tempGroup
+      )];
+    }
+  }
   
 }

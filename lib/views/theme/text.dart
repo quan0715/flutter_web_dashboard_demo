@@ -56,19 +56,19 @@ class DashboardText{
     );
   }
 
-  static headLineLarge(BuildContext context, {bool bold = true}){
+  static TextStyle headLineLarge(BuildContext context, {bool bold = true}){
     return Theme.of(context).textTheme.headlineLarge!.copyWith(
       fontFamily: "NotoSansTC",
       fontWeight: bold ? FontWeight.bold : FontWeight.normal,
     );
   }
-  static headLineMedium(BuildContext context, {bool bold = true}){
+  static TextStyle headLineMedium(BuildContext context, {bool bold = true}){
     return Theme.of(context).textTheme.headlineMedium!.copyWith(
       fontFamily: "NotoSansTC",
       fontWeight: bold ? FontWeight.bold : FontWeight.normal,
     );
   }
-  static headLineSmall(BuildContext context, {bool bold = true}){
+  static TextStyle headLineSmall(BuildContext context, {bool bold = true}){
     return Theme.of(context).textTheme.headlineSmall!.copyWith(
       fontFamily: "NotoSansTC",
       fontWeight: bold ? FontWeight.bold : FontWeight.normal,

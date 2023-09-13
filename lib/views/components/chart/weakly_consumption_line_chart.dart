@@ -41,7 +41,6 @@ class WeeklyConsumptionLineChart<ModelType extends SearchTreeNode> extends State
           SplineSeries<ModelType, String>(
             dataSource: data,
             xValueMapper: (ModelType data, index) => DashBoardFormat.iO8dateTime((data as ConsumptionSearchNode).dateTime.toIso8601String()),
-            // TODO: Fix bed coding design
             yValueMapper: (ModelType data, _) => (data as ConsumptionSearchNode).dayConsumption,
             name: '近7天用電量趨勢',
             xAxisName: '時間軸',

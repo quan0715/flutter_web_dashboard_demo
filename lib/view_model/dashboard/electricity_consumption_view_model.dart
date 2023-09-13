@@ -14,36 +14,15 @@ import 'package:web_dashboard/view_model/base_view_model.dart';
 class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
   ConsumptionSearchNode? consumptionDataGroupSearchTree;
   FilterSearchTreeNode? filterSearchTreeNode;
-
   bool isDashboardView = true;
   DateTime targetDateTime = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   List<LayerFilterData<String>> filterOrder = [
-      LayerFilterData(
-        layerLabel: "L1 廠區",
-        layerSelectedIndex: DBConfig.locId,
-        layerIndex: DBConfig.locId,
-      ),
-      LayerFilterData(
-        layerLabel: "L2 建築",
-        layerSelectedIndex: DBConfig.buildingId,
-        layerIndex: DBConfig.buildingId,
-      ),
-      LayerFilterData(
-        layerLabel: "L3 產線類別",
-        layerSelectedIndex: DBConfig.lineTypeId,
-        layerIndex: DBConfig.lineTypeId,
-      ),
-      LayerFilterData(
-        layerLabel: "L4 用電部門",
-        layerSelectedIndex: DBConfig.departmentId,
-        layerIndex: DBConfig.departmentId,
-      ),
-      LayerFilterData(
-        layerLabel: "L5 設備部門",
-        layerSelectedIndex: DBConfig.assetTypeId,
-        layerIndex: DBConfig.assetTypeId,
-      ),
-    ];
+    LayerFilterData.init(layerLabel: "L1 廠區", layerIndex: DBConfig.locId),
+    LayerFilterData.init(layerLabel: "L2 建築", layerIndex: DBConfig.buildingId),
+    LayerFilterData.init(layerLabel: "L3 產線類別",layerIndex: DBConfig.lineTypeId),
+    LayerFilterData.init(layerLabel: "L4 用電部門", layerIndex: DBConfig.departmentId),
+    LayerFilterData.init(layerLabel: "L5 設備部門",layerIndex: DBConfig.assetTypeId),
+  ];
       
   List<SumOfElectricityConsumptionDataModel> _sumOfConsumptionDataList = [];
   List<DeviceErrorReportModel> _deviceErrorReportList = [];
@@ -77,9 +56,15 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
   
   List<SumOfElectricityConsumptionDataModel> get sumOfElectricityConsumptionDataList => _sumOfConsumptionDataList;
   
-  ConsumptionSearchNode? get getTodayConsumptionDataSearchTree 
-    => consumptionDataGroupSearchTree!.searchTree([targetDateTime.toIso8601String()]) as ConsumptionSearchNode;
-
+  ConsumptionSearchNode? get getTodayConsumptionDataSearchTree{
+    var r = consumptionDataGroupSearchTree!.searchTree(getSearchList);
+    if (r == null) {
+      debugPrint('is null');
+      return null;
+    }
+    return r as ConsumptionSearchNode;
+  }
+    
   ConsumptionSearchNode? get getOverAllData
     => getTodayConsumptionDataSearchTree!.searchTree(getSearchList) as ConsumptionSearchNode;
   
@@ -88,9 +73,15 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
     for(int i=0;i<days;i++){
       List<String> filterList = getSearchList
         ..insert(0, startTime.subtract(Duration(days: i)).toIso8601String());
-      timeGroupDataSource.add(
-        tree!.searchTree(filterList)!
-      );
+      var r = tree!.searchTree(filterList);
+      if(r == null){
+        debugPrint('is null');
+        return [];
+      }
+      else{
+        timeGroupDataSource.add(r);
+      }
+     
     }
     return timeGroupDataSource.reversed.toList();
   }
@@ -115,7 +106,7 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
       {"match": {DBConfig.tagIdId : tagId}},
       {"range": targetDateTime}
     ];
-    List sortList = [{DBConfig.dateTimeId: {"order": "asc"}}];
+List sortList = [{DBConfig.dateTimeId: {"order": "desc"}}];
     query
       ..['size'] = maxResult
       ..['query'] = {'bool': {"must" : queryConditionList}}
@@ -131,7 +122,7 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
     setLoadingState(LoadingState.loading);
     try{
       var deviceIndexList = (await ElasticSearchClient.deviceClient().search()).map((e) => e.device?.tagId ?? "").toSet().toList();
-      _electricityConsumptionDataList = await ElasticSearchClient.consumptionClient().search();
+      
       _sumOfConsumptionDataList = [];
 
       for(String? tagId in deviceIndexList){
@@ -150,6 +141,35 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
         data: _sumOfConsumptionDataList,
         indexes: [DBConfig.dateTimeId, ...filterOrder.map((e) => e.layerIndex).toList()]
       );
+
+      _electricityConsumptionDataList = await ElasticSearchClient.consumptionClient().search(
+        query: {
+          "size": 9999,
+          "query": {
+            "bool": {
+              "must": [
+                {
+                  "range": {
+                    "datetime": {
+                      "time_zone": "+08:00",
+                      "gte": targetDateTime.subtract(const Duration(days: 14)).toIso8601String(),
+                      "lte": targetDateTime.add(const Duration(hours: 23, minutes: 59, seconds: 59)).toIso8601String()
+                    }
+                  }
+                },
+              ]
+            }
+          },
+          "sort": [
+            {
+              "datetime": {
+                "order": "desc"
+              }
+            }
+          ]
+        }
+      );
+
       // consumptionDataGroupSearchTree!.printTree(depth: 0);
       _deviceErrorReportList = await ElasticSearchClient.errorReportClient().search();
     }catch(e){

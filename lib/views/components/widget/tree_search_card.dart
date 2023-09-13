@@ -6,6 +6,15 @@ import 'package:web_dashboard/models/search/search_node.dart';
 import 'package:web_dashboard/views/components/widget/quote.dart';
 import 'package:web_dashboard/views/theme/theme.dart';
 
+const List<Color> plates = <Color>[
+  Colors.amber,
+  Colors.red,
+  Colors.blue, 
+  Colors.green,
+  Colors.grey,
+];
+
+
 class TreeSearchLegend extends StatelessWidget{
   final FilterSearchTreeNode? filterTree;
   final List<Color> plate;
@@ -15,13 +24,7 @@ class TreeSearchLegend extends StatelessWidget{
     super.key,
     required this.filterTree,
     this.visible = true,
-    this.plate = const <Color>[
-      Colors.amber,
-      Colors.red,
-      Colors.blue, 
-      Colors.green,
-      Colors.grey,
-    ],
+    this.plate = plates
   });
 
   Color getColor(int index) => plate[(index) % plate.length];
@@ -32,7 +35,7 @@ class TreeSearchLegend extends StatelessWidget{
         Row(
           children: [
             SearchTreeLabel(
-              label: Text(root.data!.layerSelectedIndex),
+              label: root.data!.layerSelectedIndex,
               color: getColor(level),
               selected: false,
               onSelected: (value){},
@@ -65,25 +68,19 @@ class TreeSearchCard extends StatefulWidget{
   final VoidCallback? onConfirm;
   final VoidCallback? onValueChange;
   final bool enableReordering;
-  final Function(List<LayerFilterData<String>>)? onOrderChange;
+  final Function(List<LayerFilterData<String>>)? onFilterOrderChange;
   final String confirmLabel;
   final String resetLabel;
   final double elevation;
   final Color backgroundColor;
   final double width;
   final SearchTreeNode? searchTree; 
-  final FilterSearchTreeNode? filterTree;
+  final List<LayerFilterData> filterOrder;
   const TreeSearchCard({
     super.key, 
-    required this.searchTree,
-    required this.filterTree,
-    this.plate = const <Color>[
-      Colors.amber,
-      Colors.red,
-      Colors.blue, 
-      Colors.green,
-      Colors.grey,
-    ], 
+    required this.searchTree, // search card data source search tree 
+    required this.filterOrder, // filter order
+    this.plate = plates,
     this.confirmLabel = "確認",
     this.resetLabel = "重設",
     this.elevation = 5,
@@ -93,7 +90,7 @@ class TreeSearchCard extends StatefulWidget{
     this.onReset,
     this.onConfirm, 
     this.onValueChange,
-    this.onOrderChange,
+    this.onFilterOrderChange,
   });
 
   @override
@@ -101,11 +98,20 @@ class TreeSearchCard extends StatefulWidget{
 }
 
 class _TreeSearchCardState extends State<TreeSearchCard> {
+  late FilterSearchTreeNode filterTree;
+  bool isReorderingMode = false;
 
-  bool isReordering = false;
+  @override
+  void initState() {
+    super.initState();
+    // widget.filterTree!.reset();
+    filterTree = FilterSearchTreeNode.buildTree(data: widget.filterOrder);
+  }
+
   Color getColor(int index) => widget.plate[(index) % widget.plate.length];
+
   List<Widget> getAllEntries(SearchTreeNode layerData, int level) {
-    var filterList = widget.filterTree!.levelList(until: (layerData as FilterSearchTreeNode).data!.layerIndex);
+    var filterList = filterTree.levelList(until: (layerData as FilterSearchTreeNode).data!.layerIndex);
     // debugPrint("${layerData.data!.layerLabel}: $layerData (level: $level, filterList: $filterList)");
     return [
       FilterEntries(
@@ -115,13 +121,7 @@ class _TreeSearchCardState extends State<TreeSearchCard> {
         dataSource: (widget.searchTree!.searchTree(filterList)!).children, //..forEach((element) {element.printTree(depth: 0);}),
         labelMapper: (data) => Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
-          // child: SearchTreeLabel(
-          //   label: Text(data.index),
-          //   color: getColor(level),
-          //   selected: data.index == layerData.data!.layerSelectedIndex,
-          //   onSelected: (bool value) => onSelected(layerData, data.index, value),
-          // ),
-          child: SearchTreeLabelWidget(
+          child: SearchTreeLabel(
             label: data.index,
             color: getColor(level),
             selected: data.index == layerData.data!.layerSelectedIndex,
@@ -146,25 +146,34 @@ class _TreeSearchCardState extends State<TreeSearchCard> {
   }
   void onReorder(int oldIndex, int newIndex){
     setState(() {
-      var list = widget.filterTree!.toList();
+      var list = filterTree.toList();
       if (oldIndex < newIndex) {
         newIndex -= 1;
       }
       final item = list.removeAt(oldIndex);
       list.insert(newIndex, item);
-      widget.onOrderChange!(list);
-      widget.filterTree!.reset();
+      // debugPrint(list.toString());
+      widget.onFilterOrderChange!(list);
+      filterTree = FilterSearchTreeNode.buildTree(data: list);
+      // widget.onValueChange!();
+      filterTree.reset();
     });
   }
   void onRest(){
     setState(() {
-      widget.filterTree!.reset();
-      widget.onValueChange!();
+      if(isReorderingMode){
+        filterTree = FilterSearchTreeNode.buildTree(data: widget.filterOrder);
+      }else{
+        filterTree.reset();
+      }
+      if(widget.onValueChange!=null){
+        widget.onValueChange!();
+      }
     });
   }
   void onClickReorderMode(){
     setState(() {
-      isReordering = !isReordering;
+      isReorderingMode = !isReorderingMode;
     });
   }
 
@@ -181,13 +190,13 @@ class _TreeSearchCardState extends State<TreeSearchCard> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Visibility(
-                visible: isReordering,
+                visible: isReorderingMode,
                 child: ReorderableListView.builder(
                   shrinkWrap: true,
                   buildDefaultDragHandles: false,
                   padding: EdgeInsets.zero,
                   onReorder: onReorder,
-                  itemCount: widget.filterTree!.toList().length,
+                  itemCount: filterTree.toList().length,
                   itemBuilder: (context, index){
                     // bool enabled = false;
                     return ReorderableDragStartListener(
@@ -198,7 +207,7 @@ class _TreeSearchCardState extends State<TreeSearchCard> {
                       title: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(widget.filterTree!.toList()[index].layerLabel, style: DashboardText.titleMedium(context)),
+                          Text(filterTree.toList()[index].layerLabel, style: DashboardText.titleMedium(context)),
                           Icon(Icons.drag_indicator_rounded, color:getColor(index)), 
                         ],
                       )
@@ -207,8 +216,8 @@ class _TreeSearchCardState extends State<TreeSearchCard> {
                   },
                 ),
               ),
-              if(!isReordering)
-                ...getAllEntries(widget.filterTree!, 1), 
+              if(!isReorderingMode)
+                ...getAllEntries(filterTree, 1), 
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: Row(
@@ -220,7 +229,7 @@ class _TreeSearchCardState extends State<TreeSearchCard> {
                     ),
                     const SizedBox(width: 10,),
                     Visibility(
-                      visible: !widget.enableReordering,
+                      visible: widget.enableReordering,
                       child: IconButton(
                         onPressed: onClickReorderMode,
                         icon: Icon(Icons.reorder_rounded, color: DashboardColor.primary(context))
@@ -237,31 +246,13 @@ class _TreeSearchCardState extends State<TreeSearchCard> {
   }
 }
 
-class SearchTreeLabel extends ChoiceChip{
-  final Color color;
-  SearchTreeLabel({
-    super.key,
-    required super.label,
-    required this.color,
-    required super.selected,
-    super.onSelected,
-  }) : super(
-    backgroundColor: color.withOpacity(0.1),
-    selectedColor: color.withOpacity(0.1),
-    elevation: 2,
-    iconTheme: IconThemeData(color: color.withOpacity(0.5), size: 16),
-    padding: const EdgeInsets.symmetric(horizontal: 6,vertical: 2),
-    side: BorderSide(color: color.withOpacity(0.5),width: 1),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),  
-  );
-}
 
-class SearchTreeLabelWidget extends StatelessWidget{
+class SearchTreeLabel extends StatelessWidget{
   final Color color;
   final String label;
   final bool selected;
   final ValueChanged<bool>? onSelected;
-  const SearchTreeLabelWidget({
+  const SearchTreeLabel({
     super.key,
     required this.label,
     required this.color,
@@ -292,46 +283,26 @@ class SearchTreeLabelWidget extends StatelessWidget{
       ),
     );
   }
-  // SearchTreeLabel({
-  //   super.key,
-  //   required super.label,
-  //   required this.color,
-  //   required super.selected,
-  //   super.onSelected,
-  // }) : super(
-  //   backgroundColor: color.withOpacity(0.1),
-  //   selectedColor: color.withOpacity(0.1),
-  //   elevation: 2,
-  //   iconTheme: IconThemeData(color: color.withOpacity(0.5), size: 16),
-  //   padding: const EdgeInsets.symmetric(horizontal: 6,vertical: 2),
-  //   side: BorderSide(color: color.withOpacity(0.5),width: 1),
-  //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),  
-  // );
 }
 
 class FilterEntries<DataSourceType> extends StatelessWidget{
   final String label;
   final Color color;
   final String index;
-  // final int level;
   final List<DataSourceType> dataSource;
   final Widget Function(DataSourceType) labelMapper;
-  // final bool isVisible; 
 
   const FilterEntries({
     super.key,
-    required this.label,
-    // required this.isVisible, 
     this.color = Colors.grey, 
+    required this.label,
     required this.index,
-    // required this.level,
     required this.dataSource,
     required this.labelMapper,
   });
   
   @override
   Widget build(BuildContext context) {
-
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
         child: Column(
@@ -341,15 +312,8 @@ class FilterEntries<DataSourceType> extends StatelessWidget{
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Wrap(
-                children: List.generate(
-                  dataSource.length, (index) => labelMapper(dataSource[index])
-                ) 
+                children: dataSource.map(labelMapper).toList(),
               ),
-              // child: Row(
-              //   children: List.generate(
-              //     dataSource.length, (index) => labelMapper(dataSource[index])
-              //   ) 
-              // )
             ),
           ],
         ),

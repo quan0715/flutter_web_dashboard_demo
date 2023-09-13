@@ -11,15 +11,12 @@ import 'package:web_dashboard/view_model/base_view_model.dart';
 class ConsumptionReportDashboardViewModel extends BaseViewModel {
   List<SumOfElectricityConsumptionDataModel> dataSource = [];
   List<SumOfElectricityConsumptionDataModel> lastYearDataSource = [];
-  SearchTreeNode? searchTree;
+  ConsumptionSearchNode? searchTree;
   SearchTreeNode? get consumptionDataGroupSearchTree => 
     searchTree!.searchTree(['YEAR', '2023 年','QUARTER', 'Q3', 'MONTH', '7 月', 'DAY']);
   SearchTreeNode? get lastYearConsumptionDataGroupSearchTree => 
     searchTree!.searchTree(['YEAR', '2022 年','QUARTER' , 'Q3', 'MONTH','7 月', 'DAY']);
   SearchTreeNode? filterSearchTreeNode;
-
-
-
   List<LayerFilterData<String>> filterOrder = [
       LayerFilterData(
         layerLabel: "YEAR",
@@ -43,15 +40,9 @@ class ConsumptionReportDashboardViewModel extends BaseViewModel {
       ),
     ];
   
-  List<SearchTreeNode> get monthReport{
-    // List<ConsumptionSearchNode> result = [];
-    
-    return consumptionDataGroupSearchTree!.children;
-  }
-  List<SearchTreeNode> get lastYearMonthReport{
-    // List<ConsumptionSearchNode> result = [];
-    return lastYearConsumptionDataGroupSearchTree!.children;
-  }
+  get monthReport => consumptionDataGroupSearchTree!.children;
+
+  get lastYearMonthReport => lastYearConsumptionDataGroupSearchTree!.children;
 
   @override
   Future init() async {
@@ -69,23 +60,24 @@ class ConsumptionReportDashboardViewModel extends BaseViewModel {
       }
     }
     searchTree = ConsumptionSearchNode.buildTree(data: dataSource); 
-    (searchTree! as ConsumptionSearchNode).addNewGroup(
+    searchTree!.addNewGroup(
       index: 'YEAR',
       indexBuilder: (node) => "${DateTime.parse(node.data!.getDataByKey(DBConfig.dateTimeId)).year} 年",
     );
-    (searchTree! as ConsumptionSearchNode).addNewGroup(
+    searchTree!.addNewGroup(
       index: 'QUARTER',
       indexBuilder: (node) => "Q${(DateTime.parse(node.data!.getDataByKey(DBConfig.dateTimeId)).month + 2) ~/ 3}",
     );
     // searchTree!.printTree(depth: 0);
-    (searchTree! as ConsumptionSearchNode).addNewGroup(
+    searchTree!.addNewGroup(
       index: 'MONTH',
       indexBuilder: (node) => "${DateTime.parse(node.data!.getDataByKey(DBConfig.dateTimeId)).month} 月",
     );
-    (searchTree! as ConsumptionSearchNode).addNewGroup(
+    searchTree!.addNewGroup(
       index: 'DAY',
       indexBuilder: (node) => "${DateTime.parse(node.data!.getDataByKey(DBConfig.dateTimeId)).day} 日",
     );
     setLoadingState(LoadingState.free);
   }
+
 }

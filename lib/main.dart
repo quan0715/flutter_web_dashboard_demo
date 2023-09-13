@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:web_dashboard/view_model/auth_manager.dart';
 import 'package:web_dashboard/view_model/theme_manager.dart';
 import 'package:web_dashboard/views/pages/dashboard/consumption_report_dashboard_view.dart';
+import 'package:web_dashboard/views/pages/dashboard_config/dashboard_config_view.dart';
 import 'package:web_dashboard/views/pages/data_table/device_error_report_view.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -40,7 +41,8 @@ class MyApp extends StatelessWidget {
               "/dashboard/report":(context) => const ConsumptionReportDashboardView(),
               "/dashboard/device_error_report": (context) => const DeviceErrorReportView(),
               "/login": (context) => LoginPageView(),
-              '/': (context) => LoginPageView(),
+              "/dashboard/config" : (context) => const DashboardConfigView(),  
+              "/": (context) => LoginPageView(),
             },
             initialRoute: authManager.isLogin ? "/dashboard/device_consumption_report" : "/login",
           ),

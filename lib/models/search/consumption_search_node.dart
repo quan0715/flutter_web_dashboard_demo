@@ -61,7 +61,22 @@ class ConsumptionSearchNode extends SearchTreeNode<SumOfElectricityConsumptionDa
       children: tempGroup
     );
   }
-
+  
+  @override
+  List<PieChartProportion<ConsumptionSearchNode>> toProportionList() {
+    List<PieChartProportion<ConsumptionSearchNode>> result = [];
+    int total = (children as List<ConsumptionSearchNode>).fold<int>(0, (previousValue,  element) => previousValue + element.dayConsumption);
+    for(ConsumptionSearchNode child in children as List<ConsumptionSearchNode>){
+      result.add(PieChartProportion(
+        model: child,
+        amount: child.dayConsumption,
+        proportion: (child.dayConsumption) / total * 100,
+      ));
+    }
+    return result;
+  }
+  
+  @override
   void addNewGroup({
     required String index, 
     required String Function(SearchTreeNode node) indexBuilder,
@@ -69,7 +84,7 @@ class ConsumptionSearchNode extends SearchTreeNode<SumOfElectricityConsumptionDa
     if (children.isEmpty) return;
     if (children.first.data==null){
       for(SearchTreeNode node in children){
-        (node as ConsumptionSearchNode).addNewGroup(index: index, indexBuilder: indexBuilder);
+        node.addNewGroup(index: index, indexBuilder: indexBuilder);
       }
       return;
     }
@@ -90,20 +105,6 @@ class ConsumptionSearchNode extends SearchTreeNode<SumOfElectricityConsumptionDa
         children: tempGroup
       )];
     }
-  }
-  
-  @override
-  List<PieChartProportion<ConsumptionSearchNode>> toProportionList() {
-    List<PieChartProportion<ConsumptionSearchNode>> result = [];
-    int total = (children as List<ConsumptionSearchNode>).fold<int>(0, (previousValue,  element) => previousValue + element.dayConsumption);
-    for(ConsumptionSearchNode child in children as List<ConsumptionSearchNode>){
-      result.add(PieChartProportion(
-        model: child,
-        amount: child.dayConsumption,
-        proportion: (child.dayConsumption) / total * 100,
-      ));
-    }
-    return result;
   }
 }
 

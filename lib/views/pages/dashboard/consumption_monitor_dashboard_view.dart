@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_brand_palettes/gradients.dart';
 import 'package:provider/provider.dart';
 import 'package:web_dashboard/models/search/consumption_search_node.dart';
+import 'package:web_dashboard/models/search/filter_search_node.dart';
 import 'package:web_dashboard/models/search/search_node.dart';
 import 'package:web_dashboard/models/data/state.dart';
 import 'package:web_dashboard/views/components/chart/info_card.dart';
@@ -13,6 +13,7 @@ import 'package:web_dashboard/view_model/dashboard/electricity_consumption_view_
 import 'package:web_dashboard/views/components/data/electricity_consumption_table/data_grid.dart';
 import 'package:web_dashboard/views/components/data/sum_consumption_table.dart/data_grid.dart';
 import 'package:web_dashboard/views/components/widget/dashboard_widget.dart';
+import 'package:web_dashboard/views/pages/dashboard/consumption_report_dashboard_view.dart';
 import 'package:web_dashboard/views/theme/theme.dart';
 
 class ConsumptionMonitorDashboardView extends StatefulWidget {
@@ -351,17 +352,33 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
                 child: DashboardPadding.small(
                   child: Column(
                     children: [
-                      DashboardSearchBar(
+                      viewModel.loadingState == LoadingState.free
+                      ? DashboardSearchBar(
                         children: [
-                          const DateFilterList(), const LevelFilterList(), const Spacer(), tableSwitcher(),            
+                          DateFilterList(), 
+                          LevelFilterList(
+                            treeSearchCard: TreeSearchCard(
+                              searchTree: viewModel.getTodayConsumptionDataSearchTree!,
+                              // filterTree: viewModel.filterSearchTreeNode as FilterSearchTreeNode,
+                              filterOrder: viewModel.filterOrder,
+                              // plate: const InstagramGrad().colors,
+                              enableReordering: true,
+                              onValueChange: viewModel.refreshPage,
+                              onFilterOrderChange: (value) => viewModel.setFilterOrder = value,
+                            ),
+                            treeSearchLegend: TreeSearchLegend(
+                              filterTree: viewModel.filterSearchTreeNode as FilterSearchTreeNode,
+                              // plate: const InstagramGrad().colors,
+                            ),
+                          ), const Spacer(), tableSwitcher(),            
                         ]              
-                      ),
+                      ) : const SizedBox.shrink(),
                       Expanded(
                         child: DashboardFrameCard(
                           elevation: 3,
                           child: viewModel.loadingState == LoadingState.loading
                           ? loadingView()
-                          : viewModel.sumOfElectricityConsumptionDataList.isEmpty
+                          : viewModel.sumOfElectricityConsumptionDataList.isEmpty || viewModel.getTodayConsumptionDataSearchTree == null
                             ? noneDataDialogView()
                             : LayoutBuilder(
                               builder: (context, constraints){
@@ -386,96 +403,10 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
   }
 }
 
-class LevelFilterList extends StatefulWidget{
-  const LevelFilterList({super.key});
 
-  @override
-  State<LevelFilterList> createState() => _LevelFilterListState();
-}
+class DateFilterList extends StatelessWidget{
+  DateFilterList({super.key});
 
-class _LevelFilterListState extends State<LevelFilterList> {
-  final GlobalKey buttonKey = GlobalKey();
-
-  final String title = "Level: 階層篩選";
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<ElectricityConsumptionDashboardViewModel>(
-      builder: (context, viewModel, child) {
-      return Row(
-        children: [
-          MaterialButton(
-            key: buttonKey,
-            onPressed: ()async {
-              final buttonPosition = buttonKey.currentContext!.findRenderObject() as RenderBox;
-              await showGeneralDialog(
-                context: context,
-                barrierDismissible: true,
-                barrierLabel: title,
-                transitionDuration: const Duration(milliseconds: 200),
-                pageBuilder: (BuildContext context, Animation<double> a1, Animation<double> a2) => const SizedBox(),
-                transitionBuilder: (BuildContext context, a1,a2, widget) => 
-                  ChangeNotifierProvider<ElectricityConsumptionDashboardViewModel>.value(
-                  value: viewModel,
-                  child: Consumer<ElectricityConsumptionDashboardViewModel>(
-                    builder: (context, viewModel, child) => 
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          Widget card = TreeSearchCard(
-                            searchTree: viewModel.getTodayConsumptionDataSearchTree!,
-                            filterTree: viewModel.filterSearchTreeNode!,
-                            plate: const InstagramGrad().colors,
-                            onConfirm: () => Navigator.pop(context, true), 
-                            onOrderChange: (value) => viewModel.setFilterOrder = value,
-                            onValueChange: viewModel.refreshPage,
-                          );
-                          if(constraints.maxWidth > 600){
-                            return Stack(
-                              children: [
-                                Positioned(
-                                  top: buttonPosition.size.height + buttonPosition.localToGlobal(Offset.zero).dy + 1,
-                                  left: buttonPosition.localToGlobal(Offset.zero).dx,
-                                  child: card 
-                                )
-                              ],
-                            );
-                          }else{
-                            return Center(child: card);
-                          }
-                        }
-                      ),
-                  ),
-                  )
-                );
-            }, 
-            child: RawChip(
-              side: BorderSide.none,
-              avatar: Icon(Icons.filter_list, color: DashboardColor.primary(context)),
-              label: Text(title)),
-          ),
-          Visibility(
-            visible: MediaQuery.of(context).size.width > 950,
-            child: TreeSearchLegend(
-              filterTree: viewModel.filterSearchTreeNode!,
-              plate: const InstagramGrad().colors,
-            ),
-          )
-        ],
-      );
-      }
-    );
-  }
-}
-
-
-class DateFilterList extends StatefulWidget{
-  const DateFilterList({super.key});
-
-  @override
-  State<DateFilterList> createState() => _DateFilterListState();
-}
-
-class _DateFilterListState extends State<DateFilterList> {
   final GlobalKey buttonKey = GlobalKey();
 
   final String title = "Level: 階層篩選";
@@ -487,44 +418,37 @@ class _DateFilterListState extends State<DateFilterList> {
         key: buttonKey,
         onPressed: ()async{
           final buttonPosition = buttonKey.currentContext!.findRenderObject() as RenderBox;
-          final DateTime? result = await showGeneralDialog(
+          final DateTime? result = await showDialog(
             context: context, 
             barrierDismissible: true,
             barrierLabel: "時間篩選",
             // barrierColor: Colors.transparent,
-            transitionDuration: const Duration(milliseconds: 250),
-            pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-              return const SizedBox();
-            },
-            transitionBuilder: (BuildContext context, a1,a2, widget) {
-              return SlideTransition(
-                position: a1.drive(Tween(begin: const Offset(0, -0.05), end: const Offset(0, 0))),
-                child: LayoutBuilder(
-                  builder: (context, constrain) {
-                    Widget datePicker = DatePickerDialog(
-                        initialDate: viewModel.targetDateTime,
-                        firstDate: viewModel.targetDateTime.subtract(const Duration(days: 365)), 
-                        lastDate: DateTime.now(),
-                        initialEntryMode: DatePickerEntryMode.calendarOnly,
-                        helpText: "選擇觀測區間",
-                        cancelText: "取消",
-                        confirmText: "確認",
+            builder: (BuildContext context) {
+              return LayoutBuilder(
+                builder: (context, constrain) {
+                  Widget datePicker = DatePickerDialog(
+                      initialDate: viewModel.targetDateTime,
+                      firstDate: viewModel.targetDateTime.subtract(const Duration(days: 365)), 
+                      lastDate: DateTime.now(),
+                      initialEntryMode: DatePickerEntryMode.calendarOnly,
+                      helpText: "選擇觀測區間",
+                      cancelText: "取消",
+                      confirmText: "確認",
+                  );
+                  if(constrain.maxWidth > 600){
+                    return Stack(
+                      children: [
+                        Positioned(
+                          top: buttonPosition.size.height + buttonPosition.localToGlobal(Offset.zero).dy - 15,
+                          left: buttonPosition.localToGlobal(Offset.zero).dx - 20,
+                          child: datePicker,
+                        ),
+                      ],
                     );
-                    if(constrain.maxWidth > 600){
-                      return Stack(
-                        children: [
-                          Positioned(
-                            top: buttonPosition.size.height + buttonPosition.localToGlobal(Offset.zero).dy - 15,
-                            left: buttonPosition.localToGlobal(Offset.zero).dx - 20,
-                            child: datePicker,
-                          ),
-                        ],
-                      );
-                    }else{
-                      return datePicker;
-                    }
+                  }else{
+                    return datePicker;
                   }
-                ),
+                }
               );
             },
           );

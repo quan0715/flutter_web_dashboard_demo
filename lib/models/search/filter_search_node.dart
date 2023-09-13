@@ -13,11 +13,11 @@ class FilterSearchTreeNode extends SearchTreeNode<LayerFilterData<String>>{
   String toString() =>  "[$index] : $isLayerSelected ${data!.layerIndex} ${data!.layerSelectedIndex}";
   
   @override
-  factory FilterSearchTreeNode.buildTree({required List<LayerFilterData<String>> data}){
+  factory FilterSearchTreeNode.buildTree({required List<LayerFilterData> data}){
    return build(data: data.map(
     (d) => FilterSearchTreeNode(
       index: d.layerIndex,
-      data: d,
+      data: d as LayerFilterData<String>,
       children: []
     )
    ).toList());
@@ -65,9 +65,10 @@ class FilterSearchTreeNode extends SearchTreeNode<LayerFilterData<String>>{
     }
   }
 
+  
+
   @override
-  List<PieChartProportion> toProportionList() {
-    // TODO: implement toProportionList
+  List<PieChartProportion> toProportionList() { 
     throw UnimplementedError();
   }
   

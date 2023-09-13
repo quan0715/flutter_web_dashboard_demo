@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:web_dashboard/models/search/consumption_search_node.dart';
 import 'package:web_dashboard/models/search/search_node.dart';
 import 'package:web_dashboard/views/theme/color.dart';
-import 'package:web_dashboard/views/theme/format.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class MonthlyReportLineChart<ModelType extends SearchTreeNode> extends StatelessWidget{
   final List<ModelType> data;
   final List<ModelType> cmpLine;
-  const MonthlyReportLineChart({super.key, required this.data,required this.cmpLine});
+  final String? Function(ModelType data, int index) xValueMapper;
+  final num? Function(ModelType data, int index) yValueMapper;
+  // : (ModelType data, index) => DashBoardFormat.iO8dateTime((data as ConsumptionSearchNode).dateTime.toIso8601String()),
+  // yValueMapper: (ModelType data, _) => (data as ConsumptionSearchNode).dayConsumption,
+  const MonthlyReportLineChart({
+    super.key, 
+    required this.data,
+    required this.cmpLine,
+    required this.xValueMapper,
+    required this.yValueMapper,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +48,11 @@ class MonthlyReportLineChart<ModelType extends SearchTreeNode> extends Stateless
         series: <XyDataSeries<ModelType, String>>[
           SplineSeries<ModelType, String>(
             dataSource: data,
-            xValueMapper: (ModelType data, index) => DashBoardFormat.iO8dateTime((data as ConsumptionSearchNode).dateTime.toIso8601String()),
-            yValueMapper: (ModelType data, _) => (data as ConsumptionSearchNode).dayConsumption,
+            xValueMapper: xValueMapper,
+            // DashBoardFormat.iO8dateTime((data as ConsumptionSearchNode).dateTime.toIso8601String()),
+            yValueMapper: yValueMapper,
+            // (data as ConsumptionSearchNode).dayConsumption,
             name: '2023 7月用電量趨勢',
-
             xAxisName: '時間軸',
             yAxisName: '用電量',
             width: 2,
@@ -62,9 +71,10 @@ class MonthlyReportLineChart<ModelType extends SearchTreeNode> extends Stateless
             color: Colors.grey.withOpacity(0.3),
             dataSource: cmpLine,
             borderRadius: BorderRadius.circular(5.0),
-            xValueMapper: (ModelType data, index) => 
-              DashBoardFormat.iO8dateTime((cmpLine[index] as ConsumptionSearchNode).dateTime.toIso8601String()),
-            yValueMapper: (ModelType data, _) => (data as ConsumptionSearchNode).dayConsumption,
+            xValueMapper: xValueMapper,
+            // DashBoardFormat.iO8dateTime((data as ConsumptionSearchNode).dateTime.toIso8601String()),
+            yValueMapper: yValueMapper,
+            // (data as ConsumptionSearchNode).dayConsumption,
             dataLabelSettings: const DataLabelSettings(
                 isVisible: false, textStyle: TextStyle(fontSize: 10)),
           )

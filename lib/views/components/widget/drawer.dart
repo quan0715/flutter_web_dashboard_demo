@@ -105,10 +105,7 @@ class DashboardDrawer extends StatelessWidget{
                         ListTile(
                           leading: const Icon(Icons.settings),
                           title: const Text('帳戶設定'),
-                          onTap: () {
-                            // Update the state of the app.
-                            // ...
-                          },
+                          onTap: () => Navigator.pushNamed(context, "/dashboard/config")
                         ),
                       ],
                     ),

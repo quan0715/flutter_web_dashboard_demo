@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_brand_palettes/flutter_brand_palettes.dart';
 import 'package:provider/provider.dart';
 import 'package:web_dashboard/models/data/state.dart';
+import 'package:web_dashboard/models/search/consumption_search_node.dart';
 import 'package:web_dashboard/models/search/filter_search_node.dart';
 import 'package:web_dashboard/view_model/dashboard/consumption_report_dashboard_view_model.dart';
 import 'package:web_dashboard/views/components/chart/monthly_report_line_chart.dart';
@@ -95,7 +95,7 @@ class _ConsumptionReportDashboardViewState extends State<ConsumptionReportDashbo
                   unit: "2022 Aug",
                   valueColor: DashboardColor.error(context),
                 ),
-                DashboardDataCard(
+                const DashboardDataCard(
                   label: "月小時平均耗電量",
                   value: "768",
                   unit: "Kwh / hour",
@@ -128,9 +128,11 @@ class _ConsumptionReportDashboardViewState extends State<ConsumptionReportDashbo
         children: [
           Expanded(
             flex: 1,
-            child: MonthlyReportLineChart(
+            child: MonthlyReportLineChart<ConsumptionSearchNode>(
               data: viewModel.monthReport,
               cmpLine: viewModel.lastYearMonthReport,
+              xValueMapper: (data, index) => DashBoardFormat.iO8dateTime((data).dateTime.toIso8601String()),
+              yValueMapper: (data, _) => data.dayConsumption,
             ),
           ),
           const Spacer()
@@ -200,8 +202,10 @@ class _ConsumptionReportDashboardViewState extends State<ConsumptionReportDashbo
                           LevelFilterList(
                             treeSearchCard: TreeSearchCard(
                               searchTree: viewModel.searchTree!,
-                              filterTree: viewModel.filterSearchTreeNode as FilterSearchTreeNode,
+                              // filterTree: viewModel.filterSearchTreeNode as FilterSearchTreeNode,
+                              filterOrder: viewModel.filterOrder,
                               // plate: const InstagramGrad().colors,
+                              enableReordering: false,
                               onValueChange: viewModel.refreshPage,
                             ),
                             treeSearchLegend: TreeSearchLegend(
@@ -241,7 +245,7 @@ class _ConsumptionReportDashboardViewState extends State<ConsumptionReportDashbo
 }
 
 class DashboardDataCard extends StatelessWidget{
-  DashboardDataCard({
+  const DashboardDataCard({
     super.key,
     required this.value,
     this.label,
@@ -253,32 +257,32 @@ class DashboardDataCard extends StatelessWidget{
   final String? label;
   final String value;
   final String? unit;
-  Color? labelColor;
-  Color? valueColor;
-  Color? unitColor;
+  final Color? labelColor;
+  final Color? valueColor;
+  final Color? unitColor;
   @override
   Widget build(BuildContext context) {
-    labelColor ??= DashboardColor.secondary(context);
-    unitColor ??= DashboardColor.secondary(context);
-    valueColor ??= DashboardColor.primary(context);
+    TextStyle labelStyle = DashboardText.titleMedium(context).copyWith(
+      color: labelColor != null ? labelColor! : DashboardColor.secondary(context)
+    );
+    TextStyle valueStyle = DashboardText.titleMedium(context).copyWith(
+      color: valueColor != null ? valueColor! : DashboardColor.primary(context)
+    );
+    TextStyle unitStyle = DashboardText.titleMedium(context).copyWith(
+      color: unitColor != null ? unitColor! : DashboardColor.secondary(context)
+    );
+    const space = SizedBox(height: 5,);
+
     return DashboardFrameCard(
       padding: const EdgeInsets.all(8),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if(label != null)
-            Text(label!, style: DashboardText.titleMedium(context).copyWith(
-              color: labelColor,
-            )),
-          const SizedBox(height: 5,),
-          Text(value, style: DashboardText.headLineMedium(context).copyWith(
-            color: valueColor,
-          )),
-          const SizedBox(height: 5,),
-          if(unit!=null)
-            Text(unit!, style: DashboardText.titleSmall(context).copyWith(
-              color: unitColor,
-            )),
+          label != null ? Text(label!, style: labelStyle) : const SizedBox.shrink(),
+          space,
+          Text(value, style: valueStyle),
+          space, 
+          unit!=null ? Text(unit!, style: unitStyle) : const SizedBox.shrink(),
         ],
       ),
     );
