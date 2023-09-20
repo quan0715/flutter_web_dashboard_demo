@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:web_dashboard/models/data/config.dart';
+import 'package:web_dashboard/models/data/state.dart';
+import 'package:web_dashboard/view_model/dashboard/dashboard_config_view_model.dart';
 import 'package:web_dashboard/views/components/widget/dashboard_widget.dart';
 import 'package:web_dashboard/views/theme/theme.dart';
 
@@ -15,7 +20,7 @@ class _DashboardConfigViewState extends State<DashboardConfigView> {
     Widget titleAndSubTitle = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: DashboardText.titleLarge(context)),
+        Text(title, style: DashboardText.titleMedium(context)),
         Text(description, style: DashboardText.bodyMedium(context).copyWith(
           color: DashboardColor.secondary(context)
         ),),
@@ -31,8 +36,8 @@ class _DashboardConfigViewState extends State<DashboardConfigView> {
         ),
       ),
     );
-    return DashboardPadding.object(
-      // padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 60),
+    return DashboardPadding(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
@@ -66,40 +71,48 @@ class _DashboardConfigViewState extends State<DashboardConfigView> {
     );
   }
 
-  
-  Widget settingToolBar(){
+  Widget settingToolBar(DashboardConfigViewModel viewModel){
     Widget toolButtons = Row(
       children: [
-        ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              elevation: 1,
-              textStyle: DashboardText.titleSmall(context),
-              foregroundColor: DashboardColor.error(context),
+        MaterialButton(
+            textColor: DashboardColor.error(context),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              side: BorderSide(color: DashboardColor.error(context).withOpacity(0.3))
             ),
-            onPressed: () => {},
-            label: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
-              child: Text('Reset')),
-            icon: const Icon(Icons.refresh),
+            onPressed: viewModel.onReset,
+            elevation: 1,
+            child: const Row(
+              children: [
+                Icon(Icons.refresh),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
+                  child: Text('Reset')),
+              ],
+            ),
           ),
           const SizedBox(width: 5,),
-          ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              elevation: 1,
-              textStyle: DashboardText.titleSmall(context),
-              foregroundColor: DashboardColor.primary(context),
+          MaterialButton(
+            textColor: DashboardColor.primary(context),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              side: BorderSide(color: DashboardColor.primary(context).withOpacity(0.3))
             ),
-            onPressed: () => {},
-            label: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
-              child: Text('儲存')),
-            icon: const Icon(Icons.save),
-          )
+            onPressed: () async => await viewModel.onSave(),
+            elevation: 1,
+            child: const Row(
+              children: [
+                Icon(Icons.save),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
+                  child: Text('儲存')),
+              ],
+            ),
+          ),
       ],
     );
     return DashboardPadding.object(
       child: Column(
-        
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           LayoutBuilder(
@@ -107,7 +120,16 @@ class _DashboardConfigViewState extends State<DashboardConfigView> {
               if(constrains.maxWidth > 420){
                 return Row(
                     children: [
-                      Text('帳號設定', style: DashboardText.headLineSmall(context),),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          
+                          Text('儀表板設定', style: DashboardText.headLineSmall(context),),
+                          Text('上次更新時間: ${DashBoardFormat.time(viewModel.lastUpdate)}', style: DashboardText.bodyMedium(context).copyWith(
+                            color: DashboardColor.secondary(context)
+                          ))
+                        ],
+                      ),
                       const Spacer(),
                       toolButtons,
                       
@@ -118,7 +140,7 @@ class _DashboardConfigViewState extends State<DashboardConfigView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('帳號設定', style: DashboardText.headLineSmall(context),),
-                    SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
                     toolButtons, 
                   ]);
             }
@@ -130,109 +152,114 @@ class _DashboardConfigViewState extends State<DashboardConfigView> {
     );
   }
 
+  Widget loadingFrame(){
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const DashboardAppBar(title: "帳戶設定"),
-      drawer: const DashboardDrawer(),
-      body: DashboardPadding.large(
-        child: DashboardFrameCard(
-          child: SizedBox.expand(
-            child: DashboardPadding.object(
-              padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 40),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    settingToolBar(),
-                    configRowTemplate(
-                      title: 'SCADA Cycle Interval 監測週期',
-                      description: '監測資料搜集最小時間單位',
-                      child: DropdownButton(
-                          underline: Container(),
-                          value: 1,
-                          isExpanded: true,
-                          items: const [
-                            DropdownMenuItem(child: Text('10 分鐘每次'), value: 1,),
-                            DropdownMenuItem(child: Text('15 分鐘每次'), value: 2,),
-                            DropdownMenuItem(child: Text('20 分鐘每次'), value: 3,),
-                            DropdownMenuItem(child: Text('30 分鐘每次'), value: 4,),
-                          ],
-                          onChanged: (value) => {},
-                        ),
-                    ),
-                    configRowTemplate(
-                      title: 'Rate Type 尖峰時段類型',
-                      description: '設定固定或動態尖峰時段',
-                      child: DropdownButton(
-                          underline: Container(),
-                          value: 1,
-                          isExpanded: true,
-                          items: const [
-                            DropdownMenuItem(child: Text('Fix 固定時段'), value: 1,),
-                            DropdownMenuItem(child: Text('Dynamic 動態時段'), value: 2,),
-                          ],
-                          onChanged: (value) => {},
-                        ),
-                    ),
-                    configRowTemplate(
-                      title: 'Rate Type 尖峰時段分段方式',
-                      description: '設定兩節或三節式計價電費',
-                      child: StreamBuilder<Object>(
-                        stream: null,
-                        builder: (context, snapshot) {
-                          return DropdownButton(
+    return ChangeNotifierProvider<DashboardConfigViewModel>(
+      create: (context) => DashboardConfigViewModel()..init(),
+      child: Scaffold(
+        appBar: const DashboardAppBar(title: "帳戶設定"),
+        drawer: const DashboardDrawer(),
+        body: DashboardPadding.large(
+          child: DashboardFrameCard(
+            child: SizedBox.expand(
+              child: DashboardPadding.object(
+                padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 35),
+                child: Consumer<DashboardConfigViewModel>(
+                  builder: (context, viewModel, child) => 
+                  viewModel.loadingState == LoadingState.loading 
+                  ? loadingFrame()
+                  : SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        settingToolBar(viewModel),
+                        configRowTemplate(
+                          title: 'SCADA Cycle Interval 監測週期',
+                          description: '監測資料搜集最小時間單位',
+                          child: DropdownButton(
                               underline: Container(),
-                              value: 1,
+                              value: viewModel.cycleTime,
                               isExpanded: true,
-                              items: const [
-                                DropdownMenuItem(child: Text('兩節式電費'), value: 1,),
-                                DropdownMenuItem(child: Text('三節式電費'), value: 2,),
-                              ],
-                              onChanged: (value) => {},
-                          );
-                        }
-                      )
-                    ),
-                    configRowTemplate(
-                      title: 'Rate Type 用電類別',
-                      description: '設定電壓分類 (高壓、特高壓)',
-                      child: StreamBuilder<Object>(
-                        stream: null,
-                        builder: (context, snapshot) {
-                          return DropdownButton(
+                              items: viewModel.scadaCycleTimeOption.map((int time) => DropdownMenuItem(value: time, child: Text('$time min/次'))).toList(),
+                              onChanged: (value) => viewModel.cycleTime = value as int,
+                            ),
+                        ),
+                        configRowTemplate(
+                          title: 'Rate Type 尖峰時段類型',
+                          description: '設定固定或動態尖峰時段',
+                          child: DropdownButton(
                               underline: Container(),
-                              value: 1,
+                              value: viewModel.rateType,
                               isExpanded: true,
-                              items: const [
-                                DropdownMenuItem(child: Text('高壓電 HV'), value: 1,),
-                                DropdownMenuItem(child: Text('特高壓電 UHV'), value: 2,),
-                              ],
-                              onChanged: (value) => {},
-                          );
-                        }
-                      )
-                    ),
-                    configRowTemplate(
-                      title: 'Contract Capacity 契約容量',
-                      description: '基礎電費支出計算依據',
-                      child: TextField(
-                        controller: TextEditingController(text: DashBoardFormat.number(10000)),
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none
-                          ),
-                          labelText: '契約容量',
-                          suffixText: 'kW',
-                        ), 
-                      )
-                    ),
-                ]),
+                              items: RateType.values.map((RateType rateType) => DropdownMenuItem(value: rateType, child: Text(rateType.label))).toList(),
+                              onChanged: (value) => viewModel.rateType = value as RateType,
+                            ),
+                        ),
+                        configRowTemplate(
+                          title: 'Section Type 尖峰時段分段方式',
+                          description: '設定兩節或三節式計價電費, 尖峰、半尖峰、離峰時段',
+                          child: StreamBuilder<Object>(
+                            stream: null,
+                            builder: (context, snapshot) {
+                              return DropdownButton(
+                                  underline: Container(),
+                                  value: viewModel.section,
+                                  isExpanded: true,
+                                  items: RateSectionType.values.map((RateSectionType rateSectionType) => DropdownMenuItem(value: rateSectionType, child: Text(rateSectionType.label))).toList(),
+                                  onChanged: (value) => viewModel.section = value as RateSectionType,
+                              );
+                            }
+                          )
+                        ),
+                        configRowTemplate(
+                          title: 'Rate Voltage Type 電壓分類',
+                          description: '設定電壓分類 (高壓、特高壓)',
+                          child: StreamBuilder<Object>(
+                            stream: null,
+                            builder: (context, snapshot) {
+                              return DropdownButton(
+                                  underline: Container(),
+                                  value: viewModel.voltage,
+                                  isExpanded: true,
+                                  items: RateVoltageType.values.map((RateVoltageType rateVoltageType) => DropdownMenuItem(value: rateVoltageType, child: Text(rateVoltageType.label))).toList(),
+                                  onChanged: (value) => viewModel.voltage = value as RateVoltageType,
+                              );
+                            }
+                          )
+                        ),
+                        configRowTemplate(
+                          title: 'Contract Capacity 契約容量',
+                          description: '基礎電費支出計算依據',
+                          child: TextField(
+                            controller: TextEditingController(
+                              text: DashBoardFormat.number(viewModel.contractCapacity)
+                            ),
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none
+                              ),
+                              labelText: '契約容量',
+                              suffixText: 'kW',
+                            ),
+                            onEditingComplete: () => FocusScope.of(context).unfocus(),
+                            onSubmitted: (value) => viewModel.contractCapacity = int.parse(value), 
+                          )
+                        ),
+                    ]),
+                  ),
               ),
             ),
           ),
         ),
       ),
-    );
+    ));
   }
 }

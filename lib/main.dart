@@ -3,11 +3,13 @@ import 'package:web_dashboard/view_model/auth_manager.dart';
 import 'package:web_dashboard/view_model/theme_manager.dart';
 import 'package:web_dashboard/views/pages/dashboard/consumption_report_dashboard_view.dart';
 import 'package:web_dashboard/views/pages/dashboard_config/dashboard_config_view.dart';
+import 'package:web_dashboard/views/pages/data_table/daily_scda_data_table_view_model.dart';
 import 'package:web_dashboard/views/pages/data_table/device_error_report_view.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:web_dashboard/views/pages/auth/login_view.dart';
 import 'package:web_dashboard/views/pages/data_table/monitoring_device_manage_view.dart';
+import 'package:web_dashboard/views/pages/data_table/scada_data_table_view.dart';
 import 'views/config/firebase_options.dart';
 import 'views/pages/dashboard/consumption_monitor_dashboard_view.dart';
 
@@ -40,6 +42,8 @@ class MyApp extends StatelessWidget {
               "/dashboard/monitoring_device_manage": (context) => const MonitoringDeviceManageView(),
               "/dashboard/report":(context) => const ConsumptionReportDashboardView(),
               "/dashboard/device_error_report": (context) => const DeviceErrorReportView(),
+              "/dashboard/daily_scada_sum_table": (context) => const DailyScadaDataTableView(),
+              "/dashboard/scada_table":(context) => const ScadaDataTableView(),
               "/login": (context) => LoginPageView(),
               "/dashboard/config" : (context) => const DashboardConfigView(),  
               "/": (context) => LoginPageView(),

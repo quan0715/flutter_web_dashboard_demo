@@ -21,10 +21,14 @@ class ConsumptionSearchNode extends SearchTreeNode<SumOfElectricityConsumptionDa
     => data?.quarterConsumption ?? 0 + children.fold<int>(0, (previousValue, element) => previousValue + (element as ConsumptionSearchNode).quarterConsumption);
   double get averageMonthConsumptionPerMonth
     => data?.averageMonthConsumptionPerMonth ?? 0 + children.fold<double>(0, (previousValue, element) => previousValue + (element as ConsumptionSearchNode).averageMonthConsumptionPerMonth);
+  double get billPrice 
+    => data?.dayBillPrice ?? 0.0 + children.fold<double>(0, (previousValue, element) => previousValue + (element as ConsumptionSearchNode).billPrice);  
 
   DateTime get dateTime
     => data?.dateTime ?? children.fold<DateTime>(DateTime.now(), (previousValue, element) => previousValue = (element as ConsumptionSearchNode).dateTime);
 
+  double get averageBillPerUnit => billPrice / dayConsumption;
+  
   @override
   factory ConsumptionSearchNode.buildTree({
     required List<SumOfElectricityConsumptionDataModel> data,
@@ -62,19 +66,20 @@ class ConsumptionSearchNode extends SearchTreeNode<SumOfElectricityConsumptionDa
     );
   }
   
-  @override
-  List<PieChartProportion<ConsumptionSearchNode>> toProportionList() {
-    List<PieChartProportion<ConsumptionSearchNode>> result = [];
-    int total = (children as List<ConsumptionSearchNode>).fold<int>(0, (previousValue,  element) => previousValue + element.dayConsumption);
-    for(ConsumptionSearchNode child in children as List<ConsumptionSearchNode>){
-      result.add(PieChartProportion(
-        model: child,
-        amount: child.dayConsumption,
-        proportion: (child.dayConsumption) / total * 100,
-      ));
-    }
-    return result;
-  }
+  // @override
+  // List<PieChartProportion<ConsumptionSearchNode>> toProportionList({required num Function(SearchTreeNode) builder}) {
+  //   List<PieChartProportion<ConsumptionSearchNode>> result = [];
+  //   var data = children.map(builder).toList();
+  //   num total = data.fold<num>(0, (previousValue,  element) => previousValue + element);
+  //   for(ConsumptionSearchNode child in children as List<ConsumptionSearchNode>){
+  //     result.add(PieChartProportion(
+  //       model: child,
+  //       amount: child.dayConsumption,
+  //       proportion: (child.dayConsumption) / total * 100,
+  //     ));
+  //   }
+  //   return result;
+  // }
   
   @override
   void addNewGroup({

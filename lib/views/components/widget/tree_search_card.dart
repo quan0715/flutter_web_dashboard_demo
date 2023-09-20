@@ -303,6 +303,7 @@ class FilterEntries<DataSourceType> extends StatelessWidget{
   
   @override
   Widget build(BuildContext context) {
+    // debugPrint(this.dataSource.length.toString());
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
         child: Column(

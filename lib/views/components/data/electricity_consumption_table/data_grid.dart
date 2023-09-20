@@ -4,6 +4,7 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:web_dashboard/models/repo/consumption_repo_model.dart';
 import 'package:web_dashboard/views/components/data/electricity_consumption_table/config.dart';
 import 'package:web_dashboard/views/components/data/electricity_consumption_table/data_source.dart';
+import 'package:web_dashboard/views/theme/color.dart';
 
 class ElectricityConsumptionDataGrid extends StatelessWidget{
   final List<ElectricityConsumptionDataModel> dataSource;
@@ -26,6 +27,8 @@ class ElectricityConsumptionDataGrid extends StatelessWidget{
       ) :
       SfDataGrid(
         allowPullToRefresh: true,
+        horizontalScrollPhysics: const AlwaysScrollableScrollPhysics(),
+        // isScrollbarAlwaysShown: true,
         gridLinesVisibility: GridLinesVisibility.vertical,
         headerGridLinesVisibility: GridLinesVisibility.vertical,
         columnWidthMode: ColumnWidthMode.fill,
@@ -33,7 +36,7 @@ class ElectricityConsumptionDataGrid extends StatelessWidget{
         columns: columnsLabel.map((label) => GridColumn(
           columnName: label,
           label: Container(
-            color: Colors.amber.withOpacity(0.1),
+            color: DashboardColor.primary(context).withOpacity(0.2),
             child: Center(
               child: Text(label),
             ),

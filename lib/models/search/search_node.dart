@@ -45,16 +45,17 @@ class SearchTreeNode<T>{
     }
   }
 
-  SearchTreeNode? searchTree(List<String> indexes){
+  SearchTreeNode? searchTree(List<String> indexes, {int index = 0}){
     if(indexes.isEmpty) return null;
-    String target = indexes.first;
+    if(indexes.length == index){
+      return this;
+    } 
+    String target = indexes[index];
     SearchTreeNode? node = _searchTree(target);
-    if(indexes.length == 1){
-      return node;
-    }else if(node != null){
-      indexes.removeAt(0);
-      return node.searchTree(indexes);
+    if(node != null){
+      return node.searchTree(indexes, index: index + 1);
     }
+    // debugPrint('search result empty');
     return null;
   }
 
@@ -83,9 +84,23 @@ class SearchTreeNode<T>{
     return result;
   } 
 
-  List<PieChartProportion> toProportionList()=>
-    throw UnimplementedError();
-  @override
+  // List<PieChartProportion> toProportionList({
+  //   required num Function(SearchTreeNode) valueBuilder,
+  //   required String Function(SearchTreeNode) indexBuilder,
+  // }){
+  //   List<PieChartProportion> result = [];
+  //   var dataSources = children.map(valueBuilder).toList();
+  //   var indexes = children.map(indexBuilder).toList();
+  //   num total = dataSources.fold<num>(0, (previousValue,  element) => previousValue + element);
+  //   for(int i=0;i<=dataSources.length;i++){
+  //     result.add(PieChartProportion(
+  //       index: indexes[i],
+  //       amount: dataSources[i].toInt(),
+  //       proportion: dataSources[i] / total * 100,
+  //     ));
+  //   }
+  //   return result;
+  // }
   String toString() => "[$index]";
 
   void addNewGroup({

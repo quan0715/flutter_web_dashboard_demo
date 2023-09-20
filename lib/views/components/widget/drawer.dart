@@ -76,7 +76,7 @@ class DashboardDrawer extends StatelessWidget{
                           ]),
                         ),
                         DashboardSizedBox.large(),
-                        const FrameQuote(quoteText: "儀表板",),
+                        const FrameQuote(quoteText: "數據儀表板",),
                         ListTile(
                           leading: const Icon(Icons.dashboard),
                           title: const Text('用電紀錄監測報告'),
@@ -88,7 +88,19 @@ class DashboardDrawer extends StatelessWidget{
                           title: const Text('電力紀錄使用報告'),
                           onTap: () => Navigator.pushNamed(context, "/dashboard/report"),
                         ),
-                        const FrameQuote(quoteText: "工廠資料設定"), 
+                        const FrameQuote(quoteText: "數據記錄(表格)",),
+                        ListTile(
+                          // isThreeLine: true,
+                          leading: const Icon(Icons.analytics),
+                          title: const Text('Scada 監控點數據'),
+                          onTap: () => Navigator.pushNamed(context, "/dashboard/scada_table"),
+                        ),
+                        ListTile(
+                          // isThreeLine: true,
+                          leading: const Icon(Icons.analytics),
+                          title: const Text('每日數據累績監控數據'),
+                          onTap: () => Navigator.pushNamed(context, "/dashboard/daily_scada_sum_table"),
+                        ),
                         ListTile(
                           leading: const Icon(Icons.error),
                           // isThreeLine: true,
@@ -96,6 +108,7 @@ class DashboardDrawer extends StatelessWidget{
                           onTap: () => Navigator.pushNamed(context, "/dashboard/device_error_report")
                           
                         ),
+                        const FrameQuote(quoteText: "儀表板設定"), 
                         ListTile(
                           leading: const Icon(Icons.factory),
                           // isThreeLine: true,

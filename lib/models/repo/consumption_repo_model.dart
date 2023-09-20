@@ -22,6 +22,8 @@ class ElectricityConsumptionDataModel implements RepoModel{
   final int? sumOfEnergyConsumed; // db: sum_kwh
   final int? ampere; // db: ampere
   final int? volt; // db: voltage
+  final double? priceRate; // db: pricerate
+  double get billPrice => priceRate! * energyConsumed!; // priceRate * energyConsumed
   // constructor
   ElectricityConsumptionDataModel({
     this.deviceData,
@@ -32,6 +34,7 @@ class ElectricityConsumptionDataModel implements RepoModel{
     this.power,
     this.energyConsumed,
     this.sumOfEnergyConsumed,
+    this.priceRate,
     this.repoId,
   });
 
@@ -44,10 +47,12 @@ class ElectricityConsumptionDataModel implements RepoModel{
       return ElectricityConsumptionDataModel(
         recordTime: DateTime.parse(source[DBConfig.dateTimeId] as String),
         power: source[DBConfig.powerId],
-        energyConsumed: source[DBConfig.powerConsumptionId],
+        energyConsumed: source[DBConfig.powerConsumptionId] ?? 0,
         sumOfEnergyConsumed: source[DBConfig.sumOfEnergyConsumedId],
         ampere: source[DBConfig.ampereId],
         volt: source[DBConfig.voltageId],
+        priceRate: source[DBConfig.priceRateId] ?? 0,
+        // billPrice: (source[DBConfig.priceRateId] ?? 0) * (source[DBConfig.powerConsumptionId] ?? 0),
         deviceData: DeviceDataClass.fromJson(source),
         boundData: BoundDataClass.fromJson(source),
         repoId: json['_id'] as String,
@@ -67,8 +72,8 @@ class ElectricityConsumptionDataModel implements RepoModel{
       DBConfig.sumOfEnergyConsumedId : sumOfEnergyConsumed ?? 0,
       DBConfig.ampereId : ampere ?? 0,
       DBConfig.voltageId : volt ?? 0,
+      DBConfig.priceRateId : priceRate ?? 0,
     }..addEntries(deviceData?.toJson().entries ?? [])
      ..addEntries(boundData?.toJson().entries ?? []);
   }
-
 }

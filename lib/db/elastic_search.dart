@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_dashboard/models/base_repo.dart';
 import 'package:web_dashboard/db/db_config.dart';
+import 'package:web_dashboard/models/repo/config_repo_model.dart';
 import 'package:web_dashboard/models/repo/consumption_repo_model.dart';
 import 'package:web_dashboard/models/repo/error_report_repo_model.dart';
 import 'package:web_dashboard/models/repo/monitoring_device_repo_model.dart';
@@ -83,16 +84,27 @@ class ElasticSearchClient<M extends RepoModel>{
   }
 
   Future<void> post(M data) async {
-    debugPrint("testing: update Device data to repo");
+    
     // debugPrint(data.toJson().toString());
+    dynamic response;
     try{
-      final response = await http.post(
-        Uri.parse("$baseURI/$index/_doc"),
-        headers: headers,
-        body: jsonEncode(data.toJson()),
-      );
+      if(data.repoId == null){
+        debugPrint("testing: create data to repo $index");
+        response = await http.post(
+          Uri.parse("$baseURI/$index/_doc"),
+          headers: headers,
+          body: jsonEncode(data.toJson()),
+        );
+      }else{
+        debugPrint("testing: update data to repo $index (${data.repoId}))");
+        response = await http.put(
+          Uri.parse("$baseURI/$index/_doc/${data.repoId}"),
+          headers: headers,
+          body: jsonEncode(data.toJson()),
+        );
+      }
       // debugPrint(response.statusCode.toString());
-      if(response.statusCode == 201){
+      if(response.statusCode == 201 || response.statusCode == 200){
         debugPrint(response.body);
       }else{
         debugPrint(response.body);
@@ -103,6 +115,7 @@ class ElasticSearchClient<M extends RepoModel>{
       throw Exception(e.toString());
     }
   }
+
 
   Future<void> delete(String targetId) async {
     try{
@@ -162,6 +175,10 @@ class ElasticSearchClient<M extends RepoModel>{
 
   static ElasticSearchClient<MonitoringDeviceModel> deviceClient(){
     return ElasticSearchClient<MonitoringDeviceModel>.fromModel(MonitoringDeviceModel.getInstance());
+  }
+
+  static ElasticSearchClient<ConfigRepoModel> configClient(){
+    return ElasticSearchClient<ConfigRepoModel>.fromModel(ConfigRepoModel.getInstance());
   }
 
   static Future<List<SumOfElectricityConsumptionDataModel>> getSumConsumptionDataByTime({

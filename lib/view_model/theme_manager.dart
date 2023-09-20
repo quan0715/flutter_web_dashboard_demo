@@ -17,7 +17,7 @@ class DashboardThemeManager extends ChangeNotifier{
   
   // void toggle
   void toggleTheme(){
-    _theme = _theme.brightness == Brightness.dark 
+    _theme = isDark
     ? ThemeData(
       colorScheme: ColorScheme.fromSeed(
         seedColor: const Ibm.blue().color, 
@@ -27,7 +27,7 @@ class DashboardThemeManager extends ChangeNotifier{
     )
     : ThemeData(
       colorScheme: ColorScheme.fromSeed(
-        seedColor: const Ibm.black().color, 
+        seedColor: const Ibm.blue().color, 
         brightness: Brightness.dark
       ),
       useMaterial3: true,

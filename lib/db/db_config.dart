@@ -14,6 +14,7 @@ class DBConfig{
   static String errorReportRepoIndex = "event_202307";
   static String deviceConsumptionRepoIndex = "consumption_202308"; // FIX: correct spelling
   static String deviceConsumptionSumRepoIndex = "sumconsumption_202308";
+  static String dashboardConfigRepoIndex = "config";
   static String lineTypeId= "linetype";
   static String assetTypeId= "assettype";
   static String buildingId= "building";
@@ -39,6 +40,11 @@ class DBConfig{
   static String powerConsumptionId = "kwh";
   static String sumOfEnergyConsumedId = "sum_kwh";
   static String ampereId = "ampere";
+  static String priceRateId = "pricerate";
+  static String billId = "bill";
+  static String monthBillId = "m_bill";
+  static String yearBillId = "y_bill";
+  static String quarterBillId = "q_bill";
 
   static DateFormat dateFormat = DateFormat("yyyy-MM-ddTHH:mm:ssZ");
   static String jsonSerializerMessage(String modelName, String errorMessage) => "Error Log($modelName): json serializer error -> $errorMessage";

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:web_dashboard/models/data/state.dart';
 import 'package:web_dashboard/views/theme/theme.dart';
-import 'package:web_dashboard/view_model/dashboard/monitoring_device_manage_view_model.dart';
+import 'package:web_dashboard/view_model/data_table/monitoring_device_manage_view_model.dart';
 import 'package:web_dashboard/views/components/widget/app_bar.dart';
 import 'package:web_dashboard/views/components/widget/dashboard_frame_card.dart';
 import 'package:web_dashboard/views/components/data/device_manage_table/data_grid.dart';

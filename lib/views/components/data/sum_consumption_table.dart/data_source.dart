@@ -6,11 +6,15 @@ import 'package:web_dashboard/views/components/data/sum_consumption_table.dart/c
 
 class SumOfElectricityConsumptionDataSource extends DataGridSource{
   List<SumOfElectricityConsumptionDataModel> dataSource;
-  SumOfElectricityConsumptionDataSource({required this.dataSource});
+  final bool priceOnly;
+  SumOfElectricityConsumptionDataSource({required this.dataSource, this.priceOnly = false});
 
   @override
   List<DataGridRow> get rows => dataSource
-    .map<DataGridRow>(SumConsumptionTableConfig.getRows)
+    .map<DataGridRow>(
+      priceOnly 
+      ? SumConsumptionTableBillOnlyConfig.getRows
+      : SumConsumptionTableConfig.getRows)
     .toList();
 
   @override

@@ -19,6 +19,10 @@ class SumOfElectricityConsumptionDataModel implements RepoModel{
    double? averageMonthConsumptionPerMonth; //  _source/avg_m_h_com;
    DateTime? dateTime; // db:  _source/datetime
    DeviceDataClass? deviceData;
+   double? dayBillPrice; // db:  _source/bill
+   double? monthBillPrice;
+   double? quarterBillPrice;
+   double? yearBillPrice;   
   // constructor
   SumOfElectricityConsumptionDataModel({
     this.dayConsumption,
@@ -28,6 +32,10 @@ class SumOfElectricityConsumptionDataModel implements RepoModel{
     this.quarterConsumption,
     this.deviceData,
     this.dateTime,
+    this.dayBillPrice,
+    this.monthBillPrice,
+    this.quarterBillPrice,
+    this.yearBillPrice,
     this.repoId,
   }){
     groupLabel = deviceData?.tagId ?? '';
@@ -40,13 +48,17 @@ class SumOfElectricityConsumptionDataModel implements RepoModel{
     try{
       var s = json['_source'];
       return SumOfElectricityConsumptionDataModel( 
-      dayConsumption: s[DBConfig.dayConsumptionId],
-      monthConsumption: s[DBConfig.monthConsumptionId],
-      yearConsumption: s[DBConfig.yearConsumptionId],
+      dayConsumption: s[DBConfig.dayConsumptionId].toInt(),
+      monthConsumption: s[DBConfig.monthConsumptionId].toInt(),
+      yearConsumption: s[DBConfig.yearConsumptionId].toInt(),
       quarterConsumption: s[DBConfig.quarterConsumption],
       averageMonthConsumptionPerMonth: s[DBConfig.averageMonthConsumptionPerMonth],
       dateTime: DBConfig.dateFormat.parse(s[DBConfig.dateTimeId]),
       deviceData: DeviceDataClass.fromJson(s),
+      dayBillPrice: s[DBConfig.billId] ?? 0,
+      monthBillPrice: s[DBConfig.monthBillId] ?? 0,
+      quarterBillPrice: s[DBConfig.quarterBillId] ?? 0,
+      yearBillPrice: s[DBConfig.yearBillId] ?? 0,
       repoId: json['_id'] as String,
     );
     } catch(e){
@@ -65,6 +77,9 @@ class SumOfElectricityConsumptionDataModel implements RepoModel{
       DBConfig.yearConsumptionId: yearConsumption ?? 0,
       DBConfig.quarterConsumption: quarterConsumption ?? 0,
       DBConfig.dateTimeId: dateTime?.toIso8601String() ?? '',
+      DBConfig.billId: dayBillPrice ?? 0,
+      DBConfig.monthBillId: monthBillPrice ?? 0,
+      DBConfig.yearBillId: yearBillPrice ?? 0,
     }..addEntries(deviceData?.toJson().entries ?? []);
   }
 
@@ -78,14 +93,33 @@ class SumOfElectricityConsumptionDataModel implements RepoModel{
   }
 }
 
-class PieChartProportion<M>{
+class PieChartProportion{
   // for pie chart
-  final M model;
+  final String index;
   final int amount;
   final double proportion;
   PieChartProportion({
-    required this.model, 
+    required this.index,
     required this.amount,
     required this.proportion,
   });
+
+  static List<PieChartProportion> listBuilder<T>({
+    required List<T> dataSource,
+    required num Function(T node) valueBuilder,
+    required String Function(T node) indexBuilder,
+  }){
+    List<PieChartProportion> result = [];
+    var total = dataSource.fold(0, (previousValue, element) => previousValue + valueBuilder(element).toInt());
+    for (T data in dataSource){
+      result.add(
+        PieChartProportion(
+          index: indexBuilder(data),
+          amount: valueBuilder(data).toInt(),
+          proportion: valueBuilder(data) / total * 100,
+        )
+      );
+    }
+    return result;
+  }
 }
