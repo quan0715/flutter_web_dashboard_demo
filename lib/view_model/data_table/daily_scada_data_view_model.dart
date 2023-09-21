@@ -11,6 +11,23 @@ import 'package:web_dashboard/view_model/base_view_model.dart';
 class DailyScadaDataViewModel extends BaseViewModel{
   // view model data
   List<SumOfElectricityConsumptionDataModel> _dataList = [];
+  
+  DateTime _searchStartTime = DateTime.now();
+  DateTime _searchEndTime = DateTime.now();
+  DateTime get searchStartTime => DateTime(_searchStartTime.year, _searchStartTime.month, _searchStartTime.day, 0, 0 , 0);
+  DateTime get searchEndTime => DateTime(_searchEndTime.year, _searchEndTime.month, _searchEndTime.day, 23, 59, 59);
+
+  ConsumptionSearchNode? consumptionDataGroupSearchTree;
+  FilterSearchTreeNode? filterSearchTreeNode;
+  List<LayerFilterData<String>> filterOrder = [
+    LayerFilterData.init(layerLabel: "L1 廠區", layerIndex: DBConfig.locId),
+    LayerFilterData.init(layerLabel: "L2 建築", layerIndex: DBConfig.buildingId),
+    LayerFilterData.init(layerLabel: "L3 產線類別",layerIndex: DBConfig.lineTypeId),
+    LayerFilterData.init(layerLabel: "L4 用電部門", layerIndex: DBConfig.departmentId),
+    LayerFilterData.init(layerLabel: "L5 設備部門",layerIndex: DBConfig.assetTypeId),
+    LayerFilterData.init(layerLabel: "L6 設備編號",layerIndex: DBConfig.tagIdId),
+  ];
+
   List<SumOfElectricityConsumptionDataModel> get dataList{
     if(filterSearchTreeNode != null && consumptionDataGroupSearchTree != null){
       var searchList = filterSearchTreeNode!.levelList();
@@ -29,21 +46,6 @@ class DailyScadaDataViewModel extends BaseViewModel{
     }
     return _dataList;
   }
-  DateTime _searchStartTime = DateTime.now();
-  DateTime _searchEndTime = DateTime.now();
-  DateTime get searchStartTime => DateTime(_searchStartTime.year, _searchStartTime.month, _searchStartTime.day - 7, 0, 0 , 0);
-  DateTime get searchEndTime => DateTime(_searchEndTime.year, _searchEndTime.month, _searchEndTime.day, 23, 59, 59);
-
-  ConsumptionSearchNode? consumptionDataGroupSearchTree;
-  FilterSearchTreeNode? filterSearchTreeNode;
-  List<LayerFilterData<String>> filterOrder = [
-    LayerFilterData.init(layerLabel: "L1 廠區", layerIndex: DBConfig.locId),
-    LayerFilterData.init(layerLabel: "L2 建築", layerIndex: DBConfig.buildingId),
-    LayerFilterData.init(layerLabel: "L3 產線類別",layerIndex: DBConfig.lineTypeId),
-    LayerFilterData.init(layerLabel: "L4 用電部門", layerIndex: DBConfig.departmentId),
-    LayerFilterData.init(layerLabel: "L5 設備部門",layerIndex: DBConfig.assetTypeId),
-    LayerFilterData.init(layerLabel: "L6 設備編號",layerIndex: DBConfig.tagIdId),
-  ];
 
   void checkSearchTimeOrder(){
     if(_searchStartTime.isAfter(_searchEndTime)){
@@ -57,14 +59,12 @@ class DailyScadaDataViewModel extends BaseViewModel{
     _searchStartTime = newTime;
     checkSearchTimeOrder();
     init();
-    notifyListeners();
   }
 
   set searchEndTime(DateTime newTime){
     _searchEndTime = newTime;
     checkSearchTimeOrder();
     init();
-    notifyListeners();
   }
 
   Map<String, dynamic> get queryObject => {
@@ -100,7 +100,7 @@ class DailyScadaDataViewModel extends BaseViewModel{
         query: queryObject
     );
     consumptionDataGroupSearchTree = ConsumptionSearchNode.buildTree(
-      data: dataList,
+      data: _dataList,
       indexes: [DBConfig.dateTimeId, ...filterOrder.map((e) => e.layerIndex).toList()]
     );
     // consumptionDataGroupSearchTree!.printTree();

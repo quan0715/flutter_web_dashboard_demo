@@ -82,12 +82,12 @@ class DashboardDrawer extends StatelessWidget{
                           title: const Text('用電紀錄監測報告'),
                           onTap: () => Navigator.pushNamed(context, "/dashboard/device_consumption_report"),
                         ),
-                        ListTile(
-                          // isThreeLine: true,
-                          leading: const Icon(Icons.analytics),
-                          title: const Text('電力紀錄使用報告'),
-                          onTap: () => Navigator.pushNamed(context, "/dashboard/report"),
-                        ),
+                        // ListTile(
+                        //   // isThreeLine: true,
+                        //   leading: const Icon(Icons.analytics),
+                        //   title: const Text('電力紀錄使用報告'),
+                        //   onTap: () => Navigator.pushNamed(context, "/dashboard/report"),
+                        // ),
                         const FrameQuote(quoteText: "數據記錄(表格)",),
                         ListTile(
                           // isThreeLine: true,

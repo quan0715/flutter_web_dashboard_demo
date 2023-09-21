@@ -4,10 +4,12 @@ class DashboardLayout{
   static const double padding = 20;
   static const double avatarRadius = 45;
   static ResponsiveLayoutType getLayout(BoxConstraints constraints){
-    switch (constraints.maxWidth.toInt()) {
+    // debugPrint(constraints.maxWidth.toString());
+    // debugPrint(constraints.maxHeight.toString());
+    switch (constraints.maxWidth) {
       case >=1200:
         return ResponsiveLayoutType.big;
-      case >=800:
+      case >=650:
         return ResponsiveLayoutType.medium;
       case >=400:
         return ResponsiveLayoutType.small;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:web_dashboard/views/components/widget/dashboard_page.dart';
 import 'package:web_dashboard/views/theme/theme.dart';
 import 'package:web_dashboard/view_model/data_table/device_error_report_view_model.dart';
 import 'package:web_dashboard/views/components/widget/app_bar.dart';
@@ -21,28 +22,21 @@ class _DeviceErrorReportViewState extends State<DeviceErrorReportView> {
     return ChangeNotifierProvider<DeviceErrorReportViewModel>(
       create: (context) => DeviceErrorReportViewModel()..init(),
       child: Consumer<DeviceErrorReportViewModel>(
-        builder: (context, viewModel, child) => Scaffold(
-          appBar: const DashboardAppBar(title: "用電異常清單"),
-          drawer: const DashboardDrawer(),
-          body: SizedBox.expand(
-            child: DashboardPadding.large(
-              child: DashboardFrameCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    FrameQuote(quoteText: "用電異常清單", style: DashboardText.titleLarge(context)),
-                    // DashboardDivider.small(),
-                    // DashboardSizedBox.large(),
-                    Expanded(
-                      child:  DashboardPadding.object(child: DeviceErrorReportTableDataGrid(dataSource: viewModel.dataSource)),
-                    ),
-                  ],
-                ),
+        builder: (context, viewModel, child) => DashboardPage(
+          pageTitle: "用電異常清單",
+          isSearchBarVisible: false,
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const FrameQuote(quoteText: "用電異常清單"),
+              Expanded(
+                child:  DeviceErrorReportTableDataGrid(dataSource: viewModel.dataSource),
               ),
-            ),
+            ],
+          ),
           ),
         ),
-      ),
+      
     );
   }
 }

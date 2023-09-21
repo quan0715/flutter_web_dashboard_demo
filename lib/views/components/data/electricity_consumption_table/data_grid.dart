@@ -31,7 +31,7 @@ class ElectricityConsumptionDataGrid extends StatelessWidget{
         // isScrollbarAlwaysShown: true,
         gridLinesVisibility: GridLinesVisibility.vertical,
         headerGridLinesVisibility: GridLinesVisibility.vertical,
-        columnWidthMode: ColumnWidthMode.fill,
+        columnWidthMode: MediaQuery.sizeOf(context).width > 1200 ? ColumnWidthMode.fill : ColumnWidthMode.auto,
         source: dataGridSource!,
         columns: columnsLabel.map((label) => GridColumn(
           columnName: label,

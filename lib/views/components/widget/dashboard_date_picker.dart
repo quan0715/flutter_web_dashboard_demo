@@ -36,7 +36,7 @@ class DashboardDatePicker extends StatelessWidget{
                       cancelText: "取消",
                       confirmText: "確認",
                   );
-                  if(constrain.maxWidth > 600){
+                  if(DashboardLayout.getLayout(constrain) == ResponsiveLayoutType.medium){
                     return Stack(
                       children: [
                         Positioned(
@@ -61,7 +61,9 @@ class DashboardDatePicker extends StatelessWidget{
         child:RawChip(
           side: BorderSide.none,
           avatar: Icon(Icons.filter_list, color: DashboardColor.primary(context)),
-          label: Text("$buttonLabel: ${DashBoardFormat.timePickerLabel(initDate)}")
+          label: LayoutBuilder(
+            builder: (context, constraints) => 
+              Text("$buttonLabel: ${DashBoardFormat.timePickerLabel(initDate)}"))
         )
       );
   }

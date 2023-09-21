@@ -303,46 +303,47 @@ class LevelFilterList extends StatelessWidget{
   final GlobalKey buttonKey = GlobalKey();
 
   Widget get card => treeSearchCard;
-
+  
   @override
   Widget build(BuildContext context) {
-    return Row(
-        children: [
-          MaterialButton(
-            key: buttonKey,
-            onPressed: ()async {
-              final buttonPosition = buttonKey.currentContext!.findRenderObject() as RenderBox;
-              await showDialog(
-                context: context,
-                barrierDismissible: true,
-                barrierLabel: title,
-                builder: (BuildContext context) => 
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      return constraints.maxWidth > 600
-                        ? Stack(
-                          children: [
-                            Positioned(
-                              top: buttonPosition.size.height + buttonPosition.localToGlobal(Offset.zero).dy + 1,
-                              left: buttonPosition.localToGlobal(Offset.zero).dx,
-                              child: card 
-                            )
-                          ],
-                        )
-                        : Center(child: card);
-                    }
+    Widget button = MaterialButton(
+      key: buttonKey,
+      onPressed: ()async {
+        final buttonPosition = buttonKey.currentContext!.findRenderObject() as RenderBox;
+        await showDialog(
+          context: context,
+          barrierDismissible: true,
+          barrierLabel: title,
+          builder: (BuildContext context) => 
+            LayoutBuilder(
+              builder: (context, constraints) {
+                return constraints.maxWidth > 600
+                  ? Stack(
+                    children: [
+                      Positioned(
+                        top: buttonPosition.size.height + buttonPosition.localToGlobal(Offset.zero).dy + 1,
+                        left: buttonPosition.localToGlobal(Offset.zero).dx,
+                        child: card 
+                      )
+                    ],
                   )
-                );
-            }, 
-            child: RawChip(
-              side: BorderSide.none,
-              avatar: Icon(Icons.filter_list, color: DashboardColor.primary(context)),
-              label: Text(title)),
-          ),
-          if (treeSearchLegend != null)
-            treeSearchLegend!,
-        ],
-      );
+                  : Center(child: card);
+              }
+            )
+          );
+      }, 
+      child: RawChip(
+        side: BorderSide.none,
+        avatar: Icon(Icons.filter_list, color: DashboardColor.primary(context)),
+        label: Text(title)),
+    );
+    return Row(
+      children: [
+        button,
+        if (treeSearchLegend != null)
+          treeSearchLegend!,
+      ],
+    );
   }
 }
 

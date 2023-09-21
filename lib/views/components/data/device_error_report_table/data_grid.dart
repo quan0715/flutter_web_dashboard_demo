@@ -27,10 +27,10 @@ class DeviceErrorReportTableDataGrid extends StatelessWidget{
       elevation: 1,
       child: SfDataGridTheme(
         data: SfDataGridThemeData(
-          headerColor: isLarge ? DashboardColor.primaryContainer(context).withOpacity(0.4) : null 
+          headerColor: isLarge ? DashboardColor.primary(context).withOpacity(0.2) : null 
         ),
         child: SfDataGrid(
-          columnWidthMode: ColumnWidthMode.fill,
+          columnWidthMode: MediaQuery.sizeOf(context).width > 1200 ? ColumnWidthMode.fill : ColumnWidthMode.auto,
           source: DeviceErrorReportTableDataSource(dataSource: dataSource, isLarge: isLarge), 
           columns: columnsLabel.map<GridColumn>(
             (col) => GridColumn(

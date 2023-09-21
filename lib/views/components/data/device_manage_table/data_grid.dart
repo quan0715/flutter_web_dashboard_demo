@@ -16,23 +16,16 @@ class DeviceManagingTableDataGrid extends StatelessWidget{
       // elevation: 0,
       child: SfDataGridTheme(
         data: SfDataGridThemeData(
-          headerColor: DashboardColor.primaryContainer(context).withOpacity(0.3),
+          headerColor: DashboardColor.primary(context).withOpacity(0.2),
           // rowHoverColor: DashboardColor.primaryContainer(context),
           // rowHoverTextStyle: DashboardText.titleMedium(context).copyWith(color: DashboardColor.onPrimaryContainer(context)),
           gridLineStrokeWidth: 1,
           // gridLineColor: DashboardColor.primary(context).withOpacity(0.2)
         ),
         child: SfDataGrid(
-          // isScrollbarAlwaysShown: true,
-          // allowFiltering: true,
-          // allowColumnsDragging: true,
-          // allowColumnsResizing: true,
-          // footer: Divider(thickness: 1,),
-          allowPullToRefresh: true,
-          allowMultiColumnSorting: true,
           gridLinesVisibility: GridLinesVisibility.vertical,
           headerGridLinesVisibility: GridLinesVisibility.vertical,
-          columnWidthMode: ColumnWidthMode.fill,
+          columnWidthMode: MediaQuery.sizeOf(context).width > 1200 ? ColumnWidthMode.fill : ColumnWidthMode.auto,
           source: DeviceManagingTableDataSource(dataSource: dataSource),
           columns: DeviceManageTableConfig.columName.map((label) => GridColumn(
             columnName: label,

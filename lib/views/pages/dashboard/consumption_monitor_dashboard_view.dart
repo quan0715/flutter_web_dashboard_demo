@@ -37,15 +37,20 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
   }
   
   Widget priceSwitcher(){
-    return Switch(
-      thumbIcon: MaterialStateProperty.all(
-        viewModel.isShowConsumptionData
-          ? const Icon(Icons.electric_meter)
-          : const Icon(Icons.money, )
+    return MaterialButton(
+      onPressed: () => viewModel.setIsDashboard = !viewModel.isShowConsumptionData,
+      child: Chip(
+        avatar: viewModel.isShowConsumptionData
+            ? const Icon(Icons.electric_meter,)
+            : const Icon(Icons.money, color: Colors.green,),
+        side: BorderSide.none,
+        label: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('顯示: ${viewModel.isShowConsumptionData ? "電量" : "電費"}'),
+          ],
+        ),
       ),
-      inactiveThumbColor: Colors.green,
-      value: viewModel.isShowConsumptionData, 
-      onChanged: (value) => viewModel.setIsDashboard = value,
     );
   }
   
@@ -237,7 +242,7 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(flex: 3, child: consumptionTimelineChartFrame()),
+                Expanded(flex: 2, child: consumptionTimelineChartFrame()),
                 Expanded(flex: 2, child: errorReportTableView()),
               ],
             ),
@@ -295,15 +300,8 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
       );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ElectricityConsumptionDashboardViewModel>.value(
-      value: viewModel,
-      child: Consumer<ElectricityConsumptionDashboardViewModel>(
-        builder: (context, viewModel, child) => DashboardPage(
-          pageTitle: viewModel.isShowConsumptionData ? "每日累積報告 - 電量" : "每日累積報告 - 電價",
-          isSearchBarVisible: true,
-          searchBar: viewModel.loadingState == LoadingState.free
+  Widget searchBar(){
+    return viewModel.loadingState == LoadingState.free
           ? DashboardSearchBar(
             children: [
               DashboardDatePicker(
@@ -324,9 +322,21 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
                   filterTree: viewModel.filterSearchTreeNode as FilterSearchTreeNode,
                   // plate: const InstagramGrad().colors,
                 ),
-              ), const Spacer(), priceSwitcher(),            
+              ), 
+              priceSwitcher(),            
             ]              
-          ) : const SizedBox.shrink(),
+          ) : const SizedBox.shrink();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<ElectricityConsumptionDashboardViewModel>.value(
+      value: viewModel,
+      child: Consumer<ElectricityConsumptionDashboardViewModel>(
+        builder: (context, viewModel, child) => DashboardPage(
+          pageTitle: viewModel.isShowConsumptionData ? "每日累積報告 - 電量" : "每日累積報告 - 電價",
+          isSearchBarVisible: true,
+          searchBar: searchBar(),
           body: viewModel.loadingState == LoadingState.free
           ? viewModel.loadingState == LoadingState.loading
           ? loadingView()
