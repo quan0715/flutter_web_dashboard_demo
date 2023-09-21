@@ -3,7 +3,7 @@ import 'package:web_dashboard/view_model/auth_manager.dart';
 import 'package:web_dashboard/view_model/theme_manager.dart';
 import 'package:web_dashboard/views/pages/dashboard/consumption_report_dashboard_view.dart';
 import 'package:web_dashboard/views/pages/dashboard_config/dashboard_config_view.dart';
-import 'package:web_dashboard/views/pages/data_table/daily_scda_data_table_view_model.dart';
+import 'package:web_dashboard/views/pages/data_table/daily_scda_data_table_view.dart';
 import 'package:web_dashboard/views/pages/data_table/device_error_report_view.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';

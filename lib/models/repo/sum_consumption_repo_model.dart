@@ -45,6 +45,7 @@ class SumOfElectricityConsumptionDataModel implements RepoModel{
 
   @override
   SumOfElectricityConsumptionDataModel fromJson(Map<String, dynamic> json) {
+    
     try{
       var s = json['_source'];
       return SumOfElectricityConsumptionDataModel( 

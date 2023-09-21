@@ -16,6 +16,5 @@ class LayerFilterData<T>{
     layerLabel: layerLabel,
     layerIndex: layerIndex,
     layerSelectedIndex: layerIndex,
-    
   );
 }

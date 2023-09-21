@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:web_dashboard/db/elastic_search.dart';
-import 'package:web_dashboard/models/data/config.dart';
 import 'package:web_dashboard/models/data/state.dart';
 import 'package:web_dashboard/models/repo/config_repo_model.dart';
 import 'package:web_dashboard/view_model/base_view_model.dart';

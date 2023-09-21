@@ -25,7 +25,6 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
       
   List<SumOfElectricityConsumptionDataModel> _sumOfConsumptionDataList = [];
   List<DeviceErrorReportModel> _deviceErrorReportList = [];
-  // List<ElectricityConsumptionDataModel> _electricityConsumptionDataList = [];
 
   set setFilterOrder(List<LayerFilterData<String>> value){
     filterOrder = value;
@@ -75,8 +74,6 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
     return r as ConsumptionSearchNode;
   }
 
-
-  
   List<SearchTreeNode> getTimeGroupDataSource(SearchTreeNode? tree, DateTime startTime, int days){
     List<SearchTreeNode> timeGroupDataSource = [];
     for(int i=0;i<days;i++){
@@ -101,7 +98,7 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
   List<SearchTreeNode> get lastWeekSumOfElectricityConsumptionDataList
     => getTimeGroupDataSource(consumptionDataGroupSearchTree, targetDateTime.subtract(const Duration(days: 7)), 7);
 
-  Future<List<SumOfElectricityConsumptionDataModel>> getSumConsumptionDataByTime(DateTime startTime, DateTime endTime, String? tagId) async{
+  Future<List<SumOfElectricityConsumptionDataModel>> getSumConsumptionDataByTime(DateTime startTime, DateTime endTime) async{
     Map<String, dynamic> query = {};
     int maxResult = 9999;
     Map<String, Map<String,String>> targetDateTime = {
@@ -112,7 +109,7 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
       }
     };
     List queryConditionList = [
-      {"match": {DBConfig.tagIdId : tagId}},
+      // {"match": {DBConfig.tagIdId : tagId}},
       {"range": targetDateTime}
     ];
   List sortList = [{DBConfig.dateTimeId: {"order": "desc"}}];
@@ -127,30 +124,16 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
   Future<void> init() async{
     _deviceErrorReportList = [];
     filterSearchTreeNode = FilterSearchTreeNode.buildTree(data: filterOrder);
-    // debugPrint(filterSearchTreeNode!.toList().toString());
     setLoadingState(LoadingState.loading);
     try{
-      var deviceIndexList = (await ElasticSearchClient.deviceClient().search()).map((e) => e.device?.tagId ?? "").toSet().toList();
-      
-      _sumOfConsumptionDataList = [];
-
-      for(String? tagId in deviceIndexList){
-        var result = await getSumConsumptionDataByTime(
-          targetDateTime.subtract(const Duration(days: 14)), 
-          targetDateTime.add(const Duration(hours: 23, minutes: 59, seconds: 59)),
-          tagId
-        );
-        if(result.isNotEmpty){
-          _sumOfConsumptionDataList.addAll(result);
-        }else{
-          debugPrint("no device data for $tagId");
-        }
-      }
+      _sumOfConsumptionDataList = await getSumConsumptionDataByTime(
+        targetDateTime.subtract(const Duration(days: 14)), 
+        targetDateTime.add(const Duration(hours: 23, minutes: 59, seconds: 59)),
+      );
       consumptionDataGroupSearchTree = ConsumptionSearchNode.buildTree(
         data: _sumOfConsumptionDataList,
         indexes: [DBConfig.dateTimeId, ...filterOrder.map((e) => e.layerIndex).toList()]
       );
-
       _deviceErrorReportList = await ElasticSearchClient.errorReportClient().search();
     }catch(e){
       debugPrint(e.toString());

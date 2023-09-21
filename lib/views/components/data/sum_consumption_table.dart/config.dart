@@ -6,9 +6,9 @@ class SumConsumptionTableConfig{
   static DataGridRow getRows(SumOfElectricityConsumptionDataModel data){
     return DataGridRow(cells: [
       DataGridCell<String>(columnName: '設備編號', value: data.deviceData!.tagId),
-      DataGridCell<String>(columnName: '工廠', value: data.deviceData!.loc),
-      DataGridCell<String>(columnName: '區域', value: data.deviceData!.building),
-      DataGridCell<String>(columnName: '設備類型', value: data.deviceData!.assetType),
+      // DataGridCell<String>(columnName: '工廠', value: data.deviceData!.loc),
+      // DataGridCell<String>(columnName: '區域', value: data.deviceData!.building),
+      // DataGridCell<String>(columnName: '設備類型', value: data.deviceData!.assetType),
       DataGridCell<String>(columnName: '日累積電費', value: data.dayBillPrice!.round().toString()),
       DataGridCell<String>(columnName: '月累積電費', value: data.monthBillPrice!.round().toString()),
       DataGridCell<String>(columnName: '季累積電費', value: data.quarterBillPrice!.round().toString()),
@@ -23,9 +23,9 @@ class SumConsumptionTableConfig{
   }
   static List<String> columNameList = [
     '設備編號',
-    '工廠',
-    '區域',
-    '設備類型',
+    // '工廠',
+    // '區域',
+    // '設備類型',
     '日累積電費',
     '月累積電費',
     '季累積電費',

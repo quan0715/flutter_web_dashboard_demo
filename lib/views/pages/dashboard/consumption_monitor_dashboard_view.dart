@@ -12,6 +12,7 @@ import 'package:web_dashboard/views/components/chart/weakly_consumption_line_cha
 import 'package:web_dashboard/views/components/data/device_error_report_table/data_grid.dart';
 import 'package:web_dashboard/view_model/dashboard/electricity_consumption_view_model.dart';
 import 'package:web_dashboard/views/components/data/sum_consumption_table.dart/data_grid.dart';
+import 'package:web_dashboard/views/components/widget/dashboard_date_picker.dart';
 import 'package:web_dashboard/views/components/widget/dashboard_page.dart';
 import 'package:web_dashboard/views/components/widget/dashboard_widget.dart';
 import 'package:web_dashboard/views/pages/dashboard/consumption_report_dashboard_view.dart';
@@ -305,7 +306,10 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
           searchBar: viewModel.loadingState == LoadingState.free
           ? DashboardSearchBar(
             children: [
-              DateFilterList(), 
+              DashboardDatePicker(
+                initDate: viewModel.targetDateTime,
+                onDateChange: (value) => viewModel.targetDateTime = value,
+              ), 
               LevelFilterList(
                 treeSearchCard: TreeSearchCard(
                   searchTree: viewModel.getTodayData,
@@ -346,67 +350,3 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
 }
 
 
-class DateFilterList extends StatelessWidget{
-  DateFilterList({super.key});
-
-  final GlobalKey buttonKey = GlobalKey();
-
-  final String title = "Level: 階層篩選";
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<ElectricityConsumptionDashboardViewModel>(
-      builder: (context, viewModel, child) => MaterialButton(
-        key: buttonKey,
-        onPressed: ()async{
-          final buttonPosition = buttonKey.currentContext!.findRenderObject() as RenderBox;
-          final DateTime? result = await showDialog(
-            context: context, 
-            barrierDismissible: true,
-            barrierLabel: "時間篩選",
-            // barrierColor: Colors.transparent,
-            builder: (BuildContext context) {
-              return LayoutBuilder(
-                builder: (context, constrain) {
-                  Widget datePicker = DatePickerDialog(
-                      initialDate: viewModel.targetDateTime,
-                      firstDate: viewModel.targetDateTime.subtract(const Duration(days: 365)), 
-                      lastDate: DateTime.now(),
-                      initialEntryMode: DatePickerEntryMode.calendarOnly,
-                      helpText: "選擇觀測區間",
-                      cancelText: "取消",
-                      confirmText: "確認",
-                  );
-                  if(constrain.maxWidth > 600){
-                    return Stack(
-                      children: [
-                        Positioned(
-                          top: buttonPosition.size.height + buttonPosition.localToGlobal(Offset.zero).dy - 15,
-                          left: buttonPosition.localToGlobal(Offset.zero).dx - 20,
-                          child: datePicker,
-                        ),
-                      ],
-                    );
-                  }else{
-                    return datePicker;
-                  }
-                }
-              );
-            },
-          );
-          // 
-          if(result != null){
-            viewModel.setTargetDateTime = result;
-            debugPrint(viewModel.targetDateTime.toString());
-            // debugPrint(viewModel.targetDateTime.day == DateTime.now().day ? "今天" : DashBoardFormat.time(viewModel.targetDateTime));
-          }
-        },
-        child:RawChip(
-          side: BorderSide.none,
-          avatar: Icon(Icons.filter_list, color: DashboardColor.primary(context)),
-          label: Text("時間: ${DashBoardFormat.timePickerLabel(viewModel.targetDateTime)}")
-        )
-      ),
-    );
-  }
-}

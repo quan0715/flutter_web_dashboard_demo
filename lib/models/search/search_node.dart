@@ -45,15 +45,17 @@ class SearchTreeNode<T>{
     }
   }
 
-  SearchTreeNode? searchTree(List<String> indexes, {int index = 0}){
+  SearchTreeNode? searchTree(List<String> indexes, {int index = 0, bool matchAll = false}){
     if(indexes.isEmpty) return null;
     if(indexes.length == index){
       return this;
     } 
-    String target = indexes[index];
-    SearchTreeNode? node = _searchTree(target);
-    if(node != null){
-      return node.searchTree(indexes, index: index + 1);
+    if(!matchAll){
+      String target = indexes[index];
+      SearchTreeNode? node = _searchTree(target);
+      if(node != null){
+        return node.searchTree(indexes, index: index + 1, matchAll: matchAll);
+      }
     }
     // debugPrint('search result empty');
     return null;
