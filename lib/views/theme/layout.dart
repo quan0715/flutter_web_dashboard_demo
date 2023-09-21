@@ -11,7 +11,7 @@ class DashboardLayout{
         return ResponsiveLayoutType.big;
       case >=650:
         return ResponsiveLayoutType.medium;
-      case >=400:
+      case >=300:
         return ResponsiveLayoutType.small;
       default:
         return ResponsiveLayoutType.none;

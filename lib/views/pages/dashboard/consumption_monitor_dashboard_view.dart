@@ -215,14 +215,18 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
                 valueBuilder: (node) => node.billPrice,
               ),
             ),
-            Column(
-              children: data.map<Widget>(
-                (d) => InfoCard(
-                  title: d["title"] as String,
-                  value: d["value"] as int,
-                  unit: d["unit"] as String,
-                )
-              ).toList()
+            LayoutBuilder(
+              builder: (context, constraints) => 
+              // DashboardLayout.getLayout(constraints) == ResponsiveLayoutType.small
+              Column(
+                children: data.map<Widget>(
+                  (d) => InfoCard(
+                    title: d["title"] as String,
+                    value: d["value"] as int,
+                    unit: d["unit"] as String,
+                  )
+                ).toList()
+              )
             ),
           ],
         ),

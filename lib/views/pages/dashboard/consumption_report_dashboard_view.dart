@@ -327,7 +327,10 @@ class LevelFilterList extends StatelessWidget{
                       )
                     ],
                   )
-                  : Center(child: card);
+                  : Center(child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: card,
+                  ));
               }
             )
           );
