@@ -8,6 +8,7 @@ class DBConfig{
   // if the index names are changed in the database, they must be changed here as well
 
   static String baseURI = "https://es.lab.nick983.app";
+  static String baseURIIp = "http://192.168.1.175:9200";
   static String apiKey = "ApiKey YWdxZGpZa0JJUV90ZlhMR3AwMlc6Z1RGdW1DR1dTLTZGMWN1dDZkWEJsdw==";
   static int searchMaxSize = 9999;
   static String meterRepoIndex = "metermsd";

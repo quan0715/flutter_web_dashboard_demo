@@ -17,7 +17,7 @@ class DashboardDatePicker extends StatelessWidget{
   Widget build(BuildContext context) {
     return MaterialButton(
         key: buttonKey,
-        onPressed: ()async{
+        onPressed: () async{
           final buttonPosition = buttonKey.currentContext!.findRenderObject() as RenderBox;
           final DateTime? result = await showDialog(
             context: context, 

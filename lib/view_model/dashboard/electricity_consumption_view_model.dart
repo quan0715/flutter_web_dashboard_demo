@@ -36,9 +36,9 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
     notifyListeners(); 
   }
 
-  set setTargetDateTime(DateTime dateTime){
+  void setTargetDateTime(DateTime dateTime) async{
     targetDateTime = dateTime;
-    init();
+    await init();
   }
 
   set setIsDashboard(bool value){
@@ -66,8 +66,10 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
 
   ConsumptionSearchNode? get getOverAllData{
     var r = getTodayData!.searchTree(getSearchList);
+
     if (r == null) {
       debugPrint('search tree $getSearchList is null');
+      notifyListeners();
       return null;
     }
     // r.printTree();
@@ -79,6 +81,7 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
     for(int i=0;i<days;i++){
       List<String> filterList = getSearchList
         ..insert(0, startTime.subtract(Duration(days: i)).toIso8601String());
+      // debugPrint(filterList.toList().toString());
       var r = tree!.searchTree(filterList);
       if(r == null){
         // debugPrint('search tree $filterList is null');
@@ -89,6 +92,7 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
       }
      
     }
+    
     return timeGroupDataSource.reversed.toList();
   }
 
@@ -135,11 +139,12 @@ class ElectricityConsumptionDashboardViewModel extends BaseViewModel {
         indexes: [DBConfig.dateTimeId, ...filterOrder.map((e) => e.layerIndex).toList()]
       );
       _deviceErrorReportList = await ElasticSearchClient.errorReportClient().search();
-    }catch(e){
+    }catch(e){      
       debugPrint(e.toString());
       setLoadingState(LoadingState.error);
       rethrow;
     }
+    // consumptionDataGroupSearchTree!.printTree();
     setLoadingState(LoadingState.free);
   }
 }

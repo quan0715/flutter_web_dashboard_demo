@@ -310,7 +310,7 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
             children: [
               DashboardDatePicker(
                 initDate: viewModel.targetDateTime,
-                onDateChange: (value) => viewModel.targetDateTime = value,
+                onDateChange: viewModel.setTargetDateTime,
               ), 
               LevelFilterList(
                 treeSearchCard: TreeSearchCard(
@@ -344,7 +344,7 @@ class _ConsumptionMonitorDashboardViewState extends State<ConsumptionMonitorDash
           body: viewModel.loadingState == LoadingState.free
           ? viewModel.loadingState == LoadingState.loading
           ? loadingView()
-          : viewModel.sumOfElectricityConsumptionDataList.isEmpty || viewModel.getOverAllData == null
+          : viewModel.sumOfElectricityConsumptionDataList.isEmpty || viewModel.getTodayData == null
             ? noneDataDialogView()
             : LayoutBuilder(
               builder: (context, constraints){

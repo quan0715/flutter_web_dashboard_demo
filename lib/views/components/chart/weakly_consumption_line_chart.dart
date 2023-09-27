@@ -71,7 +71,7 @@ class DashboardTimeLineChart<ModelType extends SearchTreeNode> extends Stateless
           if(cmpLine != null) 
             AreaSeries<ModelType, String>(
               dataSource: cmpLine!,
-              xValueMapper: xValueMapper,
+              xValueMapper: (data, index) => xValueMapper(this.data[index], index),
               yValueMapper: yValueMapper,
               name: comparedLineLabel,
               xAxisName: timeLineLabel,

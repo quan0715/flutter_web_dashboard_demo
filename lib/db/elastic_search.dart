@@ -11,6 +11,7 @@ import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
 
 class ElasticSearchClient<M extends RepoModel>{
   static String baseURI = DBConfig.baseURI;
+  // static String baseURI = DBConfig.baseURIIp;
   static String apiKey = DBConfig.apiKey;
   static int searchMaxSize = DBConfig.searchMaxSize;
   static Map<String, String> headers = {
@@ -18,7 +19,6 @@ class ElasticSearchClient<M extends RepoModel>{
     'Access-Control-Allow-Origin': '*, $baseURI',
     'Access-Control-Allow-Credentials': "true",
     'Access-Control-Allow-Headers': 'Authorization, Content-Type, Access-Control-Allow-Origin, Access-Control-Allow-Credentials',
-    // 'Access-Control-Allow-Origin': '*',
     'Authorization': apiKey,
     // 'Access-Control-Allow-Methods': 'GET, POST',
     // "Access-Control-Allow-Headers": 'X-Requested-With',
