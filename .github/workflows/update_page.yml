@@ -20,7 +20,6 @@ jobs:
       
       - name: Install dependencies
         run: flutter pub get
-        working-directory: ncu_helper_web
 
       - name: Build Flutter Web
         run: flutter build web --base-href=/flutter_web_dashboard_demo/ --no-tree-shake-icons
