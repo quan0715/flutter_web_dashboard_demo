@@ -6,7 +6,6 @@ import 'package:web_dashboard/models/data/state.dart';
 import 'package:web_dashboard/models/repo/config_repo_model.dart';
 import 'package:web_dashboard/view_model/dashboard/dashboard_config_view_model.dart';
 import 'package:web_dashboard/views/components/widget/dashboard_page.dart';
-import 'package:web_dashboard/views/components/widget/dashboard_widget.dart';
 import 'package:web_dashboard/views/theme/theme.dart';
 
 class DashboardConfigView extends StatefulWidget{

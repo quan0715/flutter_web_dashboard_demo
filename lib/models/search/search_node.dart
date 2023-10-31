@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:web_dashboard/models/repo/sum_consumption_repo_model.dart';
 
 /// ## Search Tree Node
 /// abstract class SearchTreeNode<T> is a tree node for search tree

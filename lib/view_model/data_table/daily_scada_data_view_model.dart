@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:web_dashboard/db/db_config.dart';
 import 'package:web_dashboard/db/elastic_search.dart';
 import 'package:web_dashboard/models/data/filter_data_class.dart';

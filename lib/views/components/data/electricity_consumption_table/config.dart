@@ -16,7 +16,7 @@ class ConsumptionTableConfig{
       DataGridCell<String>(columnName: '耗電量', value: data.energyConsumed.toString()),
       DataGridCell<String>(columnName: '總耗電量', value: data.sumOfEnergyConsumed.toString()),
       DataGridCell<String>(columnName: '電費費率', value: data.priceRate.toString()),
-      DataGridCell<String>(columnName: '總電費', value: data.billPrice!.round().toString()),
+      DataGridCell<String>(columnName: '總電費', value: data.billPrice.round().toString()),
       DataGridCell<String>(columnName:  "Ub", value: data.boundData!.upperBound.toString()),
       DataGridCell<String>(columnName:  "Lb", value: data.boundData!.lowerBound.toString()),
       DataGridCell<String>(columnName:  "WUb", value: data.boundData!.warningUpperBound.toString()),

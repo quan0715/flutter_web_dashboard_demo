@@ -67,7 +67,6 @@ class FilterSearchTreeNode extends SearchTreeNode<LayerFilterData<String>>{
 
   
 
-  @override
   List<PieChartProportion> toProportionList() { 
     throw UnimplementedError();
   }

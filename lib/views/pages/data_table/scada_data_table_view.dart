@@ -6,7 +6,6 @@ import 'package:web_dashboard/views/components/data/electricity_consumption_tabl
 import 'package:web_dashboard/views/components/widget/dashboard_date_picker.dart';
 import 'package:web_dashboard/views/components/widget/dashboard_page.dart';
 import 'package:web_dashboard/views/components/widget/dashboard_widget.dart';
-import 'package:web_dashboard/views/pages/dashboard/consumption_report_dashboard_view.dart';
 class ScadaDataTableView extends StatelessWidget with DashboardPageTemplate{
   const ScadaDataTableView({super.key});
 

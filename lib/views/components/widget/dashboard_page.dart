@@ -76,20 +76,20 @@ mixin class DashboardPageTemplate{
   }
   
   Widget mediumScreenSizeView(){
-    return Center(
+    return const Center(
       child: Text("medium not support",),
     );
   }
 
   Widget smallScreenSizeView(){
-    return Center(
+    return const Center(
       child: Text("small screen not support"),
     );
   }
 
   
   Widget noneDataDialogView(){
-    return Center(
+    return const Center(
       child: Text("無資料紀錄 確認伺服器連線狀態",),
     );
   }

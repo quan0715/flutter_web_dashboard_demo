@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:web_dashboard/views/components/widget/dashboard_page.dart';
-import 'package:web_dashboard/views/theme/theme.dart';
 import 'package:web_dashboard/view_model/data_table/device_error_report_view_model.dart';
-import 'package:web_dashboard/views/components/widget/app_bar.dart';
-import 'package:web_dashboard/views/components/widget/dashboard_frame_card.dart';
 import 'package:web_dashboard/views/components/data/device_error_report_table/data_grid.dart';
-import 'package:web_dashboard/views/components/widget/drawer.dart';
 import 'package:web_dashboard/views/components/widget/quote.dart';
 
 class DeviceErrorReportView extends StatefulWidget {

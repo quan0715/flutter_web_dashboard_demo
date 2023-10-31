@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:web_dashboard/models/data/state.dart';
-import 'package:web_dashboard/models/search/filter_search_node.dart';
 import 'package:web_dashboard/view_model/data_table/daily_scada_data_view_model.dart';
 import 'package:web_dashboard/views/components/data/sum_consumption_table.dart/data_grid.dart';
 import 'package:web_dashboard/views/components/widget/dashboard_date_picker.dart';
